@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 
 defineProps({
     canResetPassword: Boolean,
@@ -60,7 +59,6 @@ const submit = () => {
                     <TextInput id="username" type="text" v-model="form.username"
                         class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
                         placeholder="username.sample" required autofocus autocomplete="username" />
-                    <InputError class="mt-1 text-sm text-red-600" :message="form.errors.username" />
                     <InputError class="mt-1 text-sm text-red-600" :message="form.errors.username" />
                 </div>
 
