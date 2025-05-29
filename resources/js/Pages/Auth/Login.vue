@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import Checkbox from '@/Components/Checkbox.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
@@ -44,20 +44,8 @@ const submit = () => {
             <!-- Logo & Title -->
             <div class="text-center mb-6">
                 <div class="flex justify-center mb-3">
-                    <div class="bg-blue-100 p-4 rounded-full shadow-inner">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="h-10 w-10 text-blue-600"
-                            fill="none" stroke="currentColor">
-                            <rect x="4" y="28" width="18" height="24" rx="2" stroke-width="2" fill="white" />
-                            <path d="M4 28l9 6 9-6" stroke-width="2" />
-                            <rect x="26" y="20" width="10" height="32" rx="2" stroke-width="2" fill="white" />
-                            <rect x="28.5" y="14" width="5" height="6" rx="1" stroke-width="2" fill="white" />
-                            <rect x="42" y="32" width="12" height="20" rx="2" stroke-width="2" fill="white" />
-                            <line x1="42" y1="36" x2="54" y2="36" stroke-width="1.5" />
-                            <line x1="42" y1="40" x2="54" y2="40" stroke-width="1.5" />
-                            <circle cx="10" cy="56" r="2" fill="currentColor" />
-                            <circle cx="32" cy="56" r="2" fill="currentColor" />
-                            <circle cx="48" cy="56" r="2" fill="currentColor" />
-                        </svg>
+                    <div class="bg-blue-100 rounded-full shadow-inner">
+                        <img src="/storage/images/logo.png" alt="Nesa Logo" class="h-24 w-24 object-cover">
                     </div>
                 </div>
                 <h1 class="text-3xl font-bold text-gray-800">Welcome to Nesa</h1>
@@ -73,13 +61,14 @@ const submit = () => {
                         class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
                         placeholder="username.sample" required autofocus autocomplete="username" />
                     <InputError class="mt-1 text-sm text-red-600" :message="form.errors.username" />
+                    <InputError class="mt-1 text-sm text-red-600" :message="form.errors.username" />
                 </div>
 
                 <div>
                     <InputLabel for="password" value="Password" class="text-gray-700" />
                     <TextInput id="password" type="password" v-model="form.password"
                         class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
-                        placeholder="••••••••" required autocomplete="current-password" />
+                        placeholder="password" required autocomplete="current-password" />
                     <InputError class="mt-1 text-sm text-red-600" :message="form.errors.password" />
                 </div>
 
