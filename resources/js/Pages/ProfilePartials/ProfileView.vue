@@ -13,7 +13,7 @@
             </div>
 
             <div class="flex items-center flex-col">
-                <p title="name/نام" class="text-black font-Roboto-md">{{ page.auth.user.name }}</p>
+                <p title="name/نام" class="text-black font-Roboto-md">{{ page.auth.user.firstname }},{{ page.auth.user.lastname}}</p>
                 <p title="bio/بیوگرافی" class="text-xs text-gray-500 font-medium">
                     {{ page.auth.user.usertype ? page.auth.user.usertype : 'Admin' }}
                 </p>

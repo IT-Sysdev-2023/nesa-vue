@@ -5,11 +5,7 @@
                 <!-- Logo -->
                 <div class="flex items-center">
                     <a href="#" class="flex items-center space-x-2">
-                        <!-- <span class="text-indigo-600">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
-                <path fill-rule="evenodd" d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z" clip-rule="evenodd" />
-              </svg>
-            </span> -->
+
                         <img class="w-10 h-10" src="/storage/images/logo.png" alt="iamge">
                         <span class="text-xl font-bold text-gray-900">Nesa</span>
                     </a>
@@ -18,14 +14,17 @@
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
                     <div class="hidden md:flex space-x-8">
-                        <a href="#"
-                            class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">Home</a>
 
-                        <!-- Dropdown -->
+                        <button
+                            class="flex items-center gap-1 text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">
+                            <HomeOutlined />
+                            <Link :href="route('dashboard')"><span>Home</span></Link>
+                        </button>
                         <div class="relative group">
                             <button
-                                class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
-                                <span>Products</span>
+                                class="text-gray-900  gap-1  hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
+                                <NotificationOutlined />
+                                <span>Nesa</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                     class="w-4 h-4 transform group-hover:rotate-180 transition-transform duration-200">
                                     <path fill-rule="evenodd"
@@ -36,26 +35,52 @@
                             <div
                                 class="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 transform z-50">
                                 <div class="py-1">
+                                    <Link :href="route('nesa.get.list')"
+                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                                        Near Expiry Stock Advise</Link>
                                     <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">Web
-                                        Design</a>
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                                        Summary Of Supplier</a>
                                     <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">Mobile
-                                        Apps</a>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">UI/UX</a>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">Development</a>
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">Summary
+                                        Of SWAF</a>
                                 </div>
                             </div>
                         </div>
 
-                        <a href="#"
-                            class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">Pricing</a>
+                        <div class="relative group">
+                            <button
+                                class="text-gray-900  gap-1  hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
+                                <DeploymentUnitOutlined />
+                                <span>Masterfile</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-4 h-4 transform group-hover:rotate-180 transition-transform duration-200">
+                                    <path fill-rule="evenodd"
+                                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div
+                                class="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 transform z-50">
+                                <div class="py-1">
+                                    <Link :href="route('admin.masterfile')"
+                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                                    Products</Link>
+                                    <Link :href="route('admin.supplier.list')"
+                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                                    Supplier List</Link>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- <a href="#"
+                            class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">Pricing</a> -->
                         <a href="#"
                             class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">About</a>
-                        <a href="#"
-                            class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">Contact</a>
+                        <!-- <a href="#"
+                            class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">Contact</a> -->
                     </div>
                 </div>
 
@@ -77,7 +102,7 @@
                         <div
                             class="absolute left-0 mt-2 w-56 origin-top-left rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 transform z-50">
                             <div class="py-1">
-                                <ProfileView/>
+                                <ProfileView />
                             </div>
                         </div>
                     </div>
@@ -165,6 +190,8 @@
 </template>
 
 <script setup>
+import { Link } from '@inertiajs/vue3';
+import { HomeOutlined, NotificationOutlined, DeploymentUnitOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
 import { usePage } from "@inertiajs/vue3";
 import ProfileView from "../Pages/ProfilePartials/ProfileView.vue"
