@@ -1,14 +1,12 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
-import Components from 'unplugin-vue-components/vite'
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
-
+import { createStyleImportPlugin, AntdResolve } from 'vite-plugin-style-import';
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: 'resources/js/app.js',
+            input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
         }),
         vue({
@@ -19,9 +17,13 @@ export default defineConfig({
                 },
             },
         }),
-        Components({
-            resolvers: [AntDesignVueResolver()],
-            dts: true,
+        createStyleImportPlugin({
+            resolves: [AntdResolve()],
         }),
     ],
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+        },
+    },
 });

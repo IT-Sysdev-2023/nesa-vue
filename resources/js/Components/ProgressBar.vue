@@ -10,7 +10,7 @@
         </div>
 
         <div class="flex justify-center">
-            <a-progress :type="type" :stroke-color="{
+            <Progress :type="type" :stroke-color="{
                 '0%': '#108ee9',
                 '100%': '#87d068',
             }" :percent="progress.percentage" />
@@ -18,7 +18,7 @@
     </div>
 </template>
 <script setup>
-
+import { Progress} from 'ant-design-vue';
 const props = defineProps({
     progress: Object,
     type: String

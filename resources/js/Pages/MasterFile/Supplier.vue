@@ -1,11 +1,11 @@
 <template>
     <AuthenticatedLayout>
-        <a-card>
+        <Card>
             <ProgressBar v-if="isSyncing" type="circle" :progress="progressbar" />
-            <a-button @click="syncSupplier" class="mb-3">
+            <PrimaryButton @click="syncSupplier" class="mb-3">
                 Sync Supplier
-            </a-button>
-            <a-table :pagination="false" bordered size="small" :data-source="records.data" :columns="[
+            </PrimaryButton>
+            <Table :pagination="false" bordered size="small" :data-source="records.data" :columns="[
                 {
                     title: 'Supplier Code',
                     dataIndex: 'supplier_code',
@@ -16,19 +16,20 @@
                 },
             ]">
 
-            </a-table>
+            </Table>
             <Pagination :datarecords="records" class="mt-5" />
-        </a-card>
+        </Card>
     </AuthenticatedLayout>
 </template>
 
 <script setup>
-
+import { Card, Table, Button, Input } from 'ant-design-vue';
 import Pagination from '@/Components/Pagination.vue';
 import ProgressBar from '@/Components/ProgressBar.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { router, usePage } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 
 const props = defineProps({
