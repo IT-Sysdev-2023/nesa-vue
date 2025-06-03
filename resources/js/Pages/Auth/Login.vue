@@ -14,7 +14,7 @@ defineProps({
 const form = useForm({
     username: '',
     password: '',
-    remember: false,
+    // remember: false,
 });
 
 const submit = () => {
@@ -70,12 +70,12 @@ const submit = () => {
                     <InputError class="mt-1 text-sm text-red-600" :message="form.errors.password" />
                 </div>
 
-                <div>
+                <!-- <div>
                     <label>
                         <Checkbox name="remember" v-model:checked="form.remember" class="mr-2" />
                         <span class="text-gray-700 text-sm">Remember me</span>
                     </label>
-                </div>
+                </div> -->
 
                 <PrimaryButton
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md shadow-md transition disabled:opacity-50"

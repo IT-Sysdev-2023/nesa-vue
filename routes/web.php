@@ -30,6 +30,14 @@ Route::middleware('auth')->group(function () {
             Route::get('search-products', [AdminController::class, 'masterFile'])->name('search.products');
             Route::get('supplier-list', [AdminController::class, 'listOfSupplier'])->name('supplier.list');
             Route::get('sync-suppliers', [AdminController::class, 'syncSupplier'])->name('sync.supplier');
+
+            // adding users routes
+            Route::get('add-user', [AdminController::class, 'addUser'])->name('addUser');
+            Route::post('submit-user', [AdminController::class, 'submitUser'])->name('submitUser');
+
+            // usertype and user profile routes 
+            Route::get('userType', [AdminController::class, 'userType'])->name('userType');
+            Route::get('view-profile', [AdminController::class, 'viewProfile'])->name('viewProfile');
         });
     });
 });

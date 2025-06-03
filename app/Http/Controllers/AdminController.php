@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Events\SyncingProductsEvent;
 use App\Models\Product;
 use App\Models\Supplier;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -15,7 +17,7 @@ class AdminController extends Controller
     public function masterFile(Request $request)
     {
         $query = Product::query()
-    ->leftJoin('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no');
+            ->leftJoin('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no');
 
 
         if ($request->filled('search')) {
@@ -97,5 +99,67 @@ class AdminController extends Controller
                     );
                 }
             }, 'No_');
+    }
+
+    public function addUser(Request $request)
+    {
+        $usertype = DB::table('user_types')->select('id', 'name')->get();
+        $businessUnit = DB::table('business_units')->select('id', 'name')->get();
+
+        return inertia('AdminSetup/AddUser-Setup', [
+            'usertypes' => $usertype,
+            'businessUnit' => $businessUnit
+        ]);
+    }
+
+    public function submitUser(Request $request)
+    {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'middlename' => 'required',
+            'usertype' => 'required',
+            'businessUnit' => 'required'
+        ]);
+        $check = User::where('username',  $request->username)->exists();
+        if ($check === true) {
+            return back()->with(
+                'error',
+                'Username is already taken, please try another username'
+            );
+        }
+        User::create([
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'middlename' => $request->middlename,
+            'name_extention' => $request->nameExtention,
+            'usertype' => $request->usertype,
+            'bu' => $request->businessUnit
+        ]);
+        return back()->with(
+            'success',
+            'User added successfully'
+        );
+    }
+
+    public function userType()
+    {
+        $usertype = User::join('user_types', 'user_types.id', '=', 'users.usertype')
+            ->where('users.id', Auth::user()->id)
+            ->select('user_types.name')
+            ->first();
+
+        return response()->json([
+            'usertypes' => $usertype
+        ]);
+    }
+
+    public function viewProfile()
+    {
+        return inertia('AdminSetup/ViewProfile-Setup');
     }
 }

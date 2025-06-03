@@ -37,7 +37,7 @@
                                 <div class="py-1">
                                     <Link :href="route('nesa.get.list')"
                                         class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
-                                        Near Expiry Stock Advise</Link>
+                                    Near Expiry Stock Advise</Link>
                                     <a href="#"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                                         Summary Of Supplier</a>
@@ -74,13 +74,32 @@
                             </div>
                         </div>
 
-
-                        <!-- <a href="#"
-                            class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">Pricing</a> -->
-                        <a href="#"
-                            class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">About</a>
-                        <!-- <a href="#"
-                            class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">Contact</a> -->
+                        <button
+                            class="flex items-center gap-1 text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">
+                            <QuestionCircleOutlined />
+                            <Link :href="route('dashboard')"><span>About</span></Link>
+                        </button>
+                        <div class="relative group" v-if="page.auth.user.usertype == 1">
+                            <button
+                                class="text-gray-900  gap-1  hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
+                                <SettingOutlined />
+                                <span>Setup</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-4 h-4 transform group-hover:rotate-180 transition-transform duration-200">
+                                    <path fill-rule="evenodd"
+                                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div
+                                class="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 transform z-50">
+                                <div class="py-1">
+                                    <Link :href="route('admin.addUser')"
+                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                                    Add User</Link>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -103,11 +122,9 @@
                             class="absolute left-0 mt-2 w-56 origin-top-left rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 transform z-50">
                             <div class="py-1">
                                 <ProfileView />
-                                <ProfileView />
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Mobile menu button -->
@@ -164,13 +181,8 @@
                             class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">Development</a>
                     </div>
                 </div>
-
-                <a href="#"
-                    class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-indigo-600 hover:bg-gray-50">Pricing</a>
                 <a href="#"
                     class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-indigo-600 hover:bg-gray-50">About</a>
-                <a href="#"
-                    class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-indigo-600 hover:bg-gray-50">Contact</a>
                 <div class="px-3 py-2">
                     <button @click="toggleMobileSetupMenu"
                         class="w-full flex justify-between items-center text-base font-medium text-gray-900 hover:text-indigo-600"
@@ -211,7 +223,7 @@
 
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import { HomeOutlined, NotificationOutlined, DeploymentUnitOutlined } from '@ant-design/icons-vue';
+import { HomeOutlined, NotificationOutlined, DeploymentUnitOutlined, SettingOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
 import { usePage } from "@inertiajs/vue3";
 import ProfileView from "../Pages/ProfilePartials/ProfileView.vue"
