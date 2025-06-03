@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+<<<<<<< HEAD
     AButton: typeof import('ant-design-vue/es')['Button']
     ACard: typeof import('ant-design-vue/es')['Card']
     ACol: typeof import('ant-design-vue/es')['Col']
@@ -21,5 +22,9 @@ declare module 'vue' {
 =======
 >>>>>>> 55f92b983ce58475b72880edc16323fe7aab1bdb
     ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
+=======
+    ATabPane: typeof import('ant-design-vue/es')['TabPane']
+    ATabs: typeof import('ant-design-vue/es')['Tabs']
+>>>>>>> gamale
   }
 }

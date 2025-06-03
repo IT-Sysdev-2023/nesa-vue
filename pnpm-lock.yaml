@@ -39,18 +39,18 @@ importers:
       concurrently:
         specifier: ^9.1.2
         version: 9.1.2
-      laravel-echo:
-        specifier: ^2.1.4
-        version: 2.1.4(pusher-js@8.4.0)(socket.io-client@4.8.1)
       laravel-vite-plugin:
         specifier: ^1.2.0
         version: 1.2.0(vite@6.3.5(jiti@2.4.2)(lightningcss@1.30.1)(yaml@2.8.0))
       postcss:
         specifier: ^8.5.4
         version: 8.5.4
+<<<<<<< HEAD
       pusher-js:
         specifier: ^8.4.0
         version: 8.4.0
+=======
+>>>>>>> gamale
       tailwindcss:
         specifier: ^3.4.17
         version: 3.4.17
@@ -1006,6 +1006,7 @@ packages:
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
+<<<<<<< HEAD
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
@@ -1016,6 +1017,8 @@ packages:
       pusher-js: '*'
       socket.io-client: '*'
 
+=======
+>>>>>>> gamale
   laravel-vite-plugin@1.2.0:
     resolution: {integrity: sha512-R0pJ+IcTVeqEMoKz/B2Ij57QVq3sFTABiFmb06gAwFdivbOgsUtuhX6N2MGLEArajrS3U5JbberzwOe7uXHMHQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
@@ -2524,6 +2527,7 @@ snapshots:
 
   js-tokens@4.0.0: {}
 
+<<<<<<< HEAD
   jsonfile@6.1.0:
     dependencies:
       universalify: 2.0.1
@@ -2535,6 +2539,8 @@ snapshots:
       pusher-js: 8.4.0
       socket.io-client: 4.8.1
 
+=======
+>>>>>>> gamale
   laravel-vite-plugin@1.2.0(vite@6.3.5(jiti@2.4.2)(lightningcss@1.30.1)(yaml@2.8.0)):
     dependencies:
       picocolors: 1.1.1
