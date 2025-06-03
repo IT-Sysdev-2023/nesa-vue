@@ -1,14 +1,15 @@
 <template>
     <AuthenticatedLayout>
-        <a-card>
-            <a-table bordered :pagination="false" size="small" :columns="columns">
+        <Card>
+            <Table bordered :pagination="false" size="small" :columns="columns">
 
-            </a-table>
-        </a-card>
+            </Table>
+        </Card>
     </AuthenticatedLayout>
 </template>
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Card, Table } from 'ant-design-vue';
 import { ref } from 'vue';
 const columns = ref([
     {

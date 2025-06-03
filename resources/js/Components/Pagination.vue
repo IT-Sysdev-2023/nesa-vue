@@ -1,43 +1,48 @@
 <template>
-    <a-row class="flex justify-between" align="middle" v-if="datarecords !== undefined">
-        <a-col>
-            <a-typography-text>{{ `Showing ${datarecords?.from || 0} to ${datarecords?.to || 0} of
-                ${datarecords?.total.toLocaleString()}
-                records` }}
-            </a-typography-text>
-        </a-col>
-        <a-col>
-            <a-config-provider>
-                <template v-for="(link, key) in datarecords.links" :key="`link-${key}`">
-                    <a-button style="border-radius: 2px;" :type="link.active ? 'primary' : 'default'"
-                        v-html="link.label" @click="paginate(link)" />
-                </template>
-
-            </a-config-provider>
-        </a-col>
-    </a-row>
+  <div class="flex justify-between items-center" v-if="datarecords !== undefined">
+    <div>
+      <span class="text-gray-700">
+        Showing {{ datarecords?.from || 0 }} to {{ datarecords?.to || 0 }} of
+        {{ datarecords?.total.toLocaleString() }} records
+      </span>
+    </div>
+    <div>
+      <div class="inline-flex gap-[1px]">
+        <template v-for="(link, key) in datarecords.links" :key="`link-${key}`">
+          <button
+            @click="paginate(link)"
+            v-html="link.label"
+            class="px-3 py-1 border rounded-sm text-sm font-medium transition-colors"
+            :class="{
+              'bg-blue-600 text-white border-blue-600': link.active,
+              'bg-white text-gray-700 border-gray-300 hover:bg-gray-50': !link.active
+            }"
+          />
+        </template>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import { Link } from '@inertiajs/vue3'
 
 export default {
-    components: {
-        Link,
-    },
-    props: {
-        datarecords: Object,
-
-    },
-    methods: {
-        paginate(link) {
-            if (link.url) {
-                this.$inertia.visit(link.url, {
-                    preserveState: true,
-                    preserveScroll: true
-                })
-            }
-        }
+  components: {
+    Link,
+  },
+  props: {
+    datarecords: Object,
+  },
+  methods: {
+    paginate(link) {
+      if (link.url) {
+        this.$inertia.visit(link.url, {
+          preserveState: true,
+          preserveScroll: true
+        })
+      }
     }
+  }
 }
 </script>

@@ -15,8 +15,11 @@ declare module 'vue' {
     AProgress: typeof import('ant-design-vue/es')['Progress']
     ARow: typeof import('ant-design-vue/es')['Row']
     ATable: typeof import('ant-design-vue/es')['Table']
+<<<<<<< HEAD
     ATabPane: typeof import('ant-design-vue/es')['TabPane']
     ATabs: typeof import('ant-design-vue/es')['Tabs']
+=======
+>>>>>>> 55f92b983ce58475b72880edc16323fe7aab1bdb
     ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
   }
 }
