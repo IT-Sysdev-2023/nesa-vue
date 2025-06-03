@@ -103,6 +103,7 @@
                             class="absolute left-0 mt-2 w-56 origin-top-left rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 transform z-50">
                             <div class="py-1">
                                 <ProfileView />
+                                <ProfileView />
                             </div>
                         </div>
                     </div>
@@ -170,6 +171,25 @@
                     class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-indigo-600 hover:bg-gray-50">About</a>
                 <a href="#"
                     class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-indigo-600 hover:bg-gray-50">Contact</a>
+                <div class="px-3 py-2">
+                    <button @click="toggleMobileSetupMenu"
+                        class="w-full flex justify-between items-center text-base font-medium text-gray-900 hover:text-indigo-600"
+                        :aria-expanded="isMobileSetupMenuOpen.toString()">
+                        <span>Setup</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                            class="w-5 h-5 transform transition-transform duration-200"
+                            :class="{ 'rotate-180': isMobileSetupMenuOpen }">
+                            <path fill-rule="evenodd"
+                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div v-show="isMobileSetupMenuOpen" class="mt-2 space-y-1 pl-4">
+                        <a href="#"
+                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">Add
+                            User</a>
+                    </div>
+                </div>
             </div>
             <div class="pt-4 pb-3 border-t border-gray-200">
                 <div class="space-y-1 px-3">
@@ -200,6 +220,7 @@ const page = usePage().props;
 
 const isMobileMenuOpen = ref(false);
 const isMobileProductsMenuOpen = ref(false);
+const isMobileSetupMenuOpen = ref(false);
 
 const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value;
@@ -208,4 +229,8 @@ const toggleMobileMenu = () => {
 const toggleMobileProductsMenu = () => {
     isMobileProductsMenuOpen.value = !isMobileProductsMenuOpen.value;
 };
+
+const toggleMobileSetupMenu = () => {
+    isMobileSetupMenuOpen.value = !isMobileSetupMenuOpen.value
+}
 </script>

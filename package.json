@@ -8,6 +8,7 @@
     },
     "devDependencies": {
         "@inertiajs/vue3": "^2.0.11",
+<<<<<<< HEAD
         "@laravel/echo-vue": "^2.1.4",
         "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/vite": "^4.0.0",
@@ -22,9 +23,22 @@
         "tailwindcss": "^3.2.1",
         "vite": "^6.2.4",
         "vue": "^3.4.0"
+=======
+        "@tailwindcss/forms": "^0.5.10",
+        "@tailwindcss/vite": "^4.1.8",
+        "@vitejs/plugin-vue": "^5.2.4",
+        "autoprefixer": "^10.4.21",
+        "axios": "^1.9.0",
+        "concurrently": "^9.1.2",
+        "laravel-vite-plugin": "^1.2.0",
+        "postcss": "^8.5.4",
+        "tailwindcss": "^3.4.17",
+        "vite": "^6.3.5",
+        "vue": "^3.5.16"
+>>>>>>> gamale
     },
     "dependencies": {
         "@ant-design/icons-vue": "^7.0.1",
-        "ant-design-vue": "4.x"
+        "ant-design-vue": "~4.2.6"
     }
 }
