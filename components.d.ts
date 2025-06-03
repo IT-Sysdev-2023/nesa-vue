@@ -8,7 +8,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AButton: typeof import('ant-design-vue/es')['Button']
     ACard: typeof import('ant-design-vue/es')['Card']
+    ACol: typeof import('ant-design-vue/es')['Col']
+    AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
+    AProgress: typeof import('ant-design-vue/es')['Progress']
+    ARow: typeof import('ant-design-vue/es')['Row']
     ATable: typeof import('ant-design-vue/es')['Table']
+    ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
   }
 }

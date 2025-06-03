@@ -2,34 +2,34 @@
     <AuthenticatedLayout>
         <ProgressBar type="circle" v-if="isSyncing" :progress="progressBa">
         </ProgressBar>
-        <a-card>
+        <Card>
             <div class="flex justify-between">
-                <a-button @click="syncProducts" class="mb-2" :loading="isSyncing">
-                    <template #icon>
-                        <FastForwardOutlined />
-                    </template>
-                    Sync Products
-                </a-button>
+                <PrimaryButton @click="syncProducts" class="mb-3">
+                    Sync Products In Nav
+                </PrimaryButton>
+
                 <input type="text" v-model="form.search"
-                    class="border mb-2 border-gray-300 rounded-md px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Search Item code">
+                    class="w-[300px] border border-gray-300 rounded-md mb-2 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Search Item code" />
 
             </div>
-
-            <a-table class="" :pagination="false" bordered size="small" :data-source="records.data" :columns="columns">
-            </a-table>
+            <Table class="" :pagination="false" bordered size="small" :data-source="records.data" :columns="columns">
+            </Table>
             <Pagination class="mt-3" :datarecords="records" />
-        </a-card>
+        </Card>
     </AuthenticatedLayout>
 </template>
 
 <script setup>
+
+import { Card, Table, Button, Input } from 'ant-design-vue';
 import { FastForwardOutlined } from '@ant-design/icons-vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import ProgressBar from '@/Components/ProgressBar.vue';
 import { usePage, router } from "@inertiajs/vue3";
 import { onMounted, ref, watch } from 'vue';
 import Pagination from '@/Components/Pagination.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const page = usePage().props;
 
