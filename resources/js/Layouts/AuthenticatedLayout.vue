@@ -5,11 +5,6 @@
                 <!-- Logo -->
                 <div class="flex items-center">
                     <a href="#" class="flex items-center space-x-2">
-                        <!-- <span class="text-indigo-600">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
-                <path fill-rule="evenodd" d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z" clip-rule="evenodd" />
-              </svg>
-            </span> -->
                         <img class="w-10 h-10" src="/storage/images/logo.png" alt="iamge">
                         <span class="text-xl font-bold text-gray-900">Nesa</span>
                     </a>
@@ -18,10 +13,10 @@
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
                     <div class="hidden md:flex space-x-8">
-                        <a href="#"
+                        <a :href="route('dashboard')"
                             class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">Home</a>
 
-                        <!-- Dropdown -->
+                        <!-- Products Dropdown -->
                         <div class="relative group">
                             <button
                                 class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
@@ -56,6 +51,27 @@
                             class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">About</a>
                         <a href="#"
                             class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">Contact</a>
+                        <!-- Setup Dropdown  -->
+                        <div class="relative group">
+                            <button
+                                class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
+                                <span>Setup</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-4 h-4 transform group-hover:rotate-180 transition-transform duration-200">
+                                    <path fill-rule="evenodd"
+                                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div
+                                class="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 transform z-50">
+                                <div class="py-1">
+                                    <a :href="route('admin.add.user')"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">Add
+                                        User</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -77,7 +93,7 @@
                         <div
                             class="absolute left-0 mt-2 w-56 origin-top-left rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 transform z-50">
                             <div class="py-1">
-                                <ProfileView/>
+                                <ProfileView />
                             </div>
                         </div>
                     </div>
@@ -145,6 +161,25 @@
                     class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-indigo-600 hover:bg-gray-50">About</a>
                 <a href="#"
                     class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-indigo-600 hover:bg-gray-50">Contact</a>
+                <div class="px-3 py-2">
+                    <button @click="toggleMobileSetupMenu"
+                        class="w-full flex justify-between items-center text-base font-medium text-gray-900 hover:text-indigo-600"
+                        :aria-expanded="isMobileSetupMenuOpen.toString()">
+                        <span>Setup</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                            class="w-5 h-5 transform transition-transform duration-200"
+                            :class="{ 'rotate-180': isMobileSetupMenuOpen }">
+                            <path fill-rule="evenodd"
+                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div v-show="isMobileSetupMenuOpen" class="mt-2 space-y-1 pl-4">
+                        <a href="#"
+                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">Add
+                            User</a>
+                    </div>
+                </div>
             </div>
             <div class="pt-4 pb-3 border-t border-gray-200">
                 <div class="space-y-1 px-3">
@@ -173,6 +208,7 @@ const page = usePage().props;
 
 const isMobileMenuOpen = ref(false);
 const isMobileProductsMenuOpen = ref(false);
+const isMobileSetupMenuOpen = ref(false);
 
 const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value;
@@ -181,4 +217,8 @@ const toggleMobileMenu = () => {
 const toggleMobileProductsMenu = () => {
     isMobileProductsMenuOpen.value = !isMobileProductsMenuOpen.value;
 };
+
+const toggleMobileSetupMenu = () => {
+    isMobileSetupMenuOpen.value = !isMobileSetupMenuOpen.value
+}
 </script>
