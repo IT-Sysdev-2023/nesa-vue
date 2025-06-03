@@ -48,7 +48,7 @@
                             </div>
                         </div>
 
-                        <div class="relative group">
+                        <div class="relative group" v-if="page.auth.user.usertype == 1">
                             <button
                                 class="text-gray-900  gap-1  hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <DeploymentUnitOutlined />
