@@ -119,7 +119,7 @@
 
                 <!-- CTA Buttons -->
                 <div class="hidden md:flex items-center space-x-4">
-                    <div class="relative group">
+                    <!-- <div class="relative group">
                         <button
                             class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                             <img class="w-10 h-10"
@@ -138,7 +138,7 @@
                                 <ProfileView />
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Mobile menu button -->

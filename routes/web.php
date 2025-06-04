@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
             Route::get('add-user', [AdminController::class, 'addUser'])->name('addUser');
             Route::post('submit-user', [AdminController::class, 'submitUser'])->name('submitUser');
 
-            // usertype and user profile routes 
+            // usertype and user profile routes
             Route::get('userType', [AdminController::class, 'userType'])->name('userType');
             Route::get('view-profile', [AdminController::class, 'viewProfile'])->name('viewProfile');
             Route::post('update-credentials', [AdminController::class, 'updateCredentials'])->name('updateCredentials');
@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('nesa')->group(function () {
         Route::name('nesa.')->group(function () {
             Route::get('nesa-list', [NesaController::class, 'nesaList'])->name('get.list');
+            Route::get('nesa-view-{itemcode}', [NesaController::class, 'nesaViewing'])->name('view.list');
+            Route::get('send-email', [NesaController::class, 'sendEmailFunction'])->name('send.email');
         });
     });
 });
