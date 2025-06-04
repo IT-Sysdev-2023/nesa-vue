@@ -162,4 +162,32 @@ class AdminController extends Controller
     {
         return inertia('AdminSetup/ViewProfile-Setup');
     }
+
+    public function updateCredentials(Request $request)
+    {
+        $user = User::findOrFail($request->id);
+
+        if (!Hash::check($request->oldPassword, $user->password)) {
+            return back()->with('error', 'Old password is incorrect.');
+        }
+
+        if (Hash::check($request->password, $user->password)) {
+            return back()->with('error', 'New password must be different from the old one.');
+        }
+
+        if ($request->password !== $request->confirmPassword) {
+            return back()->with('error', 'New and old password do not match, please try again.');
+        }
+
+        if ($user->username === $request->username) {
+            return back()->with('error', 'No changes were made to the username.');
+        }
+
+        $user->update([
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return back()->with('success', 'Credentials updated successfully.');
+    }
 }

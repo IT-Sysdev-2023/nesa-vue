@@ -5,7 +5,7 @@
             <div class="mb-8">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">User Profile</h1>
-                    <p class="mt-2 text-sm text-gray-600">Viewing insight user profile details</p>
+                    <p class="mt-2 text-sm text-gray-600">Viewing {{ userDetails.employee_name }} profile details</p>
                 </div>
             </div>
 
@@ -22,7 +22,7 @@
                         'border-blue-500 text-blue-600': activeTab === 'credentials',
                         'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'credentials'
                     }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                        Update Login Credentials
+                        Login Credentials
                     </button>
                     <button @click="activeTab = 'activity'" :class="{
                         'border-blue-500 text-blue-600': activeTab === 'activity',
@@ -34,7 +34,7 @@
             </div>
 
             <div>
-                <div v-if="activeTab === 'profile'" class="flex flex-col sm:flex-row gap-8 items-start">
+                <div v-if="activeTab === 'profile'" class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="flex flex-col sm:flex-row gap-8 items-start">
                         <div v-if="userDetails" class="flex flex-col items-center text-center">
                             <img :src="'http://172.16.161.34:8080/hrms' + userDetails.employee_photo" alt="User Image"
@@ -109,7 +109,7 @@
 
                 <!--Update User Credentials -->
                 <div v-if="activeTab === 'credentials'" class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="flex flex-col md:flex-row gap-12">
+                    <div class="flex flex-col sm:flex-row gap-8 items-start">
                         <!-- Profile Image Section -->
                         <div class="flex flex-col items-center md:items-start text-center md:text-left">
                             <div v-if="userDetails" class="flex flex-col items-center">
@@ -128,30 +128,36 @@
                         </div>
 
                         <!-- Credentials Form -->
-                        <div class="flex-1 space-y-6">
-                            <h3 class="text-lg font-medium text-gray-900">Update Credentials</h3>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-medium text-gray-900 mb-5">Update Credentials</h3>
 
-                            <div class="space-y-4">
+                            <div class="space-y-4 mb-5">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                                    <input type="text"
+                                    <input type="text" v-model="page.auth.user.username"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                                    <input type="password"
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Old Password</label>
+                                    <input type="password" v-model="form.oldPassword"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                                    <input type="password" v-model="form.password"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-                                    <input type="password"
+                                    <input type="password" v-model="form.confirmPassword"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                 </div>
                             </div>
 
-                            <button
+                            <button @click="updateButton"
                                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                 Update Credentials
                             </button>
@@ -160,10 +166,48 @@
                 </div>
 
                 <!-- Activity Tab -->
-                <div v-if="activeTab === 'activity'" class="flex flex-col sm:flex-row gap-8 items-start">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
-                    <p class="text-gray-500">Activity log would go here...</p>
-                    <!-- Add your activity content here -->
+                <div v-if="activeTab === 'activity'" class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex flex-col sm:flex-row gap-8 items-start">
+                        <!-- Profile Image Section -->
+                        <div class="flex flex-col items-center md:items-start text-center md:text-left">
+                            <div v-if="userDetails" class="flex flex-col items-center">
+                                <img :src="'http://172.16.161.34:8080/hrms' + userDetails.employee_photo"
+                                    alt="User Image"
+                                    class="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow-sm mb-4" />
+                                <h2 class="text-xl font-semibold text-gray-800">{{ userDetails.employee_name }}</h2>
+                                <p class="text-gray-600">{{ userDetails.employee_position }}</p>
+                            </div>
+                            <div v-else class="flex flex-col items-center">
+                                <img src="/storage/images/noUser.jpg" alt="User Image"
+                                    class="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow-sm mb-4" />
+                                <h2 class="text-xl font-semibold text-gray-800">Fetching User image</h2>
+                                <p class="text-gray-600">Please wait</p>
+                            </div>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center justify-center py-12">
+                            <div class="text-center max-w-md">
+                                <div
+                                    class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Under Construction</h3>
+                                <p class="text-gray-500">
+                                    This section is currently being worked on. We'll have it ready for you soon!
+                                </p>
+                                <div class="mt-6">
+                                    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-blue-500 rounded-full animate-pulse" style="width: 60%">
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2">Development in progress</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -172,15 +216,22 @@
 
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { usePage } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { onMounted } from 'vue';
 import axios from "axios";
+import { router } from '@inertiajs/vue3';
+import { notification } from 'ant-design-vue';
 
 const page = usePage().props as unknown as PageProps;
 
-// Add activeTab state
 const activeTab = ref('profile');
+
+const form = useForm({
+    oldPassword: '',
+    password: '',
+    confirmPassword: ''
+});
 
 interface User {
     image?: string;
@@ -188,6 +239,7 @@ interface User {
     middlename?: string;
     lastname?: string;
     usertype?: string;
+    username?: string;
     id?: string;
 }
 
@@ -214,4 +266,29 @@ const getUserDetails = async () => {
 onMounted(() => {
     getUserDetails();
 });
+
+const updateButton = () => {
+    router.post(route('admin.updateCredentials'), {
+        username: page.auth.user.username,
+        oldPassword: form.oldPassword,
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+        id: page.auth.user.id
+    }, {
+        onSuccess: (page: any) => {
+            if (page.props.flash.success) {
+                notification.success({
+                    message: 'Success',
+                    description: page.props.flash.success
+                });
+                form.reset();
+            } else if (page.props.flash.error) {
+                notification.error({
+                    message: 'Failed',
+                    description: page.props.flash.error
+                });
+            }
+        }
+    });
+}
 </script>

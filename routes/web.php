@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
             // usertype and user profile routes 
             Route::get('userType', [AdminController::class, 'userType'])->name('userType');
             Route::get('view-profile', [AdminController::class, 'viewProfile'])->name('viewProfile');
+            Route::post('update-credentials', [AdminController::class, 'updateCredentials'])->name('updateCredentials');
         });
     });
 });

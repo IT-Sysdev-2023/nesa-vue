@@ -14,9 +14,9 @@
             </div>
 
             <div class="flex items-center flex-col">
-                <p title="name/نام" class="text-black font-Roboto-md">{{ page.auth.user.firstname }} {{
+                <p class="text-black font-Roboto-md">{{ page.auth.user.firstname }} {{
                     page.auth.user.middlename }}. {{ page.auth.user.lastname }}</p>
-                <p v-if="userTypes" title="bio/بیوگرافی" class="text-xs text-gray-500 font-medium">
+                <p v-if="userTypes" class="text-xs text-gray-500 font-medium">
                     {{ userTypes.name }}
                 </p>
 
@@ -100,6 +100,6 @@ onMounted(() => {
 });
 
 const viewProfileButton = () => {
-   router.get(route('admin.viewProfile'));
+    router.get(route('admin.viewProfile'));
 }
 </script>

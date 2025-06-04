@@ -21,13 +21,9 @@ export default defineConfig({
             resolves: [AntdResolve()],
         }),
     ],
-<<<<<<< HEAD
     resolve: {
         alias: {
             '@': '/resources/js',
         },
     },
 });
-=======
-});   
->>>>>>> gamale

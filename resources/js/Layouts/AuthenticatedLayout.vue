@@ -53,7 +53,7 @@
                             </div>
                         </div>
 
-                        <div class="relative" v-if="page.auth.user.usertype == 1">
+                        <div class="relative" v-if="page.auth.user.usertype == '1'">
                             <button @click="toggleMasterfileDropdown"
                                 class="text-gray-900 gap-1 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <DeploymentUnitOutlined />
@@ -81,7 +81,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="relative" v-if="page.auth.user.usertype == 1">
+                        <div class="relative" v-if="page.auth.user.usertype == '1'">
                             <button @click="toggleSetupDropdown"
                                 class="text-gray-900 gap-1 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <SettingOutlined />
@@ -102,9 +102,9 @@
                                         class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                                     Add User
                                     </Link>
-                                    <Link
+                                    <Link :href="route('admin.addUser')"
                                         class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
-                                    User Setup
+                                    Setup Users
                                     </Link>
                                 </div>
                             </div>
@@ -145,7 +145,7 @@
                 <div class="md:hidden flex items-center">
                     <button @click="toggleMobileMenu" type="button"
                         class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-gray-100 focus:outline-none transition duration-150 ease-in-out"
-                        :aria-expanded="isMobileMenuOpen.toString()" aria-controls="mobile-menu">
+                        :aria-expanded="isMobileMenuOpen" aria-controls="mobile-menu">
                         <span class="sr-only">Open main menu</span>
                         <svg :class="{ 'hidden': isMobileMenuOpen, 'block': !isMobileMenuOpen }" class="h-6 w-6"
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -172,7 +172,7 @@
                 <div class="px-3 py-2">
                     <button @click="toggleMobileProductsMenu"
                         class="w-full flex justify-between items-center text-base font-medium text-gray-900 hover:text-indigo-600"
-                        :aria-expanded="isMobileProductsMenuOpen.toString()">
+                        :aria-expanded="isMobileProductsMenuOpen">
                         <span>Products</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                             class="w-5 h-5 transform transition-transform duration-200"
@@ -200,7 +200,7 @@
                 <div class="px-3 py-2">
                     <button @click="toggleMobileSetupMenu"
                         class="w-full flex justify-between items-center text-base font-medium text-gray-900 hover:text-indigo-600"
-                        :aria-expanded="isMobileSetupMenuOpen.toString()">
+                        :aria-expanded="isMobileSetupMenuOpen">
                         <span>Setup</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                             class="w-5 h-5 transform transition-transform duration-200"
@@ -211,9 +211,14 @@
                         </svg>
                     </button>
                     <div v-show="isMobileSetupMenuOpen" class="mt-2 space-y-1 pl-4">
-                        <a href="#"
+                        <a :href="route('admin.addUser')"
                             class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">Add
                             User</a>
+                    </div>
+                    <div v-show="isMobileSetupMenuOpen" class="mt-2 space-y-1 pl-4">
+                        <a href="#"
+                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">Setup
+                            Users</a>
                     </div>
                 </div>
             </div>
@@ -235,14 +240,17 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { HomeOutlined, NotificationOutlined, DeploymentUnitOutlined, SettingOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
 import { usePage } from "@inertiajs/vue3";
 import ProfileView from "../Pages/ProfilePartials/ProfileView.vue"
+import { computed } from 'vue';
+import { onMounted } from 'vue';
+import axios from "axios";
 
-const page = usePage().props;
+
 
 const isMobileMenuOpen = ref(false);
 const isMobileProductsMenuOpen = ref(false);
@@ -280,5 +288,39 @@ const showSetupDropdown = ref(false);
 function toggleSetupDropdown() {
     showSetupDropdown.value = !showSetupDropdown.value;
 }
+const page = usePage().props as unknown as PageProps;
 
+interface User {
+    image?: string;
+    firstname?: string;
+    middlename?: string;
+    lastname?: string;
+    usertype?: string;
+    username?: string;
+    id?: string;
+}
+
+interface PageProps {
+    auth: {
+        user: User;
+    };
+};
+
+const formattedName = computed(() => {
+    return `${page.auth.user.lastname}, ${page.auth.user.firstname}`;
+});
+const value = ref<string>(formattedName.value);
+
+const userDetails = ref<any>({})
+const getUserDetails = async () => {
+    const response = await axios.get('http://172.16.161.34/api/gc/filter/employee/name', {
+        params: {
+            q: value.value
+        }
+    });
+    userDetails.value = response.data.data.employee[0];
+}
+onMounted(() => {
+    getUserDetails();
+});
 </script>
