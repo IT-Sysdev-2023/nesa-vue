@@ -27,6 +27,7 @@
     },
     "dependencies": {
         "@ant-design/icons-vue": "^7.0.1",
-        "ant-design-vue": "4.0.0-rc.6"
+        "ant-design-vue": "4.0.0-rc.6",
+        "console": "^0.7.2"
     }
 }
