@@ -37,7 +37,8 @@
                 <div v-if="activeTab === 'profile'" class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="flex flex-col sm:flex-row gap-8 items-start">
                         <div v-if="userDetails" class="flex flex-col items-center text-center">
-                            <img :src="'http://172.16.161.34:8080/hrms' + userDetails.employee_photo" alt="User Image"
+                            <img :src="userDetails && userDetails.employee_photo ? 'http://172.16.161.34:8080/hrms' + userDetails.employee_photo : '/storage/images/noUser.jpg'"
+                                alt=""
                                 class="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow-sm mb-4" />
                             <h2 class="text-xl font-semibold text-gray-800">{{ userDetails.employee_name }}</h2>
                             <p class="text-gray-600">{{ userDetails.employee_position }}</p>
@@ -113,8 +114,8 @@
                         <!-- Profile Image Section -->
                         <div class="flex flex-col items-center md:items-start text-center md:text-left">
                             <div v-if="userDetails" class="flex flex-col items-center">
-                                <img :src="'http://172.16.161.34:8080/hrms' + userDetails.employee_photo"
-                                    alt="User Image"
+                                <img :src="userDetails && userDetails.employee_photo ? 'http://172.16.161.34:8080/hrms' + userDetails.employee_photo : '/storage/images/noUser.jpg'"
+                                    alt=""
                                     class="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow-sm mb-4" />
                                 <h2 class="text-xl font-semibold text-gray-800">{{ userDetails.employee_name }}</h2>
                                 <p class="text-gray-600">{{ userDetails.employee_position }}</p>
@@ -134,26 +135,53 @@
                             <div class="space-y-4 mb-5">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                                    <input type="text" v-model="page.auth.user.username"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    <input type="text" v-model="page.auth.user.username" :class="[
+                                        'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
+                                        errors.username
+                                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                    ]" />
+                                    <p v-if="errors.username" class="text-red-600 text-sm mt-1">{{ errors.username }}
+                                    </p>
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Old Password</label>
-                                    <input type="password" v-model="form.oldPassword"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    <input type="password" v-model="form.oldPassword" :class="[
+                                        'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
+                                        errors.oldPassword
+                                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                    ]" />
+                                    <p v-if="errors.oldPassword" class="text-red-600 text-sm mt-1">{{ errors.oldPassword
+                                        }}</p>
+
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                                    <input type="password" v-model="form.password"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    <input type="password" v-model="form.password" :class="[
+                                        'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
+                                        errors.password
+                                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                    ]" />
+                                    <p v-if="errors.password" class="text-red-600 text-sm mt-1">{{ errors.password }}
+                                    </p>
+
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-                                    <input type="password" v-model="form.confirmPassword"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    <input type="password" v-model="form.confirmPassword" :class="[
+                                        'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
+                                        errors.confirmPassword
+                                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                    ]" />
+                                    <p v-if="errors.confirmPassword" class="text-red-600 text-sm mt-1">{{
+                                        errors.confirmPassword }}</p>
+
                                 </div>
                             </div>
 
@@ -171,8 +199,8 @@
                         <!-- Profile Image Section -->
                         <div class="flex flex-col items-center md:items-start text-center md:text-left">
                             <div v-if="userDetails" class="flex flex-col items-center">
-                                <img :src="'http://172.16.161.34:8080/hrms' + userDetails.employee_photo"
-                                    alt="User Image"
+                                <img :src="userDetails && userDetails.employee_photo ? 'http://172.16.161.34:8080/hrms' + userDetails.employee_photo : '/storage/images/noUser.jpg'"
+                                    alt=""
                                     class="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow-sm mb-4" />
                                 <h2 class="text-xl font-semibold text-gray-800">{{ userDetails.employee_name }}</h2>
                                 <p class="text-gray-600">{{ userDetails.employee_position }}</p>
@@ -224,6 +252,8 @@ import { router } from '@inertiajs/vue3';
 import { notification } from 'ant-design-vue';
 
 const page = usePage().props as unknown as PageProps;
+const pages = usePage();
+const errors = computed(() => pages.props.errors);
 
 const activeTab = ref('profile');
 
@@ -241,7 +271,7 @@ interface User {
     usertype?: string;
     username?: string;
     id?: string;
-}
+};
 
 interface PageProps {
     auth: {

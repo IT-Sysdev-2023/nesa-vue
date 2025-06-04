@@ -102,7 +102,7 @@
                                         class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                                     Add User
                                     </Link>
-                                    <Link :href="route('admin.addUser')"
+                                    <Link :href="route('admin.setupUser')"
                                         class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                                     Setup Users
                                     </Link>
@@ -112,7 +112,7 @@
 
                         <button
                             class="flex items-center gap-1 text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">
-                            <Link :href="route('dashboard')"><span>About</span></Link>
+                            <Link :href="route('admin.about')"><span>About</span></Link>
                         </button>
                     </div>
                 </div>
@@ -120,20 +120,21 @@
                 <!-- CTA Buttons -->
                 <div class="hidden md:flex items-center space-x-4">
                     <div class="relative group">
-                        <button
+                        <button @click="showProfile = !showProfile"
                             class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
-                            <img class="w-10 h-10"
-                                :src="page.auth.user.image ? page.auth.user.image : 'https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg'"
+                            <img class="w-10 h-10 rounded-full object-cover"
+                                :src="userDetails && userDetails.employee_photo ? 'http://172.16.161.34:8080/hrms' + userDetails.employee_photo : '/storage/images/noUser.jpg'"
                                 alt="">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                class="w-4 h-4 transform group-hover:rotate-180 transition-transform duration-200">
+                                class="w-4 h-4 transform transition-transform duration-200"
+                                :class="{ 'rotate-180': showProfile }">
                                 <path fill-rule="evenodd"
                                     d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
                                     clip-rule="evenodd" />
                             </svg>
                         </button>
-                        <div
-                            class="absolute left-0 mt-2 w-56 origin-top-left rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 transform z-50">
+                        <div v-show="showProfile"
+                            class="absolute left-0 mt-2 w-80 origin-top-left rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition-all duration-200 transform z-50 bg-white">
                             <div class="py-1">
                                 <ProfileView />
                             </div>
@@ -250,7 +251,7 @@ import { computed } from 'vue';
 import { onMounted } from 'vue';
 import axios from "axios";
 
-
+const showProfile = ref(false);
 
 const isMobileMenuOpen = ref(false);
 const isMobileProductsMenuOpen = ref(false);
