@@ -1,24 +1,33 @@
 <template>
     <AuthenticatedLayout>
-        <Card>
-            <ProgressBar v-if="isSyncing" type="circle" :progress="progressbar" />
-            <PrimaryButton @click="syncSupplier" class="mb-3">
-                Sync Supplier
-            </PrimaryButton>
-            <Table :pagination="false" bordered size="small" :data-source="records.data" :columns="[
-                {
-                    title: 'Supplier Code',
-                    dataIndex: 'supplier_code',
-                },
-                {
-                    title: 'Supplier Name',
-                    dataIndex: 'name',
-                },
-            ]">
+        <div class="py-6 px-4 sm:px-6 lg:px-10">
+            <!-- Header -->
+            <div class=" mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Supplier</h1>
+                    <p class="mt-2 text-sm text-gray-600">Viewing the complete supplier list</p>
+                </div>
+            </div>
+            <Card>
+                <ProgressBar v-if="isSyncing" type="circle" :progress="progressbar" />
+                <PrimaryButton @click="syncSupplier" class="mb-3">
+                    Sync Supplier
+                </PrimaryButton>
+                <Table :pagination="false" bordered size="small" :data-source="records.data" :columns="[
+                    {
+                        title: 'Supplier Code',
+                        dataIndex: 'supplier_code',
+                    },
+                    {
+                        title: 'Supplier Name',
+                        dataIndex: 'name',
+                    },
+                ]">
 
-            </Table>
-            <Pagination :datarecords="records" class="mt-5" />
-        </Card>
+                </Table>
+                <Pagination :datarecords="records" class="mt-5" />
+            </Card>
+        </div>
     </AuthenticatedLayout>
 </template>
 
