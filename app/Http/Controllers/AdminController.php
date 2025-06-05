@@ -121,7 +121,6 @@ class AdminController extends Controller
     {
         $request->validate([
             'username' => 'required',
-            'password' => 'required',
             'firstname' => 'required',
             'lastname' => 'required',
             'middlename' => 'required',
@@ -135,9 +134,10 @@ class AdminController extends Controller
                 'Username is already taken, please try another username'
             );
         }
+        $password = Hash::make('NESA2025');
         User::create([
             'username' => $request->username,
-            'password' => Hash::make($request->password),
+            'password' => $password,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'middlename' => $request->middlename,
@@ -191,10 +191,6 @@ class AdminController extends Controller
             return back()->with('error', 'New and old password do not match, please try again.');
         }
 
-        if ($user->username === $request->username) {
-            return back()->with('error', 'No changes were made to the username.');
-        }
-
         $user->update([
             'username' => $request->username,
             'password' => Hash::make($request->password),
@@ -203,7 +199,7 @@ class AdminController extends Controller
         return back()->with('success', 'Credentials updated successfully.');
     }
 
-    public function setupUser()
+    public function setupUser(Request $request)
     {
         $usertype = DB::table('user_types')->select('id', 'name')->get();
         $businessUnit = DB::table('business_units')->select('id', 'name')->get();
@@ -222,6 +218,12 @@ class AdminController extends Controller
         )
             ->join('user_types', 'user_types.id', '=', 'users.usertype')
             ->join('business_units', 'business_units.id', '=', 'users.bu')
+            ->when($request->search, function ($query, $search) {
+                $query->where('users.username', 'like', '%' . $search . '%')
+                    ->orWhere('users.firstname', 'like', '%' . $search . '%')
+                    ->orWhere('users.lastname', 'like', '%' . $search . '%')
+                    ->orWhere('users.name_extention', 'like', '%' . $search . '%');
+            })
             ->orderByDesc('users.id')
             ->paginate(10)
             ->withQueryString();
@@ -235,7 +237,8 @@ class AdminController extends Controller
             'users' => $users,
             'columns' => $columns,
             'usertype' => $usertype,
-            'businessUnit' => $businessUnit
+            'businessUnit' => $businessUnit,
+            'search' => $request->search
         ]);
     }
 

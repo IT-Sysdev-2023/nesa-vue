@@ -9,7 +9,7 @@
                 <div class="mt-5">
                     <a-card>
                         <div class="flex justify-end">
-                            <input type="text"
+                            <input type="text" v-model="search"
                                 class="w-[300px] border border-gray-300 rounded-md mb-2 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="Search User" />
                         </div>
@@ -63,7 +63,7 @@
             </div>
         </div>
         <!-- update modal  -->
-        <a-modal v-model:open="updateModal" title="Update User Credentials" class="w-full">
+        <a-modal v-model:open="updateModal" title="Update User Credentials">
             <div class="space-y-4 mt-10">
                 <!-- Username -->
                 <div>
@@ -323,7 +323,7 @@
 import Pagination from '@/Components/Pagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { createVNode } from 'vue';
 import { Modal, notification } from 'ant-design-vue'
@@ -357,9 +357,10 @@ const props = defineProps<{
     users: {
         data: User[]
     }
-    columns
-    usertype: Usertype[]
-    businessUnit: Businessunit[]
+    columns;
+    search: string;
+    usertype: Usertype[];
+    businessUnit: Businessunit[];
 }>();
 
 const updateForm = useForm({
@@ -457,5 +458,17 @@ const getUserDetails = async (query: string) => {
     });
     console.log(response.data.data.employee[0]);
     userData.value = response.data.data.employee[0];
-}
+};
+const search = ref<string>(props.search);
+const searchFunction = () => {
+    router.get(route('admin.setupUser'), {
+        search: search.value
+    }, {
+        preserveState: true,
+        preserveScroll: true
+    });
+};
+watch(() => search.value, () => {
+    searchFunction();
+})
 </script>
