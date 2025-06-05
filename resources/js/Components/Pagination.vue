@@ -9,13 +9,13 @@
     <div>
       <div class="inline-flex gap-[1px]">
         <template v-for="(link, key) in datarecords.links" :key="`link-${key}`">
-          <button
+          <button style="box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;"
             @click="paginate(link)"
             v-html="link.label"
-            class="px-3 py-1 border rounded-sm text-sm font-medium transition-colors"
+            class="px-3 py-1 border rounded-md text-sm font-medium transition-colors"
             :class="{
-              'bg-blue-600 text-white border-blue-600': link.active,
-              'bg-white text-gray-700 border-gray-300 hover:bg-gray-50': !link.active
+              ' bg-blue-600 text-white border-blue-500': link.active,
+              'bg-white border-gray-300 hover:bg-gray-200': !link.active
             }"
           />
         </template>

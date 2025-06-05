@@ -60,4 +60,9 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function about()
+    {
+        return inertia('Pages/About-Setup');
+    }
 }

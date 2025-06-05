@@ -14,12 +14,10 @@
             </div>
 
             <div class="flex items-center flex-col">
-                <p class="text-black font-Roboto-md">{{ page.auth.user.firstname }} {{
-                    page.auth.user.middlename }}. {{ page.auth.user.lastname }}</p>
-                <p v-if="userTypes" class="text-xs text-gray-500 font-medium">
+                <p class="text-black font-Roboto-md">{{ fullName }}</p>
+                <p v-if="userTypes" class="text-md text-gray-600 ">
                     {{ userTypes.name }}
                 </p>
-
             </div>
 
             <div class="flex flex-col items-center gap-2 w-full px-4">
@@ -30,7 +28,6 @@
                 <button @click="logout"
                     class="w-full bg-blue-900 text-white text-[15px] px-4 py-2 rounded-full flex justify-center items-center gap-1 shadow hover:bg-blue-800 transition">
                     Logout
-                    <LogoutOutlined />
                 </button>
             </div>
 
@@ -85,7 +82,7 @@ const userNameFormat = computed(() => {
     return `${page.auth.user.lastname.toLowerCase()}, ${page.auth.user.firstname.toLowerCase()}`;
 });
 const value = ref<string>(userNameFormat.value);
-
+const fullName = ref<string>('');
 const userImageData = ref<string>('');
 const userImage = async () => {
     const response = await axios.get('http://172.16.161.34/api/gc/filter/employee/name', {
@@ -94,6 +91,7 @@ const userImage = async () => {
         }
     });
     userImageData.value = response.data.data.employee[0].employee_photo;
+    fullName.value = response.data.data.employee[0].employee_name
 };
 onMounted(() => {
     userImage();

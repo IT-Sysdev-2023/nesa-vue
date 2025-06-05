@@ -27,7 +27,6 @@
                             <p v-if="errors.firstname" class="text-red-500 text-sm mt-1">{{ errors.firstname }}</p>
                         </div>
 
-
                         <!-- Middle Name -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Middlename</label>
@@ -61,7 +60,7 @@
                                     : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                             ]">
                                 <option v-for="item in props.businessUnit" :key="item.id" :value="item.id">{{ item.name
-                                    }}
+                                }}
                                 </option>
                             </select>
                             <p v-if="errors.businessUnit" class="text-red-600 text-sm mt-1">{{ errors.businessUnit }}
@@ -125,7 +124,6 @@
                     </div>
                 </div>
                 <div class="mt-6 space-y-4">
-                    <!-- Submit Button -->
                     <div class="flex justify-end mt-8">
                         <button @click="cancelButton" type="button"
                             class="px-6 py-2 mr-4 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">

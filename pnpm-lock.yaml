@@ -17,9 +17,12 @@ importers:
       consola:
         specifier: ^3.4.2
         version: 3.4.2
+<<<<<<< HEAD
       console:
         specifier: ^0.7.2
         version: 0.7.2
+=======
+>>>>>>> 6755714b7234fd369194f5365556a138a932af29
     devDependencies:
       '@inertiajs/vue3':
         specifier: ^2.0.11

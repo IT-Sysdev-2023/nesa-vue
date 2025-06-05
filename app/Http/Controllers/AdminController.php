@@ -10,10 +10,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\ColumnHelper;
 
 class AdminController extends Controller
 {
-    //
+    public function about()
+    {
+        return inertia('About-Setup');
+    }
+
     public function masterFile(Request $request)
     {
         $query = Product::query()
@@ -165,6 +170,13 @@ class AdminController extends Controller
 
     public function updateCredentials(Request $request)
     {
+        $request->validate([
+            'username' => 'required',
+            'oldPassword' => 'required',
+            'password' => 'required',
+            'confirmPassword' => 'required'
+        ]);
+
         $user = User::findOrFail($request->id);
 
         if (!Hash::check($request->oldPassword, $user->password)) {
@@ -189,5 +201,96 @@ class AdminController extends Controller
         ]);
 
         return back()->with('success', 'Credentials updated successfully.');
+    }
+
+    public function setupUser()
+    {
+        $usertype = DB::table('user_types')->select('id', 'name')->get();
+        $businessUnit = DB::table('business_units')->select('id', 'name')->get();
+
+        $users = User::select(
+            'users.id',
+            'users.username',
+            'users.firstname',
+            'users.lastname',
+            'users.middlename',
+            'users.name_extention',
+            'users.usertype',
+            'users.bu',
+            'user_types.name as userType',
+            'business_units.name as businessUnit'
+        )
+            ->join('user_types', 'user_types.id', '=', 'users.usertype')
+            ->join('business_units', 'business_units.id', '=', 'users.bu')
+            ->orderByDesc('users.id')
+            ->paginate(10)
+            ->withQueryString();
+
+        $columns = array_map(
+            fn($name, $field) => ColumnHelper::arrayHelper($name, $field),
+            ['Username', 'Firstname', 'Middlename', 'Lastname', 'Name Extention', 'Business Unit', 'Usertype', 'Actions'],
+            ['username', 'firstname', 'middlename', 'lastname', 'name_extention', 'businessUnit', 'userType', 'action']
+        );
+        return inertia('AdminSetup/SetupUser-Setup', [
+            'users' => $users,
+            'columns' => $columns,
+            'usertype' => $usertype,
+            'businessUnit' => $businessUnit
+        ]);
+    }
+
+    public function deleteUserAccount(Request $request)
+    {
+        User::where('id', $request->id)->delete();
+    }
+
+    public function updateUserDetails(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'username' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'middlename' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'businessUnit' => 'required|integer',
+            'usertype' => 'required|integer',
+        ]);
+
+        $user = User::findOrFail($request->id);
+
+        $changesDetected =
+            $user->username !== $request->username ||
+            $user->firstname !== $request->firstname ||
+            $user->middlename !== $request->middlename ||
+            $user->lastname !== $request->lastname ||
+            $user->bu != $request->businessUnit ||
+            $user->usertype != $request->usertype ||
+            $user->name_extention !== $request->nameExtention;
+
+        if (!$changesDetected) {
+            return back()->with('error', 'No changes detected. Please make updates before submitting.');
+        }
+
+        if ($user->username !== $request->username) {
+            $exists = User::where('username', $request->username)
+                ->where('id', '!=', $request->id)
+                ->exists();
+
+            if ($exists) {
+                return back()->with('error', 'The username is already taken.');
+            }
+        }
+
+        $user->update([
+            'username' => $request->username,
+            'firstname' => $request->firstname,
+            'middlename' => $request->middlename,
+            'lastname' => $request->lastname,
+            'bu' => $request->businessUnit,
+            'usertype' => $request->usertype,
+            'name_extention' => $request->nameExtention
+        ]);
+
+        return back()->with('success', 'User credentials updated successfully.');
     }
 }

@@ -39,6 +39,14 @@ Route::middleware('auth')->group(function () {
             Route::get('userType', [AdminController::class, 'userType'])->name('userType');
             Route::get('view-profile', [AdminController::class, 'viewProfile'])->name('viewProfile');
             Route::post('update-credentials', [AdminController::class, 'updateCredentials'])->name('updateCredentials');
+
+            // setup user routes 
+            Route::get('setup-user', [AdminController::class, 'setupUser'])->name('setupUser');
+            Route::post('delete-user-account', [AdminController::class, 'deleteUserAccount'])->name('deleteUserAccount');
+            Route::post('update-user-details', [AdminController::class, 'updateUserDetails'])->name('updateUserDetails');
+
+            // about route 
+            Route::get('about', [AdminController::class, 'about'])->name('about');
         });
     });
 });
