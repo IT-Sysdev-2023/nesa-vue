@@ -28,11 +28,8 @@
     "dependencies": {
         "@ant-design/icons-vue": "^7.0.1",
         "ant-design-vue": "4.0.0-rc.6",
-<<<<<<< HEAD
         "consola": "^3.4.2",
         "console": "^0.7.2"
-=======
-        "consola": "^3.4.2"
->>>>>>> 6755714b7234fd369194f5365556a138a932af29
+
     }
 }
