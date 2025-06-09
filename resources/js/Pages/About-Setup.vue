@@ -1,6 +1,7 @@
 <template>
     <AuthenticatedLayout>
-        <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div v-if="groupedEmployees.supervised.length > 0 || groupedEmployees.programmers.length > 0 || groupedEmployees.analysts.length > 0"
+            class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
             <!-- Header -->
             <div class="mb-12 text-center">
                 <h1 class="text-4xl font-bold text-gray-900">Our Team</h1>
@@ -169,6 +170,17 @@
                         </div>
                     </div>
                 </section>
+            </div>
+        </div>
+        <div v-else class="py-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+            <div>
+                <a-skeleton avatar :paragraph="{ rows: 4 }" />
+            </div>
+            <div>
+                <a-skeleton avatar :paragraph="{ rows: 4 }" />
+            </div>
+            <div>
+                <a-skeleton avatar :paragraph="{ rows: 4 }" />
             </div>
         </div>
     </AuthenticatedLayout>

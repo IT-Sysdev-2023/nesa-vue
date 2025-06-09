@@ -10,10 +10,11 @@
             </div>
             <Card>
                 <ProgressBar v-if="isSyncing" type="circle" :progress="progressbar" />
-                <PrimaryButton @click="syncSupplier" class="mb-3">
+                <button @click="syncSupplier"
+                    class="mb-3 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white rounded-md">
                     Sync Supplier
-                </PrimaryButton>
-                <Table :pagination="false" bordered size="small" :data-source="records.data" :columns="[
+                </button>
+                <a-table :pagination="false" bordered size="small" :data-source="records.data" :columns="[
                     {
                         title: 'Supplier Code',
                         dataIndex: 'supplier_code',
@@ -24,7 +25,7 @@
                     },
                 ]">
 
-                </Table>
+                </a-table>
                 <Pagination :datarecords="records" class="mt-5" />
             </Card>
         </div>
@@ -32,18 +33,17 @@
 </template>
 
 <script setup>
-import { Card, Table, Button, Input } from 'ant-design-vue';
+import { Card } from 'ant-design-vue';
 import Pagination from '@/Components/Pagination.vue';
 import ProgressBar from '@/Components/ProgressBar.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { router, usePage } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 
 const props = defineProps({
     records: Object
-})
+});
 const page = usePage().props;
 
 const progressbar = ref([]);
@@ -64,7 +64,7 @@ const syncSupplier = () => {
             isSyncing.value = false;
         }
     })
-}
+};
 
 onMounted(() => {
     console.log(page.auth.user.id);
@@ -73,9 +73,5 @@ onMounted(() => {
             progressbar.value = e;
         });
 
-})
-
-
-
-
+});
 </script>

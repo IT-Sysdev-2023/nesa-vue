@@ -22,11 +22,11 @@
 
             <div class="flex flex-col items-center gap-2 w-full px-4">
                 <button @click="viewProfileButton"
-                    class="w-full bg-blue-900 text-white text-[15px] px-4 py-2 rounded-full flex justify-center items-center gap-1 shadow hover:bg-blue-800 transition">
+                    class="w-full bg-blue-600 text-white text-[15px] px-4 py-2 rounded-full flex justify-center items-center gap-1 shadow hover:bg-blue-700 transition">
                     View Profile
                 </button>
                 <button @click="logout"
-                    class="w-full bg-blue-900 text-white text-[15px] px-4 py-2 rounded-full flex justify-center items-center gap-1 shadow hover:bg-blue-800 transition">
+                    class="w-full bg-blue-600 text-white text-[15px] px-4 py-2 rounded-full flex justify-center items-center gap-1 shadow hover:bg-blue-700 transition">
                     Logout
                 </button>
             </div>

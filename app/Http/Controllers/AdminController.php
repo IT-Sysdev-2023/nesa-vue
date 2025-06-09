@@ -243,6 +243,7 @@ class AdminController extends Controller
             ->join('business_units', 'business_units.id', '=', 'users.bu')
             ->when($request->search, function ($query, $search) {
                 $query->where('users.username', 'like', '%' . $search . '%')
+                    ->orWhere('users.middlename', 'like', '%' . $search . '%')
                     ->orWhere('users.firstname', 'like', '%' . $search . '%')
                     ->orWhere('users.lastname', 'like', '%' . $search . '%')
                     ->orWhere('users.name_extention', 'like', '%' . $search . '%');

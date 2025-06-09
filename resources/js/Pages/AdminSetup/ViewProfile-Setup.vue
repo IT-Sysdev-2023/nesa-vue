@@ -171,8 +171,8 @@
 
                             <!-- Password Form -->
                             <div v-if="credentialsTab === 'password'" class="mt-6">
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div>
+                                <div class="flex flex-col sm:flex-row gap-4 items-end">
+                                    <div class="flex-1">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Old Password</label>
                                         <input @keyup.enter="updatePassword" type="password" v-model="form.oldPassword"
                                             :class="[
@@ -185,7 +185,7 @@
                                             errors.oldPassword }}</p>
                                     </div>
 
-                                    <div>
+                                    <div class="flex-1">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
                                         <input @keyup.enter="updatePassword" type="password" v-model="form.password"
                                             :class="[
@@ -198,7 +198,7 @@
                                         }}</p>
                                     </div>
 
-                                    <div>
+                                    <div class="flex-1">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Confirm
                                             Password</label>
                                         <input @keyup.enter="updatePassword" type="password"
@@ -212,7 +212,7 @@
                                             errors.confirmPassword }}</p>
                                     </div>
                                 </div>
-                                <div class="mt-10 ml-3">
+                                <div class="mt-10">
                                     <button @click="updatePassword"
                                         class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                         Update Password

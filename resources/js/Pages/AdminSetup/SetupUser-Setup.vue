@@ -19,8 +19,8 @@
                                 <template v-if="column.dataIndex === 'action'">
                                     <div class="flex gap-2">
                                         <button @click="updateButton(record)" title="Update"
-                                            class="px-2 py-1 text-sm font-medium text-green-600 bg-green-100 rounded-md hover:bg-green-300 border border-green-200 transition-all duration-200">
-                                            <svg class="w-6 h-6 text-green-800 dark:text-green" aria-hidden="true"
+                                            class="flex items-center gap-2 px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors">
+                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="currentColor" viewBox="0 0 24 24">
                                                 <path fill-rule="evenodd"
@@ -32,26 +32,25 @@
                                             </svg>
                                         </button>
                                         <button @click="deleteButton(record)" title="Delete"
-                                            class="px-2 py-1 text-sm font-medium text-red-600 bg-red-100 rounded-md hover:bg-red-300 border border-red-200 transition-all duration-200">
-                                            <svg class="w-6 h-6 text-red-800 dark:text-red" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                            class="flex items-center gap-2 px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors">
+                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="currentColor" viewBox="0 0 24 24">
                                                 <path fill-rule="evenodd"
                                                     d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z"
                                                     clip-rule="evenodd" />
                                             </svg>
-
                                         </button>
                                         <button title="View" @click="viewButton(record)"
-                                            class="px-2 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-md hover:bg-blue-300 border border-blue-200 transition-all duration-200">
-                                            <svg class="w-6 h-6 text-blue-800 dark:text-blue" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                                viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-width="2"
-                                                    d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-                                                <path stroke="currentColor" stroke-width="2"
-                                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                            class="flex items-center gap-2 px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors">
+                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="currentColor" viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M4.998 7.78C6.729 6.345 9.198 5 12 5c2.802 0 5.27 1.345 7.002 2.78a12.713 12.713 0 0 1 2.096 2.183c.253.344.465.682.618.997.14.286.284.658.284 1.04s-.145.754-.284 1.04a6.6 6.6 0 0 1-.618.997 12.712 12.712 0 0 1-2.096 2.183C17.271 17.655 14.802 19 12 19c-2.802 0-5.27-1.345-7.002-2.78a12.712 12.712 0 0 1-2.096-2.183 6.6 6.6 0 0 1-.618-.997C2.144 12.754 2 12.382 2 12s.145-.754.284-1.04c.153-.315.365-.653.618-.997A12.714 12.714 0 0 1 4.998 7.78ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                                                    clip-rule="evenodd" />
                                             </svg>
+
                                         </button>
                                     </div>
                                 </template>
@@ -63,7 +62,7 @@
             </div>
         </div>
         <!-- update modal  -->
-        <a-modal v-model:open="updateModal" title="Update User Credentials">
+        <a-modal v-model:open="updateModal" width="50%" title="Update User Credentials">
             <div class="space-y-4 mt-10">
                 <!-- Username -->
                 <div>
