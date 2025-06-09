@@ -158,7 +158,7 @@
                                                     : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                                             ]" />
                                         <p v-if="errors.username" class="text-red-600 text-sm mt-1">{{ errors.username
-                                            }}</p>
+                                        }}</p>
                                     </div>
                                 </div>
                                 <div class="mt-10">
@@ -195,7 +195,7 @@
                                                     : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                                             ]" />
                                         <p v-if="errors.password" class="text-red-600 text-sm mt-1">{{ errors.password
-                                            }}</p>
+                                        }}</p>
                                     </div>
 
                                     <div>
@@ -275,10 +275,11 @@
                     Confirm your password
                 </label>
                 <div class="relative mb-4">
-                    <input @keyup.enter="updateUsername" v-model="ConfirmPassword.password" type="password" placeholder="Enter your password" :class="['w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
-                        errors.confirmPass ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-                    ]" />
+                    <input @keyup.enter="updateUsername" v-model="ConfirmPassword.password" type="password"
+                        placeholder="Enter your password" :class="['w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
+                            errors.confirmPass ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                                : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                        ]" />
                 </div>
                 <p v-if="errors.confirmPass" class="text-red-600 text-sm mt-1">{{ errors.confirmPass }}</p>
                 <p class="text-xs text-gray-500 mt-5 leading-relaxed">
@@ -293,10 +294,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
-import { onMounted } from 'vue';
+import { onMounted, createVNode } from 'vue';
 import axios from "axios";
 import { router } from '@inertiajs/vue3';
-import { notification } from 'ant-design-vue';
+import { Modal, notification } from 'ant-design-vue';
+import { ExclamationCircleFilled } from '@ant-design/icons-vue';
 
 const page = usePage().props as unknown as PageProps;
 const pages = usePage();
@@ -346,25 +348,35 @@ onMounted(() => {
 });
 
 const updatePassword = () => {
-    router.post(route('admin.updatePassword'), {
-        oldPassword: form.oldPassword,
-        password: form.password,
-        confirmPassword: form.confirmPassword,
-        id: page.auth.user.id
-    }, {
-        onSuccess: (page: any) => {
-            if (page.props.flash.success) {
-                notification.success({
-                    message: 'Success',
-                    description: page.props.flash.success
-                });
-                form.reset();
-            } else if (page.props.flash.error) {
-                notification.error({
-                    message: 'Failed',
-                    description: page.props.flash.error
-                });
-            }
+    Modal.confirm({
+        title: 'Confirmation',
+        icon: createVNode(ExclamationCircleFilled),
+        content: 'Are you sure to update your password ?',
+        onOk: () => {
+            router.post(route('admin.updatePassword'), {
+                oldPassword: form.oldPassword,
+                password: form.password,
+                confirmPassword: form.confirmPassword,
+                id: page.auth.user.id
+            }, {
+                onSuccess: (page: any) => {
+                    if (page.props.flash.success) {
+                        notification.success({
+                            message: 'Success',
+                            description: page.props.flash.success
+                        });
+                        form.reset();
+                    } else if (page.props.flash.error) {
+                        notification.error({
+                            message: 'Failed',
+                            description: page.props.flash.error
+                        });
+                    }
+                }
+            });
+        },
+        onCancel: () => {
+            console.log('cancel');
         }
     });
 };
