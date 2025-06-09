@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NesaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WeatherController;
 use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('dashboard-info', [DashboardController::class, 'dashboardInfo'])->name('dashboardInfo');
+    Route::get('weather-forecast', [WeatherController::class, 'fetchWeather'])->name('fetchWeather');
 });
 
 Route::middleware('auth')->group(function () {

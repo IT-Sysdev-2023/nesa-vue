@@ -111,7 +111,7 @@
                             </div>
                         </div>
 
-                        <button 
+                        <button
                             class="flex items-center gap-1 text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">
                             <Link :href="route('admin.about')"><span>About</span></Link>
                         </button>
@@ -236,6 +236,26 @@
             </div>
         </div>
     </nav>
+    <!-- Float Button  -->
+    <a-popover trigger="click">
+        <template #content>
+            <weather-forecast-setup />
+        </template>
+        <a-float-button type="primary">
+            <template #icon>
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path fill="currentColor"
+                        d="M5.99997 17c-.55229 0-1 .4477-1 1s.44771 1 1 1h.01c.55228 0 1-.4477 1-1s-.44772-1-1-1h-.01ZM18 17c-.5523 0-1 .4477-1 1s.4477 1 1 1h.01c.5523 0 1-.4477 1-1s-.4477-1-1-1H18Z" />
+                    <path fill="currentColor" fill-rule="evenodd"
+                        d="M12 13c.5523 0 1 .4477 1 1v.5858l.4142-.4142c.3905-.3905 1.0237-.3905 1.4142 0 .3905.3905.3905 1.0237 0 1.4142L14.4141 16l.5859.0001c.5523 0 1 .4477 1 1s-.4478 1-1.0001 1L14.4141 18l.4143.4143c.3905.3906.3905 1.0237 0 1.4142-.3906.3906-1.0237.3905-1.4143 0L13 19.4143v.5858c0 .5522-.4477 1-1 1s-1-.4478-1-1v-.5859l-.4143.4142c-.3905.3906-1.02365.3906-1.41417 0-.39053-.3905-.39053-1.0236 0-1.4142L9.58571 18l-.58572.0001c-.55228 0-1.00001-.4477-1.00002-1-.00001-.5523.44769-1 .99998-1L9.58571 16l-.41416-.4141c-.39054-.3905-.39056-1.0237-.00005-1.4142.39052-.3905 1.0237-.3906 1.4142 0l.4143.4142V14c0-.5523.4477-1 1-1Z"
+                        clip-rule="evenodd" />
+                    <path fill="currentColor"
+                        d="M9.21869 3.96216c1.18841-.77809 2.61801-1.10041 4.02531-.90756 1.4073.19285 2.6974.88787 3.6327 1.95696.8431.96375 1.3466 2.17293 1.4406 3.44244.6029.16797 1.1584.48908 1.6088.93946C20.6137 10.0811 21 11.0137 21 11.9862c0 .9449-.3677 1.9573-1.0739 2.6636-.6417.6416-1.4561.9281-2.2516.9899-.1439-.2824-.3312-.539-.5532-.761 0-.7677-.2929-1.5355-.8787-2.1213-.5858-.5858-1.3535-.8787-2.1213-.8787-.5429-.5429-1.2929-.8786-2.1213-.8786-.8285 0-1.5785.3358-2.12139.8787-.76778 0-1.53555.2929-2.12133.8788-.58574.5857-.87861 1.3535-.87862 2.1212-.18576.1858-.34727.3958-.47938.6249-.77455-.2033-1.48895-.6091-2.06499-1.1851C3.47996 13.4642 3 12.3055 3 11.0973c0-1.1581.38455-2.34287 1.27157-3.22989.74279-.74279 1.74607-1.18271 2.75928-1.2962.45424-1.06098 1.21293-1.97073 2.18784-2.60905Z" />
+                </svg>
+            </template>
+        </a-float-button>
+    </a-popover>
     <!-- Content  -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mt-5"></div>
@@ -244,12 +264,12 @@
     <!-- Footer -->
     <div class="mt-10 py-6 border-t border-gray-100">
         <div class="flex flex-col items-center justify-center gap-4 text-center">
-            <div class="text-sm text-gray-500">
+            <div class="text-sm text-gray-700">
                 © {{ dayjs().year() }} Near Expiry Stock Advice (NESA)
             </div>
 
             <div class="flex flex-col items-center gap-2">
-                <p class="text-xs text-gray-400">Powered by</p>
+                <p class="text-xs text-gray-600">Powered by</p>
                 <div class="flex items-center justify-center gap-4">
                     <div class="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <svg class="w-5 h-5 text-red-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -278,6 +298,47 @@
                                 d="m19.102 16.163-.272.183c-2.557 1.74-4.169 2.64-4.698 2.935a4.083 4.083 0 0 1-2 .53 3.946 3.946 0 0 1-1.983-.535 3.788 3.788 0 0 1-1.36-1.361 3.752 3.752 0 0 1-.51-1.85 1.812 1.812 0 0 1-.043-.26V9.143c0-.024.009-.046.01-.07-.056.02-.11.043-.162.07a1.796 1.796 0 0 0-.787 1.516v6.377a10.67 10.67 0 0 0 1.113 4.27 10.11 10.11 0 0 0 8.505-.53 10.022 10.022 0 0 0 3.282-2.858 9.936 9.936 0 0 0 1.75-3.97 19.615 19.615 0 0 1-2.845 2.216Z" />
                         </svg>
                     </div>
+                    <div class="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 128 128">
+                            <defs>
+                                <linearGradient id="deviconAntdesign0" x1=".621" x2="1.082" y1="0" y2=".379"
+                                    gradientTransform="matrix(94.54297 0 0 127.17188 .418 .406)"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#4285eb" />
+                                    <stop offset="1" stop-color="#2ec7ff" />
+                                </linearGradient>
+                                <linearGradient id="deviconAntdesign1" x1=".696" x2=".54" y1="0" y2="1.085"
+                                    gradientTransform="matrix(94.54297 0 0 127.17188 .418 .406)"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#29cdff" />
+                                    <stop offset=".379" stop-color="#148eff" />
+                                    <stop offset="1" stop-color="#0a60ff" />
+                                </linearGradient>
+                                <linearGradient id="deviconAntdesign2" x1=".697" x2=".167" y1="-.13" y2="1.174"
+                                    gradientTransform="matrix(31.49219 0 0 49.5586 96.176 39.402)"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#fa816e" />
+                                    <stop offset=".415" stop-color="#f74a5c" />
+                                    <stop offset="1" stop-color="#f51d2c" />
+                                </linearGradient>
+                                <linearGradient id="deviconAntdesign3" x1=".681" x2=".304" y1="-.357" y2="1.149"
+                                    gradientTransform="matrix(30.21094 0 0 30.1836 49.227 49.188)"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#fa8e7d" />
+                                    <stop offset=".513" stop-color="#f74a5c" />
+                                    <stop offset="1" stop-color="#f51d2c" />
+                                </linearGradient>
+                            </defs>
+                            <path fill="url(#deviconAntdesign0)"
+                                d="M58.617 2.672L2.676 58.566a7.672 7.672 0 0 0 0 10.868l55.941 55.894a7.684 7.684 0 0 0 10.871 0l23.457-23.437a6.891 6.891 0 0 0 0-9.746a6.9 6.9 0 0 0-9.754 0l-17.78 17.765c-.75.75-1.888.75-2.634 0L18.102 65.277c-.747-.75-.747-1.886 0-2.632l44.675-44.637c.746-.746 1.883-.746 2.633 0l17.781 17.765a6.9 6.9 0 0 0 9.754 0a6.891 6.891 0 0 0 0-9.746L69.492 2.594c-3.02-2.938-7.879-2.914-10.875.078Zm0 0" />
+                            <path fill="url(#deviconAntdesign1)"
+                                d="M58.617 2.672L2.676 58.566a7.672 7.672 0 0 0 0 10.868l55.941 55.894a7.684 7.684 0 0 0 10.871 0l23.457-23.437a6.891 6.891 0 0 0 0-9.746a6.9 6.9 0 0 0-9.754 0l-17.78 17.765c-.75.75-1.888.75-2.634 0L18.102 65.277c-.747-.75-.747-1.886 0-2.632l44.675-44.637c1.864-1.606 4.903-4.86 9.371-5.621c3.317-.567 6.946.68 10.883 3.734c-2.633-2.633-7.144-7.14-13.539-13.527c-3.02-2.938-7.879-2.914-10.875.078Zm0 0" />
+                            <path fill="url(#deviconAntdesign2)"
+                                d="M98.36 86.945a6.9 6.9 0 0 0 9.753 0l17.301-17.285a7.667 7.667 0 0 0 0-10.863l-17.453-17.379a6.91 6.91 0 0 0-9.762.012a6.884 6.884 0 0 0 0 9.746l11.79 11.777a1.826 1.826 0 0 1 0 2.629l-11.63 11.621a6.88 6.88 0 0 0 0 9.742Zm0 0" />
+                            <path fill="url(#deviconAntdesign3)" fill-rule="evenodd"
+                                d="M79.438 64.281c0-8.336-6.762-15.094-15.106-15.094c-8.34 0-15.105 6.758-15.105 15.094c0 8.332 6.765 15.09 15.105 15.09c8.344 0 15.106-6.758 15.106-15.09Zm0 0" />
+                        </svg>
+                    </div>
                 </div>
             </div>
         </div>
@@ -294,6 +355,8 @@ import { computed } from 'vue';
 import { onMounted } from 'vue';
 import axios from "axios";
 import dayjs from 'dayjs';
+import WeatherForecastSetup from './Weather-Forecast-Setup.vue';
+
 const showProfile = ref(false);
 
 const isMobileMenuOpen = ref(false);
