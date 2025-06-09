@@ -2,18 +2,19 @@
     <AuthenticatedLayout>
         <a-card>
             <div class="flex justify-end">
-                <a-button class="mb-2" @click="() => router.get(route('nesa.get.list'))">
+                <button class="mb-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    @click="() => router.get(route('nesa.get.list'))">
                     Back to list
-                </a-button>
+                </button>
             </div>
-            <a-table size="small" bordered :data-source="records" :columns="columns">
-
+            <a-table size="small" bordered :data-source="records.data" :columns="columns" :pagination="false">
             </a-table>
-
+            <Pagination :datarecords="props.records" class="mt-5" />
         </a-card>
     </AuthenticatedLayout>
 </template>
 <script setup lang="ts">
+import Pagination from '@/Components/Pagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
@@ -26,7 +27,9 @@ interface Nesa {
 }
 
 const props = defineProps<{
-    records: Nesa[]
+    records: {
+        data: Nesa[]
+    }
 }>();
 
 const columns = ref<any>([

@@ -56,7 +56,8 @@ class NesaController extends Controller
             ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
             ->join('business_units', 'business_units.id', '=', 'bu')
             ->where('nesa_requests.itemcode', $itemcode)
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return inertia('Nesa/NesaViewing', [
             'records' => $nesa
