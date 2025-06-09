@@ -12,6 +12,7 @@
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <h2 class="text-lg font-semibold text-gray-800 mb-6">User Information</h2>
                 <div class="flex justify-center mb-10">
+                    <!-- Search User  -->
                     <div class="w-full max-w-md">
                         <label class="block text-lg font-medium text-gray-700 mb-1 text-center">
                             Search User
@@ -123,8 +124,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-6 space-y-4">
-                    <div class="flex justify-end mt-8">
+                <div>
+                    <div class="flex justify-end mt-2">
                         <button @click="cancelButton" type="button"
                             class="px-6 py-2 mr-4 text-medium font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
                             Cancel
@@ -171,7 +172,8 @@ const forms = useForm({
     username: '',
     password: '',
     usertype: '',
-    businessUnit: ''
+    businessUnit: '',
+    employee_id: ''
 });
 const cancelButton = () => {
     router.get(route('dashboard'));
@@ -185,7 +187,8 @@ const submitButton = () => {
         username: forms.username,
         password: forms.password,
         usertype: forms.usertype,
-        businessUnit: forms.businessUnit
+        businessUnit: forms.businessUnit,
+        employee_id: forms.employee_id
 
     }, {
         onSuccess: (page: any) => {
@@ -213,6 +216,7 @@ interface Employee {
     lastname?: string;
     firstname?: string;
     middlename?: string;
+    employee_id: string
 };
 const options = ref<Employee[]>([]);
 const autoFillData = ref<Employee[]>([]);
@@ -222,6 +226,7 @@ const selectedName = computed(() => {
     forms.firstname = autoFillData.value[0]?.firstname || '';
     forms.lastname = autoFillData.value[0]?.lastname || '';
     forms.middlename = autoFillData.value[0]?.middlename || '';
+    forms.employee_id = autoFillData.value[0]?.employee_id || '';
 });
 
 const getUserInfo = async () => {
@@ -264,6 +269,7 @@ const getUserInfo = async () => {
                 lastname,
                 firstname,
                 middlename,
+                employee_id: employeeList[0].employee_id
             }];
         } else {
             options.value = [];

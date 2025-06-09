@@ -6,7 +6,7 @@
                 <div class="flex items-center">
                     <a href="#" class="flex items-center space-x-2">
 
-                        <img class="w-10 h-10" src="/storage/images/logo.png" alt="iamge">
+                        <img class="w-10 h-10" src="/storage/images/logo.png" alt="Nesa Logo">
                         <span class="text-xl font-bold text-gray-900">Nesa</span>
                     </a>
                 </div>
@@ -139,7 +139,7 @@
                                 <ProfileView />
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 </div>
 
                 <!-- Mobile menu button -->
@@ -217,7 +217,7 @@
                             User</a>
                     </div>
                     <div v-show="isMobileSetupMenuOpen" class="mt-2 space-y-1 pl-4">
-                        <a href="#"
+                        <a :href="route('admin.setupUser')"
                             class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">Setup
                             Users</a>
                     </div>
@@ -277,17 +277,22 @@ const showMasterfileDropdown = ref(false);
 function toggleDropdown() {
     showDropdown.value = !showDropdown.value;
     showMasterfileDropdown.value = false;
+    showSetupDropdown.value = false;
 }
 
 function toggleMasterfileDropdown() {
     showMasterfileDropdown.value = !showMasterfileDropdown.value;
     showDropdown.value = false;
+    showSetupDropdown.value = false;
 }
 
 const showSetupDropdown = ref(false);
 
 function toggleSetupDropdown() {
     showSetupDropdown.value = !showSetupDropdown.value;
+    showMasterfileDropdown.value = false;
+    showDropdown.value = false;
+
 }
 const page = usePage().props as unknown as PageProps;
 

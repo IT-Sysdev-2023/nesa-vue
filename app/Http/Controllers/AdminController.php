@@ -134,16 +134,16 @@ class AdminController extends Controller
                 'Username is already taken, please try another username'
             );
         }
-        $password = Hash::make('NESA2025');
         User::create([
             'username' => $request->username,
-            'password' => $password,
+            'password' => Hash::make('NESA2025'),
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'middlename' => $request->middlename,
             'name_extention' => $request->nameExtention,
             'usertype' => $request->usertype,
-            'bu' => $request->businessUnit
+            'bu' => $request->businessUnit,
+            'employee_id' => $request->employee_id
         ]);
         return back()->with(
             'success',
@@ -168,10 +168,9 @@ class AdminController extends Controller
         return inertia('AdminSetup/ViewProfile-Setup');
     }
 
-    public function updateCredentials(Request $request)
+    public function updatePassword(Request $request)
     {
         $request->validate([
-            'username' => 'required',
             'oldPassword' => 'required',
             'password' => 'required',
             'confirmPassword' => 'required'
@@ -192,11 +191,35 @@ class AdminController extends Controller
         }
 
         $user->update([
-            'username' => $request->username,
             'password' => Hash::make($request->password),
         ]);
 
-        return back()->with('success', 'Credentials updated successfully.');
+        return back()->with('success', 'Password updated successfully.');
+    }
+
+    public function updateUsername(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|max:255',
+            'confirmPass' => 'required'
+        ]);
+
+        $check = User::findOrFail($request->id);
+
+        if (!Hash::check($request->confirmPass, $check->password)) {
+            return back()->with('error', 'Confirm password is not correct, please try again');
+        }
+        if ($check->username === $request->username) {
+            return back()->with('error', 'The new username is the same as your current username');
+        }
+        if (User::where('username', $request->username)->where('id', '!=', $request->id)->exists()) {
+            return back()->with('error', 'Username is already taken, please try another username');
+        }
+
+        $check->update([
+            'username' => $request->username
+        ]);
+        return back()->with('success', 'Username updated successfully');
     }
 
     public function setupUser(Request $request)

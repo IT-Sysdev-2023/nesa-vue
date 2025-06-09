@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NesaController;
 use App\Http\Controllers\ProfileController;
 use App\Models\User;
@@ -20,6 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('dashboard-info', [DashboardController::class, 'dashboardInfo'])->name('dashboardInfo');
 });
 
 Route::middleware('auth')->group(function () {
@@ -38,7 +40,8 @@ Route::middleware('auth')->group(function () {
             // usertype and user profile routes
             Route::get('userType', [AdminController::class, 'userType'])->name('userType');
             Route::get('view-profile', [AdminController::class, 'viewProfile'])->name('viewProfile');
-            Route::post('update-credentials', [AdminController::class, 'updateCredentials'])->name('updateCredentials');
+            Route::post('update-credentials', [AdminController::class, 'updatePassword'])->name('updatePassword');
+            Route::post('update-username', [AdminController::class, 'updateUsername'])->name('updateUsername');
 
             // setup user routes 
             Route::get('setup-user', [AdminController::class, 'setupUser'])->name('setupUser');

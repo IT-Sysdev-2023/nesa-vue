@@ -12,20 +12,22 @@
                 <Table bordered :pagination="false" size="small" :data-source="records" :columns="columns">
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key == 'action'">
-                            <a-button type="primary" size="small" class="mr-1"
+                            <div class="flex gap-4">
+                                <button size="small"class="px-6 py-2 text-medium font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
                                 @click="() => router.get(route('nesa.view.list', record.itemcode))">
                                 View
-                            </a-button>
-                            <a-button size="small" class="mr-1">
+                            </button>
+                            <button size="small"class="px-6 py-2 text-medium font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
                                 Tag
-                            </a-button>
+                            </button>
+                            </div>
                         </template>
                     </template>
                 </Table>
 
-                <a-button class="mr-1 mt-1" @click="() => router.get(route('nesa.send.email'))">
+                <button class="mr-1 mt-1" @click="() => router.get(route('nesa.send.email'))">
                     Send Email
-                </a-button>
+                </button>
             </Card>
         </div>
     </AuthenticatedLayout>

@@ -1,15 +1,9 @@
-<script setup lang="ts">
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-</script>
-
 <template>
 
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
         <div class="py-6 px-4 sm:px-6 lg:px-10">
-            <!-- Header -->
             <div class=" mb-8">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
@@ -31,7 +25,8 @@ import { Head } from '@inertiajs/vue3';
                         </div>
                         <div class="ml-4">
                             <h3 class="text-sm font-medium text-gray-500">Total Users</h3>
-                            <p class="text-2xl font-semibold text-gray-900">1,256</p>
+                            <p v-if="usersCount" class="text-2xl font-semibold text-gray-900">{{ usersCount }}</p>
+                            <p v-else class="text-lg font-semibold text-gray-900">Counting...</p>
                             <p class="text-xs text-green-600 mt-1">+12.5% from last month</p>
                         </div>
                     </div>
@@ -187,12 +182,28 @@ import { Head } from '@inertiajs/vue3';
                     </div>
                 </div>
             </div>
-
-
         </div>
     </AuthenticatedLayout>
 </template>
+<script setup lang="ts">
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
+import { ref } from 'vue';
+import axios from 'axios';
 
-<script setup>
-
+const info = ref<[] | null>(null);
+const usersCount = ref<number | null>(null);
+const fetchingInfo = async () => {
+    try {
+        const response = await axios.get(route('dashboardInfo'));
+        info.value = response.data.user
+        usersCount.value = response.data.usersCount
+    } catch (error) {
+        console.log(error);
+    }
+};
+onMounted(() => {
+    fetchingInfo();
+});
 </script>

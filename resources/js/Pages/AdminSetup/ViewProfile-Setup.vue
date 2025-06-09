@@ -1,7 +1,6 @@
 <template>
     <AuthenticatedLayout>
         <div class="py-6 px-4 sm:px-6 lg:px-10">
-            <!-- Header (unchanged as requested) -->
             <div class="mb-8">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">User Profile</h1>
@@ -108,9 +107,9 @@
                     </div>
                 </div>
 
-                <!--Update User Credentials -->
+                <!-- Credentials form  -->
                 <div v-if="activeTab === 'credentials'" class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="flex flex-col sm:flex-row gap-8 items-start">
+                    <div class="flex flex-col sm:flex-row gap-12 items-start">
                         <!-- Profile Image Section -->
                         <div class="flex flex-col items-center md:items-start text-center md:text-left">
                             <div v-if="userDetails" class="flex flex-col items-center">
@@ -128,71 +127,101 @@
                             </div>
                         </div>
 
-                        <!-- Credentials Form -->
-                        <div class="flex-1">
+                        <!-- Credentials Content -->
+                        <div class="flex-1 w-full">
                             <h3 class="text-lg font-medium text-gray-900 mb-5">Update Credentials</h3>
+                            <nav class="-mb-px flex space-x-8">
+                                <button @click="credentialsTab = 'username'" :class="{
+                                    'border-blue-500 text-blue-600': credentialsTab === 'username',
+                                    'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': credentialsTab !== 'username'
+                                }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                    Update Username
+                                </button>
+                                <button @click="credentialsTab = 'password'" :class="{
+                                    'border-blue-500 text-blue-600': credentialsTab === 'password',
+                                    'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': credentialsTab !== 'password'
+                                }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                    Update Password
+                                </button>
+                            </nav>
 
-                            <div class="space-y-4 mb-5">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                                    <input type="text" v-model="page.auth.user.username" :class="[
-                                        'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
-                                        errors.username
-                                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-                                    ]" />
-                                    <p v-if="errors.username" class="text-red-600 text-sm mt-1">{{ errors.username }}
-                                    </p>
+                            <!-- Username Form -->
+                            <div v-if="credentialsTab === 'username'" class="mt-6">
+                                <div class="flex flex-col sm:flex-row gap-4 items-end">
+                                    <div class="flex-1">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                                        <input @keyup.enter="updateModal = true;" type="text"
+                                            v-model="page.auth.user.username" :class="[
+                                                'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
+                                                errors.username
+                                                    ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                            ]" />
+                                        <p v-if="errors.username" class="text-red-600 text-sm mt-1">{{ errors.username
+                                            }}</p>
+                                    </div>
                                 </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Old Password</label>
-                                    <input type="password" v-model="form.oldPassword" :class="[
-                                        'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
-                                        errors.oldPassword
-                                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-                                    ]" />
-                                    <p v-if="errors.oldPassword" class="text-red-600 text-sm mt-1">{{ errors.oldPassword
-                                        }}</p>
-
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                                    <input type="password" v-model="form.password" :class="[
-                                        'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
-                                        errors.password
-                                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-                                    ]" />
-                                    <p v-if="errors.password" class="text-red-600 text-sm mt-1">{{ errors.password }}
-                                    </p>
-
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-                                    <input type="password" v-model="form.confirmPassword" :class="[
-                                        'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
-                                        errors.confirmPassword
-                                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-                                    ]" />
-                                    <p v-if="errors.confirmPassword" class="text-red-600 text-sm mt-1">{{
-                                        errors.confirmPassword }}</p>
-
+                                <div class="mt-10">
+                                    <button @click="updateModal = true;"
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 whitespace-nowrap">
+                                        Update Username
+                                    </button>
                                 </div>
                             </div>
 
-                            <button @click="updateButton"
-                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                Update Credentials
-                            </button>
+                            <!-- Password Form -->
+                            <div v-if="credentialsTab === 'password'" class="mt-6">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Old Password</label>
+                                        <input @keyup.enter="updatePassword" type="password" v-model="form.oldPassword"
+                                            :class="[
+                                                'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
+                                                errors.oldPassword
+                                                    ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                            ]" />
+                                        <p v-if="errors.oldPassword" class="text-red-600 text-sm mt-1">{{
+                                            errors.oldPassword }}</p>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                                        <input @keyup.enter="updatePassword" type="password" v-model="form.password"
+                                            :class="[
+                                                'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
+                                                errors.password
+                                                    ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                            ]" />
+                                        <p v-if="errors.password" class="text-red-600 text-sm mt-1">{{ errors.password
+                                            }}</p>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirm
+                                            Password</label>
+                                        <input @keyup.enter="updatePassword" type="password"
+                                            v-model="form.confirmPassword" :class="[
+                                                'w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
+                                                errors.confirmPassword
+                                                    ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                            ]" />
+                                        <p v-if="errors.confirmPassword" class="text-red-600 text-sm mt-1">{{
+                                            errors.confirmPassword }}</p>
+                                    </div>
+                                </div>
+                                <div class="mt-10 ml-3">
+                                    <button @click="updatePassword"
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                        Update Password
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- Activity Tab -->
                 <div v-if="activeTab === 'activity'" class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="flex flex-col sm:flex-row gap-8 items-start">
@@ -239,6 +268,24 @@
                 </div>
             </div>
         </div>
+        <a-modal v-model:open="updateModal" @ok="updateUsername" title="Security Verification" width="400" centered
+            class="rounded-xl overflow-hidden">
+            <div class="p-5">
+                <label class="block mb-2 text-sm font-medium text-gray-900">
+                    Confirm your password
+                </label>
+                <div class="relative mb-4">
+                    <input @keyup.enter="updateUsername" v-model="ConfirmPassword.password" type="password" placeholder="Enter your password" :class="['w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-1',
+                        errors.confirmPass ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                    ]" />
+                </div>
+                <p v-if="errors.confirmPass" class="text-red-600 text-sm mt-1">{{ errors.confirmPass }}</p>
+                <p class="text-xs text-gray-500 mt-5 leading-relaxed">
+                    For security reasons, please confirm your password to update your username.
+                </p>
+            </div>
+        </a-modal>
     </AuthenticatedLayout>
 </template>
 
@@ -256,6 +303,7 @@ const pages = usePage();
 const errors = computed(() => pages.props.errors);
 
 const activeTab = ref('profile');
+const credentialsTab = ref('username');
 
 const form = useForm({
     oldPassword: '',
@@ -297,9 +345,8 @@ onMounted(() => {
     getUserDetails();
 });
 
-const updateButton = () => {
-    router.post(route('admin.updateCredentials'), {
-        username: page.auth.user.username,
+const updatePassword = () => {
+    router.post(route('admin.updatePassword'), {
         oldPassword: form.oldPassword,
         password: form.password,
         confirmPassword: form.confirmPassword,
@@ -320,5 +367,31 @@ const updateButton = () => {
             }
         }
     });
-}
+};
+const ConfirmPassword = useForm({
+    password: ''
+});
+const updateModal = ref<boolean>(false);
+const updateUsername = () => {
+    router.post(route('admin.updateUsername'), {
+        username: page.auth.user.username,
+        id: page.auth.user.id,
+        confirmPass: ConfirmPassword.password
+    }, {
+        onSuccess: (page: any) => {
+            if (page.props.flash.success) {
+                notification.success({
+                    message: 'Success',
+                    description: page.props.flash.success
+                });
+                updateModal.value = false;
+            } else if (page.props.flash.error) {
+                notification.error({
+                    message: 'Failed',
+                    description: page.props.flash.error
+                });
+            }
+        }
+    });
+};
 </script>

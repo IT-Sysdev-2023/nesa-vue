@@ -7,7 +7,7 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import antdv from "ant-design-vue";
 import ws from "./echo";
 
-const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+const appName = import.meta.env.VITE_APP_NAME || "Nesa";
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
