@@ -111,7 +111,7 @@
                             </div>
                         </div>
 
-                        <button
+                        <button 
                             class="flex items-center gap-1 text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">
                             <Link :href="route('admin.about')"><span>About</span></Link>
                         </button>
@@ -241,20 +241,16 @@
         <div class="mt-5"></div>
         <slot />
     </div>
-    <!-- Footer  -->
     <!-- Footer -->
     <div class="mt-10 py-6 border-t border-gray-100">
         <div class="flex flex-col items-center justify-center gap-4 text-center">
-            <!-- Copyright -->
             <div class="text-sm text-gray-500">
                 © {{ dayjs().year() }} Near Expiry Stock Advice (NESA)
             </div>
 
-            <!-- Powered by section -->
             <div class="flex flex-col items-center gap-2">
                 <p class="text-xs text-gray-400">Powered by</p>
                 <div class="flex items-center justify-center gap-4">
-                    <!-- SVG 1 -->
                     <div class="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <svg class="w-5 h-5 text-red-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -262,8 +258,6 @@
                                 d="m17 13 3.4641-2V7L17 5l-3.4641 2v4M17 13l-3.4641-2M17 13v4l-7.00001 4M17 13V9m0 4-7.00001 4m3.53591-6L10.5 12.7348M9.99999 21l-3.4641-2.1318M9.99999 21v-4m-3.4641 2v-.1318m0 0V15L10.5 12.7348m-3.96411 6.1334L3.5 17V5m0 0L7 3l3.5 2m-7 0 2.99999 2M10.5 5v7.7348M10.5 5 6.49999 7M17 9l3.5-2M17 9l-3.5-2M9.99999 17l-3.5-2m0 .5V7" />
                         </svg>
                     </div>
-
-                    <!-- SVG 2 -->
                     <div class="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <svg class="w-5 h-5 text-green-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -271,8 +265,6 @@
                                 d="M14.5 3 12 7.156 9.857 3H2l10 18L22 3h-7.5ZM4.486 4.5h2.4L12 13.8l5.107-9.3h2.4L12 18.021 4.486 4.5Z" />
                         </svg>
                     </div>
-
-                    <!-- SVG 3 -->
                     <div class="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <svg class="w-5 h-5 text-blue-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
