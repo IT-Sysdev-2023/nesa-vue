@@ -8,7 +8,7 @@
                     <p class="mt-2 text-sm text-gray-600">Viewing the complete product list</p>
                 </div>
             </div>
-            <ProgressBar type="circle" v-if="isSyncing" :progress="progressBa">
+            <ProgressBar size="large"  v-if="isSyncing" :progress="progressBa">
             </ProgressBar>
             <Card>
                 <div class="flex justify-between">

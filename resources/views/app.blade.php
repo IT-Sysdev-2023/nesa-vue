@@ -27,7 +27,6 @@
 
     * {
         box-sizing: border-box;
-        margin: 0 auto;
         font-family: "Karla", sans-serif;
         font-optical-sizing: auto;
         font-weight: 600;

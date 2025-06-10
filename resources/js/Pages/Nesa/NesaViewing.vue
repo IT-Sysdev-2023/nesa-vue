@@ -1,11 +1,16 @@
 <template>
     <AuthenticatedLayout>
         <a-card>
-            <div class="flex justify-end">
-                <a-button class="mb-2" @click="() => router.get(route('nesa.get.list'))">
-                    Back to list
-                </a-button>
-            </div>
+            <template #title>
+                <div class="flex justify-between">
+                    {{ records[0].supname }}
+                    <a-button class="mb-2" @click="() => router.get(route('nesa.get.list'))">
+                        Back to list
+                    </a-button>
+                </div>
+
+            </template>
+
             <a-table size="small" bordered :data-source="records" :columns="columns">
 
             </a-table>
@@ -19,7 +24,7 @@ import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 interface Nesa {
-    name: string,
+    supname: string,
     description: string,
     expiry: string,
     nesa_no: number,
@@ -43,12 +48,12 @@ const columns = ref<any>([
         dataIndex: 'buname',
     },
     {
-        title: 'Supplier',
-        dataIndex: 'supname',
-    },
-    {
         title: 'Item Description',
         dataIndex: 'description',
+    },
+    {
+        title: 'Unit Of Measure',
+        dataIndex: 'uom',
     },
     {
         title: 'Quantity',
