@@ -1,6 +1,7 @@
 <template>
     <AuthenticatedLayout>
         <a-card>
+<<<<<<< HEAD
             <div class="flex justify-end">
                 <button class="mb-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
                     @click="() => router.get(route('nesa.get.list'))">
@@ -8,6 +9,20 @@
                 </button>
             </div>
             <a-table size="small" bordered :data-source="records.data" :columns="columns" :pagination="false">
+=======
+            <template #title>
+                <div class="flex justify-between">
+                    {{ records[0].supname }}
+                    <a-button class="mb-2" @click="() => router.get(route('nesa.get.list'))">
+                        Back to list
+                    </a-button>
+                </div>
+
+            </template>
+
+            <a-table size="small" bordered :data-source="records" :columns="columns">
+
+>>>>>>> kenji
             </a-table>
             <Pagination :datarecords="props.records" class="mt-5" />
         </a-card>
@@ -20,7 +35,7 @@ import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 interface Nesa {
-    name: string,
+    supname: string,
     description: string,
     expiry: string,
     nesa_no: number,
@@ -46,12 +61,12 @@ const columns = ref<any>([
         dataIndex: 'buname',
     },
     {
-        title: 'Supplier',
-        dataIndex: 'supname',
-    },
-    {
         title: 'Item Description',
         dataIndex: 'description',
+    },
+    {
+        title: 'Unit Of Measure',
+        dataIndex: 'uom',
     },
     {
         title: 'Quantity',

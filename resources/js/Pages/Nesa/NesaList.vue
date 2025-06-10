@@ -53,13 +53,15 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 interface Nesa {
-    name: string,
-    description: string,
-    expiry: string,
-    nesa_no: number,
+    data: {
+        name: string,
+        description: string,
+        nesa_date: string,
+        nesa_no: number,
+    }[]
 }
 const props = defineProps<{
     records: Nesa[]
@@ -67,12 +69,13 @@ const props = defineProps<{
 
 const columns = ref<any>([
     {
-        title: 'Nesa No.',
-        dataIndex: 'nesa_no',
+        title: 'Item Code',
+        dataIndex: 'item_code',
+        align: 'center',
     },
     {
         title: 'Nesa Date',
-        dataIndex: 'expiry',
+        dataIndex: 'nesa_date',
     },
     {
         title: 'Business Unit',
@@ -92,4 +95,34 @@ const columns = ref<any>([
         key: 'action',
     },
 ])
+
+const form = ref({
+    search: null as string
+})
+
+const canBeConsolidate = ref<boolean>(false);
+
+
+const search = () => {
+    router.get(route('nesa.search.supplier'), {
+        search: form.value.search
+    }, {
+        onSuccess: () => {
+            if (form.value.search == '') {
+                canBeConsolidate.value = false;
+            } else {
+                canBeConsolidate.value = true;
+            }
+        },
+        preserveScroll: true,
+        preserveState: true,
+    })
+};
+
+watch(() => form.value.search, () => {
+    search();
+
+});
+
+
 </script>

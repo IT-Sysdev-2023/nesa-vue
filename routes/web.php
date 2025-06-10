@@ -45,12 +45,12 @@ Route::middleware('auth')->group(function () {
             Route::post('update-credentials', [AdminController::class, 'updatePassword'])->name('updatePassword');
             Route::post('update-username', [AdminController::class, 'updateUsername'])->name('updateUsername');
 
-            // setup user routes 
+            // setup user routes
             Route::get('setup-user', [AdminController::class, 'setupUser'])->name('setupUser');
             Route::post('delete-user-account', [AdminController::class, 'deleteUserAccount'])->name('deleteUserAccount');
             Route::post('update-user-details', [AdminController::class, 'updateUserDetails'])->name('updateUserDetails');
 
-            // about route 
+            // about route
             Route::get('about', [AdminController::class, 'about'])->name('about');
         });
     });
@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
             Route::get('nesa-list', [NesaController::class, 'nesaList'])->name('get.list');
             Route::get('nesa-view-{itemcode}', [NesaController::class, 'nesaViewing'])->name('view.list');
             Route::get('send-email', [NesaController::class, 'sendEmailFunction'])->name('send.email');
+            Route::get('search-nesa-supplier', [NesaController::class, 'nesaList'])->name('search.supplier');
         });
     });
 });

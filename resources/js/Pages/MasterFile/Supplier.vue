@@ -8,6 +8,8 @@
                     <p class="mt-2 text-sm text-gray-600">Viewing the complete supplier list</p>
                 </div>
             </div>
+            <a-alert v-if="isAlert" message="Syncing Successful" class="mb-3" description="Supplier is up to date!"
+                type="success" show-icon />
             <Card>
                 <ProgressBar v-if="isSyncing" type="circle" :progress="progressbar" />
                 <button @click="syncSupplier"
@@ -48,6 +50,7 @@ const page = usePage().props;
 
 const progressbar = ref([]);
 const isSyncing = ref(false);
+const isAlert = ref(false);
 
 const syncSupplier = () => {
     router.get(route('admin.sync.supplier'), {}, {
@@ -56,6 +59,7 @@ const syncSupplier = () => {
         },
         onSuccess: () => {
             isSyncing.value = false;
+            isAlert.value = true;
         },
         onError: () => {
             isSyncing.value = false;

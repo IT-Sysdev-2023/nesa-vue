@@ -236,6 +236,7 @@
             </div>
         </div>
     </nav>
+<<<<<<< HEAD
     <!-- Float Button  -->
     <a-popover trigger="click">
         <template #content>
@@ -258,6 +259,9 @@
     </a-popover>
     <!-- Content  -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+=======
+    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+>>>>>>> kenji
         <div class="mt-5"></div>
         <slot />
     </div>
