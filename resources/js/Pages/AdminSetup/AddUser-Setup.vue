@@ -71,11 +71,11 @@
                                     : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                             ]">
                                 <option v-for="item in props.businessUnit" :key="item.id" :value="item.id">{{ item.name
-                                    }}
+                                }}
                                 </option>
                             </select>
                             <p v-if="errors.businessUnit" class="text-red-600 text-medium mt-1">{{ errors.businessUnit
-                            }}
+                                }}
                             </p>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                                     : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                             ]" />
                             <p v-if="errors.nameExtention" class="text-red-600 text-medium mt-1">{{ errors.nameExtention
-                            }}
+                                }}
                             </p>
 
                         </div>
@@ -134,6 +134,13 @@
                             class="px-6 py-2 text-medium font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
                             Create User
                         </button>
+                    </div>
+                    <div>
+                        <p
+                            class="flex items-start text-sm text-blue-800 bg-blue-50 border border-blue-300 mt-5 p-3 rounded-md max-w-sm mx-auto">
+                            <span><strong>Note:</strong> <span class="text-blue-900"> NESA2025 is the default
+                                    password.</span></span>
+                        </p>
                     </div>
                 </div>
             </div>
