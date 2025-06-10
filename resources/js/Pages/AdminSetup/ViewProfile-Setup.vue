@@ -158,7 +158,7 @@
                                                     : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                                             ]" />
                                         <p v-if="errors.username" class="text-red-600 text-sm mt-1">{{ errors.username
-                                        }}</p>
+                                            }}</p>
                                     </div>
                                 </div>
                                 <div class="mt-10">
@@ -195,7 +195,7 @@
                                                     : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                                             ]" />
                                         <p v-if="errors.password" class="text-red-600 text-sm mt-1">{{ errors.password
-                                        }}</p>
+                                            }}</p>
                                     </div>
 
                                     <div class="flex-1">
@@ -217,6 +217,16 @@
                                         class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                         Update Password
                                     </button>
+                                    <p
+                                        class="flex items-center justify-center text-yellow-800 bg-yellow-100 border border-yellow-400 text-sm mt-5 p-3 rounded-md max-w-2xl mx-auto">
+                                        <svg class="w-5 h-5 mr-2 text-yellow-800" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 9v2m0 4h.01M5.93 19h12.14a2 2 0 001.74-2.99l-6.07-10.5a2 2 0 00-3.48 0L4.19 16.01A2 2 0 005.93 19z" />
+                                        </svg>
+                                        Please make sure to remember your password, as it will be required the next time
+                                        you log in.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -268,7 +278,7 @@
                 </div>
             </div>
         </div>
-        <a-modal v-model:open="updateModal" @ok="updateUsername" title="Security Verification" width="400" centered
+        <a-modal v-model:open="updateModal" @ok="updateUsername" title="Security Verification" width="300" centered
             class="rounded-xl overflow-hidden">
             <div class="p-5">
                 <label class="block mb-2 text-sm font-medium text-gray-900">
@@ -284,6 +294,16 @@
                 <p v-if="errors.confirmPass" class="text-red-600 text-sm mt-1">{{ errors.confirmPass }}</p>
                 <p class="text-xs text-gray-500 mt-5 leading-relaxed">
                     For security reasons, please confirm your password to update your username.
+                </p>
+                <p
+                    class="flex items-center justify-center text-yellow-800 bg-yellow-100 border border-yellow-400 text-sm mt-5 p-3 rounded-md max-w-sm mx-auto">
+                    <svg class="w-5 h-5 mr-2 text-yellow-800" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01M5.93 19h12.14a2 2 0 001.74-2.99l-6.07-10.5a2 2 0 00-3.48 0L4.19 16.01A2 2 0 005.93 19z" />
+                    </svg>
+                    Please make sure to remember your username, as it will be required the next time
+                    you log in.
                 </p>
             </div>
         </a-modal>

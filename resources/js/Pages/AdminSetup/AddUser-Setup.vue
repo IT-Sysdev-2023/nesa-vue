@@ -135,6 +135,13 @@
                             Create User
                         </button>
                     </div>
+                    <div>
+                        <p
+                            class="flex items-start text-sm text-blue-800 bg-blue-50 border border-blue-300 mt-5 p-3 rounded-md max-w-sm mx-auto">
+                            <span><strong>Note:</strong> <span class="text-blue-900"> NESA2025 is the default
+                                    password.</span></span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -173,7 +180,7 @@ const forms = useForm({
     password: '',
     usertype: '',
     businessUnit: '',
-    employee_id: ''
+    employee_no: ''
 });
 const cancelButton = () => {
     router.get(route('dashboard'));
@@ -188,7 +195,7 @@ const submitButton = () => {
         password: forms.password,
         usertype: forms.usertype,
         businessUnit: forms.businessUnit,
-        employee_id: forms.employee_id
+        employee_id: forms.employee_no
 
     }, {
         onSuccess: (page: any) => {
@@ -216,7 +223,8 @@ interface Employee {
     lastname?: string;
     firstname?: string;
     middlename?: string;
-    employee_id: string
+    employee_id?: string;
+    employee_no: string;
 };
 const options = ref<Employee[]>([]);
 const autoFillData = ref<Employee[]>([]);
@@ -226,7 +234,7 @@ const selectedName = computed(() => {
     forms.firstname = autoFillData.value[0]?.firstname || '';
     forms.lastname = autoFillData.value[0]?.lastname || '';
     forms.middlename = autoFillData.value[0]?.middlename || '';
-    forms.employee_id = autoFillData.value[0]?.employee_id || '';
+    forms.employee_no = autoFillData.value[0]?.employee_no || '';
 });
 
 const getUserInfo = async () => {
@@ -269,7 +277,7 @@ const getUserInfo = async () => {
                 lastname,
                 firstname,
                 middlename,
-                employee_id: employeeList[0].employee_id
+                employee_no: employeeList[0].employee_no
             }];
         } else {
             options.value = [];
