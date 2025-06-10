@@ -1,42 +1,103 @@
 <template>
     <div class="relative rounded-xl overflow-hidden flex flex-col items-center shadow-lg bg-white font-Roboto-light">
-        <div class="h-24 w-full">
+        <div v-if="userImageData" class="h-24 w-full">
             <img class="h-24 w-full blur-sm"
                 :src="page.auth.user.image ? page.auth.user.image : 'https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg'"
                 alt="">
         </div>
         <div class="top-16 z-10 flex items-center flex-col gap-4 px-5 py-5">
-            <div class="-mt-20">
-                <img class="h-24 w-full rounded-full"
-                    :src="page.auth.user.image ? page.auth.user.image : 'https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg'"
-                    alt="">
+            <div v-if="userImageData" class="-mt-20">
+                <img class="h-24 w-full rounded-full" :src="'http://172.16.161.34:8080/hrms' + userImageData" alt="">
+            </div>
+            <div v-else>
+                <img class="h-24 w-full rounded-full" src="/storage/images/noUser.jpg" />
             </div>
 
             <div class="flex items-center flex-col">
-                <p title="name/نام" class="text-black font-Roboto-md">{{ page.auth.user.firstname }},{{ page.auth.user.lastname}}</p>
-                <p title="bio/بیوگرافی" class="text-xs text-gray-500 font-medium">
-                    {{ page.auth.user.usertype ? page.auth.user.usertype : 'Admin' }}
+                <p class="text-black font-Roboto-md">{{ fullName }}</p>
+                <p v-if="userTypes" class="text-md text-gray-600 ">
+                    {{ userTypes.name }}
                 </p>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex flex-col items-center gap-2 w-full px-4">
+                <button @click="viewProfileButton"
+                    class="w-full bg-blue-600 text-white text-[15px] px-4 py-2 rounded-full flex justify-center items-center gap-1 shadow hover:bg-blue-700 transition">
+                    View Profile
+                </button>
                 <button @click="logout"
-                    class="bg-blue-900 transition-all gradient text-[15px] text-white px-3 py-[6px] rounded-full flex items-center gap-1">
+                    class="w-full bg-blue-600 text-white text-[15px] px-4 py-2 rounded-full flex justify-center items-center gap-1 shadow hover:bg-blue-700 transition">
                     Logout
-                   <LogoutOutlined />
                 </button>
             </div>
+
         </div>
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { usePage, router } from "@inertiajs/vue3";
 import { LogoutOutlined } from '@ant-design/icons-vue';
+import { onMounted } from 'vue';
+import { ref, computed } from 'vue';
+import axios from "axios";
 
-const page = usePage().props;
+
+interface User {
+    image?: string;
+    firstname?: string;
+    middlename?: string;
+    lastname?: string;
+    usertype?: string;
+    id?: string;
+}
+
+interface PageProps {
+    auth: {
+        user: User;
+    };
+}
+
+const page = usePage().props as unknown as PageProps;
 
 const logout = () => {
     router.post(route('logout'));
 };
+const userTypes = ref<Types | null>(null);
+
+interface Types {
+    name: string;
+}
+
+onMounted(() => {
+    viewProfile();
+});
+
+const viewProfile = async () => {
+    const response = await axios.get(route('admin.userType'));
+    userTypes.value = response.data.usertypes
+}
+
+const userNameFormat = computed(() => {
+    return `${page.auth.user.lastname.toLowerCase()}, ${page.auth.user.firstname.toLowerCase()}`;
+});
+const value = ref<string>(userNameFormat.value);
+const fullName = ref<string>('');
+const userImageData = ref<string>('');
+const userImage = async () => {
+    const response = await axios.get('http://172.16.161.34/api/gc/filter/employee/name', {
+        params: {
+            q: value.value
+        }
+    });
+    userImageData.value = response.data.data.employee[0].employee_photo;
+    fullName.value = response.data.data.employee[0].employee_name
+};
+onMounted(() => {
+    userImage();
+});
+
+const viewProfileButton = () => {
+    router.get(route('admin.viewProfile'));
+}
 </script>

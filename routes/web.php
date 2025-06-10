@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NesaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WeatherController;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -19,6 +22,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('dashboard-info', [DashboardController::class, 'dashboardInfo'])->name('dashboardInfo');
+    Route::get('weather-forecast', [WeatherController::class, 'fetchWeather'])->name('fetchWeather');
 });
 
 Route::middleware('auth')->group(function () {
@@ -29,6 +34,24 @@ Route::middleware('auth')->group(function () {
             Route::get('search-products', [AdminController::class, 'masterFile'])->name('search.products');
             Route::get('supplier-list', [AdminController::class, 'listOfSupplier'])->name('supplier.list');
             Route::get('sync-suppliers', [AdminController::class, 'syncSupplier'])->name('sync.supplier');
+
+            // adding users routes
+            Route::get('add-user', [AdminController::class, 'addUser'])->name('addUser');
+            Route::post('submit-user', [AdminController::class, 'submitUser'])->name('submitUser');
+
+            // usertype and user profile routes
+            Route::get('userType', [AdminController::class, 'userType'])->name('userType');
+            Route::get('view-profile', [AdminController::class, 'viewProfile'])->name('viewProfile');
+            Route::post('update-credentials', [AdminController::class, 'updatePassword'])->name('updatePassword');
+            Route::post('update-username', [AdminController::class, 'updateUsername'])->name('updateUsername');
+
+            // setup user routes 
+            Route::get('setup-user', [AdminController::class, 'setupUser'])->name('setupUser');
+            Route::post('delete-user-account', [AdminController::class, 'deleteUserAccount'])->name('deleteUserAccount');
+            Route::post('update-user-details', [AdminController::class, 'updateUserDetails'])->name('updateUserDetails');
+
+            // about route 
+            Route::get('about', [AdminController::class, 'about'])->name('about');
         });
     });
 });
@@ -37,6 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('nesa')->group(function () {
         Route::name('nesa.')->group(function () {
             Route::get('nesa-list', [NesaController::class, 'nesaList'])->name('get.list');
+            Route::get('nesa-view-{itemcode}', [NesaController::class, 'nesaViewing'])->name('view.list');
+            Route::get('send-email', [NesaController::class, 'sendEmailFunction'])->name('send.email');
         });
     });
 });
