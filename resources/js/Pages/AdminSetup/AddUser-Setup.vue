@@ -71,11 +71,11 @@
                                     : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                             ]">
                                 <option v-for="item in props.businessUnit" :key="item.id" :value="item.id">{{ item.name
-                                }}
+                                    }}
                                 </option>
                             </select>
                             <p v-if="errors.businessUnit" class="text-red-600 text-medium mt-1">{{ errors.businessUnit
-                                }}
+                            }}
                             </p>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                                     : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                             ]" />
                             <p v-if="errors.nameExtention" class="text-red-600 text-medium mt-1">{{ errors.nameExtention
-                                }}
+                            }}
                             </p>
 
                         </div>
@@ -173,7 +173,7 @@ const forms = useForm({
     password: '',
     usertype: '',
     businessUnit: '',
-    employee_id: ''
+    employee_no: ''
 });
 const cancelButton = () => {
     router.get(route('dashboard'));
@@ -188,7 +188,7 @@ const submitButton = () => {
         password: forms.password,
         usertype: forms.usertype,
         businessUnit: forms.businessUnit,
-        employee_id: forms.employee_id
+        employee_id: forms.employee_no
 
     }, {
         onSuccess: (page: any) => {
@@ -216,7 +216,8 @@ interface Employee {
     lastname?: string;
     firstname?: string;
     middlename?: string;
-    employee_id: string
+    employee_id?: string;
+    employee_no: string;
 };
 const options = ref<Employee[]>([]);
 const autoFillData = ref<Employee[]>([]);
@@ -226,7 +227,7 @@ const selectedName = computed(() => {
     forms.firstname = autoFillData.value[0]?.firstname || '';
     forms.lastname = autoFillData.value[0]?.lastname || '';
     forms.middlename = autoFillData.value[0]?.middlename || '';
-    forms.employee_id = autoFillData.value[0]?.employee_id || '';
+    forms.employee_no = autoFillData.value[0]?.employee_no || '';
 });
 
 const getUserInfo = async () => {
@@ -269,7 +270,7 @@ const getUserInfo = async () => {
                 lastname,
                 firstname,
                 middlename,
-                employee_id: employeeList[0].employee_id
+                employee_no: employeeList[0].employee_no
             }];
         } else {
             options.value = [];
