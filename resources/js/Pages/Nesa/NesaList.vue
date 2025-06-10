@@ -9,7 +9,7 @@
                 </div>
             </div>
             <a-card>
-                <a-table bordered :pagination="false" size="small" :data-source="records" :columns="columns">
+                <a-table bordered :pagination="false" size="small" :data-source="records.data" :columns="columns">
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key == 'action'">
                             <div class="flex gap-2">
@@ -64,7 +64,7 @@ interface Nesa {
     }[]
 }
 const props = defineProps<{
-    records: Nesa[]
+    records: Nesa
 }>();
 
 const columns = ref<any>([
