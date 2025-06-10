@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\NesaRequest;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function () {
@@ -47,6 +49,20 @@ Route::get('count-supplier', function () {
     return response()->json(
         Supplier::count()
     );
+});
+
+Route::get('getStoreUploads', function (Request $request) {
+    $data = NesaRequest::select('name')->where('itemcode', $request->itemcode)
+        ->join('business_units', 'business_units.id', '=', 'nesa_requests.bu')
+        ->get();
+    return response()->json($data ?? []);
+});
+
+Route::get('getAllStoreUploads', function () {
+    $data = NesaRequest::select('itemcode')
+        ->groupBy('itemcode')
+        ->get();
+    return response()->json($data ?? []);
 });
 
 
