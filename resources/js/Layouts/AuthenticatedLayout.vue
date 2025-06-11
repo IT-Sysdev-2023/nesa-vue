@@ -42,10 +42,10 @@
                                         class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                                     Near Expiry Stock Advise
                                     </Link>
-                                    <a href="#"
+                                    <Link :href="route('nesa.get.consolidated')"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
-                                        Summary Of Supplier
-                                    </a>
+                                    Consolidated List
+                                    </Link>
                                     <a href="#"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                                         Summary Of SWAF
