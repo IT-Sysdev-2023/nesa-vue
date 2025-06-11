@@ -11,20 +11,25 @@ class SupplierEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct()
+    protected $suppliercode = '';
+    protected $docs = '';
+
+    public function __construct(public array $request )
     {
+        $this->suppliercode = $request['sup'];
+        $this->docs = $request['docs'];
         // You can pass data here
     }
 
     public function build()
     {
-
-        $path = Storage::disk('public')->path('/consolidated/example.xlsx');
+        
+        $path = Storage::disk('public')->path('/' . $this->docs);
 
         return $this->subject('This is the Request Near Expiry Stocks')
             ->view('emails.supplier')
                ->attach($path, [
-                'as' => 'nesa.xlsx',
+                'as' => 'nesa.pdf',
                 'mime' => 'application/pdf',
             ]);
     }

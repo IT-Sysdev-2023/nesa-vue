@@ -8,14 +8,36 @@
                     <p class="mt-2 text-sm text-gray-600">Viewing the complete NESA list</p>
                 </div>
             </div>
+            <LoadingAnimation v-if="loading" title="Consolidating Please wait" />
             <a-card>
+                <template #title>
+                    <div class="flex justify-between">
+                        <div>
+                            <PrimaryButton :disabled="loading" v-if="records.data.length" class="mr-1 mt-1"
+                                @click="submitToConsolidate">
+                                {{ !loading ? 'Consolidate Nesa' : 'Consolidating on progress...' }}
+                            </PrimaryButton>
+                        </div>
+                        <div class="relative">
+                            <a-input type="text" v-model:value="form.search" placeholder="Search Supplier"
+                                class="w-[600px] py-1 pl-10 pr-4 rounded-lg border border-gray-300 " />
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </template>
                 <a-table bordered :pagination="false" size="small" :data-source="records.data" :columns="columns">
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key == 'action'">
                             <div class="flex gap-2">
                                 <button title="View"
                                     class="px-2 py-1 text-medium font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
-                                    @click="() => router.get(route('nesa.view.list', record.itemcode))">
+                                    @click="() => router.get(route('nesa.view.list', record.item_code))">
                                     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                                         viewBox="0 0 24 24">
@@ -37,22 +59,17 @@
                         </template>
                     </template>
                 </a-table>
-                <button @click="() => router.get(route('nesa.send.email'))"
-                    class="flex mt-4 items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-md shadow-sm transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    Send Email
-                </button>
             </a-card>
         </div>
     </AuthenticatedLayout>
 </template>
 <script setup lang="ts">
+import LoadingAnimation from '@/Components/LoadingAnimation.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import ProgressBarModern from '@/Components/ProgressBarModern.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { router } from '@inertiajs/vue3';
+import Swal from 'sweetalert2';
 import { ref, watch } from 'vue';
 
 interface Nesa {
@@ -102,12 +119,11 @@ const form = ref({
 
 const canBeConsolidate = ref<boolean>(false);
 
-
 const search = () => {
     router.get(route('nesa.search.supplier'), {
         search: form.value.search
     }, {
-        onSuccess: () => {
+        onSuccess: (e: any) => {
             if (form.value.search == '') {
                 canBeConsolidate.value = false;
             } else {
@@ -118,11 +134,35 @@ const search = () => {
         preserveState: true,
     })
 };
+const loading = ref<boolean>(false);
+
+const submitToConsolidate = async () => {
+    loading.value = true;
+
+    setTimeout(() => {
+        router.get(route('nesa.consolidate'), {}, {
+            onSuccess: () => {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Successfully Consolidated!",
+                    icon: "success"
+                });
+                loading.value = false;
+            },
+            onError: () => {
+                loading.value = false;
+            },
+            onFinish: () => {
+                loading.value = false;
+            }
+        });
+    }, 2000); // delay of 1000ms (1 second)
+};
 
 watch(() => form.value.search, () => {
     search();
-
 });
+
 
 
 </script>

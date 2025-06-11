@@ -63,6 +63,8 @@ Route::middleware('auth')->group(function () {
             Route::get('nesa-view-{itemcode}', [NesaController::class, 'nesaViewing'])->name('view.list');
             Route::get('send-email', [NesaController::class, 'sendEmailFunction'])->name('send.email');
             Route::get('search-nesa-supplier', [NesaController::class, 'nesaList'])->name('search.supplier');
+            Route::get('consolidate', [NesaController::class, 'consolidateProcess'])->name('consolidate');
+            Route::get('consolidate-list', [NesaController::class, 'consolidatedList'])->name('get.consolidated');
         });
     });
 });
