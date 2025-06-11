@@ -59,8 +59,9 @@ Route::get('getStoreUploads', function (Request $request) {
 });
 
 Route::get('getAllStoreUploads', function () {
-    $data = NesaRequest::select('itemcode')
-        ->groupBy('itemcode')
+    $data = NesaRequest::select('nesa_requests.itemcode', 'products.description')
+        ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+        ->groupBy('nesa_requests.itemcode')
         ->get();
     return response()->json($data ?? []);
 });
