@@ -60,9 +60,12 @@ Route::get('getStoreUploads', function (Request $request) {
     return response()->json($data ?? []);
 });
 
-Route::get('getAllStoreUploads', function () {
+Route::get('getAllStoreUploads', function (Request $request) {
+    $user = User::find($request->id);
+    $selectedSuppliers = json_decode($user->selected_supplier, true);
     $data = NesaRequest::select('nesa_requests.itemcode', 'products.description')
         ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+        ->whereIn('products.vendor_no', $selectedSuppliers)
         ->groupBy('nesa_requests.itemcode')
         ->get();
     return response()->json($data ?? []);
