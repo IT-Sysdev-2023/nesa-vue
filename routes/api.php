@@ -19,8 +19,10 @@ Route::get('/user', function () {
         'name_extention',
         'username',
         'password',
+        'android_password',
         'employee_id'
-    )->get());
+    )->where('android_password', '<>', null)
+        ->get());
 });
 
 Route::get('item-codes', function () {
