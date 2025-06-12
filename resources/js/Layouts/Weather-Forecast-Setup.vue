@@ -35,7 +35,7 @@
             </div>
 
             <!-- Weather Card -->
-            <div v-if="weatherData"
+            <div v-if="weatherData && !cityNotFound?.length"
                 class="bg-white rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg">
                 <!-- Main Weather Info -->
                 <div class="p-6 text-center">
@@ -96,6 +96,33 @@
                     </div>
                 </div>
             </div>
+            <!-- city not found  -->
+            <div v-else-if="cityNotFound" class="text-center py-8 px-4 bg-red-50 rounded-xl border border-red-100">
+                <div class="flex flex-col items-center">
+                    <!-- Error Icon -->
+                    <div class="w-16 h-16 mb-4 text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+
+                    <!-- Error Message -->
+                    <h3 class="text-lg font-medium text-red-800 mb-1">{{ cityNotFound.message }}</h3>
+
+                    <!-- Try Again Button -->
+                    <button @click="form.city = ''; cityNotFound = null"
+                        class="mt-4 px-4 py-2 bg-white text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Try another city
+                    </button>
+                </div>
+            </div>
 
             <!-- Empty State -->
             <div v-else class="text-center py-12">
@@ -120,6 +147,7 @@ const form = useForm({
     city: ''
 });
 
+const cityNotFound = ref<any | null>(null);
 const weatherData = ref<any | null>(null);
 const fetchWeather = async () => {
     try {
@@ -128,10 +156,16 @@ const fetchWeather = async () => {
                 city: form.city
             }
         });
-        weatherData.value = response.data;
+        if (response.data.cod === '404') {
+            cityNotFound.value = response.data;
+            weatherData.value = null;
+        } else {
+            weatherData.value = response.data;
+        }
     } catch (error) {
         console.log(error);
         weatherData.value = null;
+        cityNotFound.value = { message: 'Failed to fetch weather data' };
     }
 };
 onMounted(() => {

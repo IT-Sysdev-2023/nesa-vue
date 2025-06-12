@@ -18,7 +18,8 @@
                             Search User
                         </label>
                         <a-auto-complete v-model:value="searchUser" :options="showOptions"
-                            placeholder="Lastname, Firstname" class="w-full" @select="selectedName" />
+                            placeholder="Lastname, Firstname" class="w-full border border-blue-400 rounded-lg"
+                            @select="selectedName" />
                     </div>
                 </div>
 
@@ -71,11 +72,11 @@
                                     : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                             ]">
                                 <option v-for="item in props.businessUnit" :key="item.id" :value="item.id">{{ item.name
-                                }}
+                                    }}
                                 </option>
                             </select>
                             <p v-if="errors.businessUnit" class="text-red-600 text-medium mt-1">{{ errors.businessUnit
-                                }}
+                            }}
                             </p>
                         </div>
                     </div>
@@ -95,7 +96,8 @@
 
                         <!-- Name Extension -->
                         <div>
-                            <label class="block text-medium font-medium text-gray-700 mb-1">Name Extension</label>
+                            <label class="block text-medium font-medium text-gray-700 mb-1">Name Extension - <a-tag
+                                    color="red"> Optional</a-tag></label>
                             <input v-model="forms.nameExtention" type="text" placeholder="Jr, Sr, II, III" :class="[
                                 'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                                 errors.nameExtention
@@ -103,7 +105,7 @@
                                     : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                             ]" />
                             <p v-if="errors.nameExtention" class="text-red-600 text-medium mt-1">{{ errors.nameExtention
-                                }}
+                            }}
                             </p>
 
                         </div>
@@ -117,15 +119,33 @@
                                     ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
                                     : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                             ]">
-                                <option v-for="item in props.usertypes" :key="item.id" :value="item.id">{{ item.name }}
+                                <option v-for="item in filterUsertypes" :key="item.id" :value="item.id">{{ item.name }}
                                 </option>
                             </select>
                             <p v-if="errors.usertype" class="text-red-600 text-medium mt-1">{{ errors.usertype }}</p>
                         </div>
+                        <!-- Selected Supplier  -->
+                        <div>
+                            <button @click="openSupplierModal"
+                                class="px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800 flex justify-between gap-2">
+                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M5 12h14m-7 7V5" />
+                                </svg>
+                                Add Specified Supplier
+                            </button>
+                            <p v-if="errors.specifiedSupplier" class="text-red-600 text-medium mt-3">{{
+                                errors.specifiedSupplier
+                            }}</p>
+                        </div>
+                        <SupplierAssignmentSetup v-model:open="showSupplierModal"
+                            @update:selected-suppliers="handleSelectedSuppliers" />
                     </div>
                 </div>
                 <div>
-                    <div class="flex justify-end mt-2">
+                    <div class="flex justify-end mt-10">
                         <button @click="cancelButton" type="button"
                             class="px-6 py-2 mr-4 text-medium font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
                             Cancel
@@ -137,9 +157,9 @@
                     </div>
                     <div>
                         <p
-                            class="flex items-start text-sm text-blue-800 bg-blue-50 border border-blue-300 mt-5 p-3 rounded-md max-w-sm mx-auto">
-                            <span><strong>Note:</strong> <span class="text-blue-900"> NESA2025 is the default
-                                    password.</span></span>
+                            class="flex items-start text-sm text-blue-800 bg-blue-50 border border-blue-300 mt-5 p-3 rounded-md max-w-md mx-auto px-2">
+                            <span><strong>' NESA2025 '</strong> is the default
+                                password for every newly added user.</span>
                         </p>
                     </div>
                 </div>
@@ -155,14 +175,40 @@ import { Head, useForm } from '@inertiajs/vue3';
 import { notification } from 'ant-design-vue';
 import { computed, ref, watch } from 'vue';
 import axios from 'axios';
+import SupplierAssignmentSetup from './Supplier-Assignment-Setup.vue';
 
 const pages = usePage();
+const page = usePage().props as unknown as PageProps
 const errors = computed(() => pages.props.errors)
 
 const props = defineProps<{
     usertypes: userType[];
     businessUnit: businessUnit[];
 }>();
+
+interface User {
+    image?: string;
+    firstname?: string;
+    middlename?: string;
+    lastname?: string;
+    usertype?: number;
+    username?: string;
+    id?: number;
+};
+
+interface PageProps {
+    auth: {
+        user: User;
+    };
+};
+
+const filterUsertypes = computed(() => {
+    if (page.auth.user.usertype !== 1) {
+        return props.usertypes.filter(item => item.id !== 1);
+    }
+    return props.usertypes;
+});
+
 interface userType {
     name: string;
     id: number;
@@ -180,10 +226,11 @@ const forms = useForm({
     password: '',
     usertype: '',
     businessUnit: '',
-    employee_no: ''
+    employee_no: '',
+    productPermission: []
 });
 const cancelButton = () => {
-    router.get(route('dashboard'));
+    forms.reset();
 };
 const submitButton = () => {
     router.post(route('admin.submitUser'), {
@@ -195,7 +242,8 @@ const submitButton = () => {
         password: forms.password,
         usertype: forms.usertype,
         businessUnit: forms.businessUnit,
-        employee_id: forms.employee_no
+        employee_id: forms.employee_no,
+        specifiedSupplier: forms.productPermission
 
     }, {
         onSuccess: (page: any) => {
@@ -246,7 +294,6 @@ const getUserInfo = async () => {
         });
 
         const employeeList = response.data?.data?.employee;
-        console.log(employeeList);
 
         if (Array.isArray(employeeList) && employeeList.length > 0) {
             options.value = employeeList.map(employee => {
@@ -301,4 +348,13 @@ const showOptions = computed(() => {
     }));
 });
 
+const showSupplierModal = ref<boolean>(false);
+
+const openSupplierModal = () => {
+    showSupplierModal.value = true;
+};
+
+const handleSelectedSuppliers = (suppliers: number[]) => {
+    forms.productPermission = suppliers;
+};
 </script>

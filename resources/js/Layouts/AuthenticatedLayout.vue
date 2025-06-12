@@ -54,7 +54,7 @@
                             </div>
                         </div>
 
-                        <div class="relative" v-if="page.auth.user.usertype == '1'">
+                        <div class="relative" v-if="page.auth.user.usertype == '1' || page.auth.user.usertype == '2'">
                             <button @click="toggleMasterfileDropdown"
                                 class="text-gray-900 gap-1 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <DeploymentUnitOutlined />
@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="relative" v-if="page.auth.user.usertype == '1'">
+                        <div class="relative" v-if="page.auth.user.usertype == '1' || page.auth.user.usertype == '2'">
                             <button @click="toggleSetupDropdown"
                                 class="text-gray-900 gap-1 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <SettingOutlined />

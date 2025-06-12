@@ -1,43 +1,61 @@
 <template>
-    <div class="relative rounded-xl overflow-hidden flex flex-col items-center shadow-lg bg-white font-Roboto-light">
-        <div v-if="userImageData" class="h-24 w-full">
-            <img class="h-24 w-full blur-sm"
-                :src="page.auth.user.image ? page.auth.user.image : 'https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg'"
-                alt="">
+    <div
+        class="relative rounded-xl overflow-hidden flex flex-col items-center shadow-lg bg-white font-sans w-full max-w-xs">
+        <!-- Background header with blur effect -->
+        <div class="h-20 w-full bg-gray-100 relative">
+            <div v-if="userImageData" class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
         </div>
-        <div class="top-16 z-10 flex items-center flex-col gap-4 px-5 py-5">
-            <div v-if="userImageData" class="-mt-20">
-                <img class="h-24 w-full rounded-full" :src="'http://172.16.161.34:8080/hrms' + userImageData" alt="">
-            </div>
-            <div v-else>
-                <img class="h-24 w-full rounded-full" src="/storage/images/noUser.jpg" />
+
+        <!-- Profile content -->
+        <div class="w-full flex flex-col items-center px-6 pb-6 -mt-10 z-10">
+            <!-- Avatar -->
+            <div class="relative mb-4">
+                <div class="h-[130px] w-[130px] rounded-full border-4 border-white bg-white shadow-md overflow-hidden">
+                    <img v-if="userImageData" class="h-full w-full object-cover"
+                        :src="'http://172.16.161.34:8080/hrms' + userImageData" alt="Profile">
+                    <img v-else class="h-full w-full object-cover" src="/storage/images/noUser.jpg" alt="Profile">
+                </div>
+                <!-- <div class="absolute -bottom-1 -right-1 bg-green-400 h-5 w-5 rounded-full border-2 border-white"></div> -->
             </div>
 
-            <div class="flex items-center flex-col">
-                <p class="text-black font-Roboto-md">{{ fullName }}</p>
-                <p v-if="userTypes" class="text-md text-gray-600 ">
-                    {{ userTypes.name }}
-                </p>
+            <!-- User info -->
+            <div class="text-center mb-6">
+                <p class="text-sm text-gray-500 mb-1">Hello</p>
+                <h3 class="text-lg font-semibold text-gray-800">{{ fullName }}</h3>
+                <div v-if="userTypes" class="mt-1">
+                    <span class="inline-block px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                        {{ userTypes.name }}
+                    </span>
+                </div>
             </div>
 
-            <div class="flex flex-col items-center gap-2 w-full px-4">
+            <!-- Actions -->
+            <div class="w-full space-y-3">
                 <button @click="viewProfileButton"
-                    class="w-full bg-blue-600 text-white text-[15px] px-4 py-2 rounded-full flex justify-center items-center gap-1 shadow hover:bg-blue-700 transition">
-                    View Profile
+                    class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span>View Profile</span>
                 </button>
                 <button @click="logout"
-                    class="w-full bg-blue-600 text-white text-[15px] px-4 py-2 rounded-full flex justify-center items-center gap-1 shadow hover:bg-blue-700 transition">
-                    Logout
+                    class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Logout</span>
                 </button>
             </div>
-
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { usePage, router } from "@inertiajs/vue3";
-import { LogoutOutlined } from '@ant-design/icons-vue';
 import { onMounted } from 'vue';
 import { ref, computed } from 'vue';
 import axios from "axios";

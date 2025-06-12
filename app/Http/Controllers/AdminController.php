@@ -70,10 +70,16 @@ class AdminController extends Controller
             }, 'No_');
     }
 
-    public function listOfSupplier()
+    public function listOfSupplier(Request $request)
     {
+        $supplier =  Supplier::when($request->search, function ($query, $search) {
+            $query->where('supplier_code', 'like', '%' . $search . '%')
+                ->orWhere('name', 'like', '%' . $search . '%');
+        })
+            ->paginate(10)
+            ->withQueryString();
         return inertia("MasterFile/Supplier", [
-            'records' => Supplier::paginate(10),
+            'records' => $supplier
         ]);
     }
     public function syncSupplier()
@@ -106,26 +112,54 @@ class AdminController extends Controller
             }, 'No_');
     }
 
-    public function addUser(Request $request)
+    public function addUser()
     {
         $usertype = DB::table('user_types')->select('id', 'name')->get();
+
         $businessUnit = DB::table('business_units')->select('id', 'name')->get();
 
         return inertia('AdminSetup/AddUser-Setup', [
             'usertypes' => $usertype,
-            'businessUnit' => $businessUnit
+            'businessUnit' => $businessUnit,
+        ]);
+    }
+
+    public function selectedSupplier(Request $request)
+    {
+        $specifiedProducts = DB::table('suppliers')
+            ->select(
+                'suppliers.name as supplierName',
+                'suppliers.supplier_code as supplierCode',
+            )->when($request->search, function ($query, $search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('supplier_code', 'like', '%' . $search . '%');
+            })
+            ->get();
+
+        $columns = array_map(
+            fn($name, $field) => ColumnHelper::arrayHelper($name, $field),
+            ['Supplier Code', 'Supplier Name', 'Action'],
+            ['supplierCode', 'supplierName', 'action']
+        );
+
+        return response()->json([
+            'specifiedProducts' => $specifiedProducts,
+            'productColumns' => $columns,
+            'search' => $request->search
         ]);
     }
 
     public function submitUser(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'username' => 'required',
             'firstname' => 'required',
             'lastname' => 'required',
             'middlename' => 'required',
             'usertype' => 'required',
-            'businessUnit' => 'required'
+            'businessUnit' => 'required',
+            'specifiedSupplier' => 'required|array|min:1'
         ]);
         $check = User::where('username',  $request->username)->exists();
         if ($check === true) {
@@ -134,6 +168,7 @@ class AdminController extends Controller
                 'Username is already taken, please try another username'
             );
         }
+
         User::create([
             'username' => $request->username,
             'password' => Hash::make('NESA2025'),
@@ -143,7 +178,8 @@ class AdminController extends Controller
             'name_extention' => $request->nameExtention,
             'usertype' => $request->usertype,
             'bu' => $request->businessUnit,
-            'employee_id' => $request->employee_id
+            'employee_id' => $request->employee_id,
+            'selected_supplier' => $request->specifiedSupplier
         ]);
         return back()->with(
             'success',
@@ -237,7 +273,8 @@ class AdminController extends Controller
             'users.usertype',
             'users.bu',
             'user_types.name as userType',
-            'business_units.name as businessUnit'
+            'business_units.name as businessUnit',
+            'users.selected_supplier'
         )
             ->join('user_types', 'user_types.id', '=', 'users.usertype')
             ->join('business_units', 'business_units.id', '=', 'users.bu')
@@ -273,6 +310,7 @@ class AdminController extends Controller
 
     public function updateUserDetails(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'id' => 'required',
             'username' => 'required|string|max:255',
@@ -281,6 +319,8 @@ class AdminController extends Controller
             'lastname' => 'required|string|max:255',
             'businessUnit' => 'required|integer',
             'usertype' => 'required|integer',
+            'specifiedSupplier' => 'required|array|min:1'
+
         ]);
 
         $user = User::findOrFail($request->id);
@@ -292,7 +332,8 @@ class AdminController extends Controller
             $user->lastname !== $request->lastname ||
             $user->bu != $request->businessUnit ||
             $user->usertype != $request->usertype ||
-            $user->name_extention !== $request->nameExtention;
+            $user->name_extention !== $request->nameExtention ||
+            $user->selected_supplier !== $request->specifiedSupplier;
 
         if (!$changesDetected) {
             return back()->with('error', 'No changes detected. Please make updates before submitting.');
@@ -315,7 +356,8 @@ class AdminController extends Controller
             'lastname' => $request->lastname,
             'bu' => $request->businessUnit,
             'usertype' => $request->usertype,
-            'name_extention' => $request->nameExtention
+            'name_extention' => $request->nameExtention,
+            'selected_supplier' => $request->specifiedSupplier
         ]);
 
         return back()->with('success', 'User credentials updated successfully.');

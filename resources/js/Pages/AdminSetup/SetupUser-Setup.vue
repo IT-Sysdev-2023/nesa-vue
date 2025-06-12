@@ -13,8 +13,7 @@
                                 class="w-[300px] border border-gray-300 rounded-md mb-2 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="Search User" />
                         </div>
-                        <a-table :data-source="props.users.data" :columns="props.columns" :pagination="false"
-                            size="small">
+                        <a-table :data-source="filterDisplay" :columns="props.columns" :pagination="false" size="small">
                             <template #bodyCell="{ record, column }">
                                 <template v-if="column.dataIndex === 'action'">
                                     <div class="flex gap-2">
@@ -41,7 +40,8 @@
                                                     clip-rule="evenodd" />
                                             </svg>
                                         </button>
-                                        <button title="View" @click="viewButton(record)"
+                                        <button v-if="user.auth.user.usertype == '1'" title="View"
+                                            @click="viewButton(record)"
                                             class="flex items-center gap-2 px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors">
                                             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -50,7 +50,6 @@
                                                     d="M4.998 7.78C6.729 6.345 9.198 5 12 5c2.802 0 5.27 1.345 7.002 2.78a12.713 12.713 0 0 1 2.096 2.183c.253.344.465.682.618.997.14.286.284.658.284 1.04s-.145.754-.284 1.04a6.6 6.6 0 0 1-.618.997 12.712 12.712 0 0 1-2.096 2.183C17.271 17.655 14.802 19 12 19c-2.802 0-5.27-1.345-7.002-2.78a12.712 12.712 0 0 1-2.096-2.183 6.6 6.6 0 0 1-.618-.997C2.144 12.754 2 12.382 2 12s.145-.754.284-1.04c.153-.315.365-.653.618-.997A12.714 12.714 0 0 1 4.998 7.78ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
                                                     clip-rule="evenodd" />
                                             </svg>
-
                                         </button>
                                     </div>
                                 </template>
@@ -65,26 +64,26 @@
         <a-modal v-model:open="updateModal" width="50%" title="Update User Credentials">
             <div class="space-y-4 mt-10">
                 <!-- Username -->
-                <div>
+                <div class="w-full max-w-md mx-auto">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
                     <input v-model="updateForm.username" type="text" :class="[
                         'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                         errors.username
                             ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                            : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                     ]">
                     <p class="text-red-600 text-sm mt-1">{{ errors.username }}</p>
                 </div>
 
                 <!-- Name Fields Row -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Firstname</label>
                         <input v-model="updateForm.firstname" type="text" :class="[
                             'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                             errors.firstname
                                 ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                         ]">
                         <p class="text-red-600 text-sm mt-1">{{ errors.firstname }}</p>
                     </div>
@@ -94,7 +93,7 @@
                             'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                             errors.middlename
                                 ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                         ]">
                         <p class="text-red-600 text-sm mt-1">{{ errors.middlename }}</p>
                     </div>
@@ -104,17 +103,16 @@
                             'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                             errors.lastname
                                 ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                         ]">
                         <p class="text-red-600 text-sm mt-1">{{ errors.lastname }}</p>
                     </div>
-                </div>
 
-                <!-- Name Extension -->
-                <div class="w-1/4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Name Extension</label>
-                    <input v-model="updateForm.nameExtention" type="text"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Name Extension</label>
+                        <input v-model="updateForm.nameExtention" type="text"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
                 </div>
 
                 <!-- Dropdowns Row -->
@@ -125,7 +123,7 @@
                             'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                             errors.businessUnit
                                 ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                         ]">
                             <option v-for="item in props.businessUnit" :key="item.id" :value="item.id">{{ item.name }}
                             </option>
@@ -138,21 +136,40 @@
                             'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                             errors.usertype
                                 ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                         ]">
-                            <option v-for="item in props.usertype" :key="item.id" :value="item.id">{{ item.name }}
+                            <option v-for="item in filterUsertype" :key="item.id" :value="item.id">{{ item.name }}
                             </option>
                         </select>
                         <p class="text-red-600 text-sm mt-1">{{ errors.usertype }}</p>
                     </div>
                 </div>
+                <div class="flex justify-center mt-5">
+                    <button @click="openSupplierModal"
+                        class="bg-green-700 hover:bg-green-800 text-white px-4 py-3 rounded-md flex justify-between gap-2">
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path fill-rule="evenodd"
+                                d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z"
+                                clip-rule="evenodd" />
+                            <path fill-rule="evenodd"
+                                d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Update Specified Supplier</button>
+                </div>
+                <p class="text-red-600 text-center ">{{ errors.specifiedSupplier }}</p>
+                <SupplierAssignmentSetup v-model:open="showSupplierModal"
+                    :existing-supplier="updateForm.specifiedSupplier"
+                    @update:selected-suppliers="handleSelectedSuppliers" />
             </div>
 
             <!-- Modal Footer -->
             <template #footer>
                 <div class="flex justify-end space-x-3">
                     <button @click="updateModal = false"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         Cancel
                     </button>
                     <button @click="submitUpdate"
@@ -316,6 +333,7 @@
                 </div>
             </div>
         </a-modal>
+        <!-- {{ users }} -->
     </AuthenticatedLayout>
 </template>
 <script setup lang="ts">
@@ -329,6 +347,25 @@ import { Modal, notification } from 'ant-design-vue'
 import axios from 'axios';
 import { router } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import SupplierAssignmentSetup from './Supplier-Assignment-Setup.vue';
+
+
+const user = usePage().props as unknown as PageProps;
+interface PageProps {
+    auth: {
+        user: Users;
+    }
+};
+interface Users {
+    usertype: number | string
+}
+
+const filterUsertype = computed(() => {
+    if (user.auth.user.usertype !== 1) {
+        return props.usertype.filter(item => item.id !== 1);
+    }
+    return props.usertype;
+});
 
 const page = usePage();
 const errors = computed(() => page.props.errors)
@@ -342,6 +379,7 @@ interface User {
     usertype?: number;
     bu?: number;
     name?: string;
+    selected_supplier?: any;
 };
 interface Usertype {
     id: number;
@@ -362,6 +400,13 @@ const props = defineProps<{
     businessUnit: Businessunit[];
 }>();
 
+const filterDisplay = computed(() => {
+    if (user.auth.user.usertype !== 1) {
+        return props.users.data.filter(item => item.usertype !== 1);
+    }
+    return props.users.data;
+});
+
 const updateForm = useForm({
     username: '',
     firstname: '',
@@ -370,8 +415,8 @@ const updateForm = useForm({
     nameExtention: '',
     businessUnit: '',
     usertype: '',
-    id: ''
-
+    id: '',
+    specifiedSupplier: []
 });
 
 const updateModal = ref<boolean>(false)
@@ -385,6 +430,7 @@ const updateButton = (user: User) => {
     updateForm.businessUnit = user.bu ? String(user.bu) : '';
     updateForm.usertype = user.usertype ? String(user.usertype) : '';
     updateForm.id = user.id ? String(user.id) : '';
+    updateForm.specifiedSupplier = user.selected_supplier || []
 
 };
 const submitUpdate = () => {
@@ -396,7 +442,8 @@ const submitUpdate = () => {
         nameExtention: updateForm.nameExtention,
         businessUnit: updateForm.businessUnit,
         usertype: updateForm.usertype,
-        id: updateForm.id
+        id: updateForm.id,
+        specifiedSupplier: updateForm.specifiedSupplier
     }, {
         onSuccess: (page: any) => {
             if (page.props.flash.success) {
@@ -444,7 +491,7 @@ const viewButton = async (record) => {
         viewUserModal.value = true;
     } catch (error) {
         notification.warning({
-            message: 'Unable to fetch user details. Please check the user information and try again'
+            message: 'Unable to fetch user details. This user was not found in HRMS'
         });
     };
 };
@@ -469,5 +516,16 @@ const searchFunction = () => {
 };
 watch(() => search.value, () => {
     searchFunction();
-})
+});
+
+const showSupplierModal = ref<boolean>(false);
+
+const openSupplierModal = () => {
+    showSupplierModal.value = true;
+};
+
+const handleSelectedSuppliers = (suppliers: number[]) => {
+    updateForm.specifiedSupplier = suppliers;
+};
+
 </script>
