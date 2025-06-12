@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
 
             // adding users routes
             Route::get('add-user', [AdminController::class, 'addUser'])->name('addUser');
+            Route::get('selected_supplier', [AdminController::class, 'selectedSupplier'])->name('selectedSupplier');
             Route::post('submit-user', [AdminController::class, 'submitUser'])->name('submitUser');
 
             // usertype and user profile routes

@@ -28,6 +28,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $casts = [
+        'selected_supplier' => 'array',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *

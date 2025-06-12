@@ -27,9 +27,11 @@
     },
     "dependencies": {
         "@ant-design/icons-vue": "^7.0.1",
+        "@types/lodash": "^4.17.17",
         "ant-design-vue": "4.0.0-rc.6",
         "consola": "^3.4.2",
         "dayjs": "^1.11.13",
+        "lodash": "^4.17.21",
         "sweetalert2": "^11.22.0"
     }
 }
