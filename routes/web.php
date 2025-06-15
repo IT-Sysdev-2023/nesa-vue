@@ -67,6 +67,8 @@ Route::middleware('auth')->group(function () {
             Route::get('search-nesa-supplier', [NesaController::class, 'nesaList'])->name('search.supplier');
             Route::get('consolidate', [NesaController::class, 'consolidateProcess'])->name('consolidate');
             Route::get('consolidate-list', [NesaController::class, 'consolidatedList'])->name('get.consolidated');
+            Route::get('nesa-history', [NesaController::class, 'nesaHistory'])->name('get.history');
+            Route::get('nesa-history-details', [NesaController::class, 'nesaHistoryDetails'])->name('get.details');
             Route::get('/download/{filename}', function ($filename) {
                 $filePath = storage_path('app/public/' . $filename);
                 return response()->download($filePath);

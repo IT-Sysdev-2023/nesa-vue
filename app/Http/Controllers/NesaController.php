@@ -133,7 +133,10 @@ class NesaController extends Controller
 
             $itemCode = [];
 
-            $itemcode->each(function ($item, $key) use (&$itemCode) {
+            $nesa_id = 0;
+
+            $itemcode->each(function ($item, $key) use (&$itemCode, &$nesa_id) {
+                $nesa_id = $item[0]->nesa_id;
                 $itemCode[] = $key;
             });
 
@@ -143,10 +146,11 @@ class NesaController extends Controller
                 $disk->delete($filename); // optional, for clarity or logging
             }
 
-            DB::transaction(function () use ($supplier, $itemCode, $filename) {
+            DB::transaction(function () use ( $nesa_id , $supplier, $itemCode, $filename) {
                 ConsolidatedRequest::create([
                     'suplier_code' => $supplier,
                     'item_code' =>  $itemCode,
+                    'nesa_id' =>   $nesa_id ,
                     'documents' => $filename,
                     'batch' => 1,
                     'status' => 0,
@@ -192,5 +196,31 @@ class NesaController extends Controller
         return inertia('Nesa/ConsolidatedList', [
             'records' => $data,
         ]);
+    }
+    public function nesaHistory()
+    {
+        $data = ConsolidatedRequest::select('consolidated_requests.id', 'suppliers.*', 'consolidated_requests.*')
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'suplier_code')
+            ->where('status', 1)
+            ->paginate(10);
+
+        $data->each(function ($item) {
+            $names = [];
+            collect($item->item_code)->each(function ($i) use (&$names) {
+                // dd($i);
+                $names[] = Product::where('itemcode', $i)->value('description');
+                return $i;
+            });
+            $item->desc = $names;
+            return $item;
+        });
+
+        return inertia('Nesa/NesaHistory', [
+            'records' => $data,
+        ]);
+    }
+
+    public function nesaHistoryDetails(Request $request){
+        return inertia('Nesa/NesaHistoryDetails');
     }
 }

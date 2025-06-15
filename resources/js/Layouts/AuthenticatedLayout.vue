@@ -46,10 +46,10 @@
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                                     Consolidated List
                                     </Link>
-                                    <a href="#"
+                                    <Link :href="route('nesa.get.history')"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
-                                        Summary Of SWAF
-                                    </a>
+                                       Nesa History
+                                </Link>
                                 </div>
                             </div>
                         </div>
