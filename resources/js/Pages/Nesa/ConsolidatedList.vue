@@ -16,7 +16,7 @@
                         <a-tag v-for="item in record.desc" class="mt-1" color="blue">{{ item }}</a-tag>
                     </template>
                     <template v-if="column.key == 'action'" class="text-center">
-                        <button
+                        <button @click="downloadPdf(record.documents)"
                             class="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
                                 fill="currentColor">
@@ -48,6 +48,7 @@ import Swal from 'sweetalert2';
 import { ref, watch } from 'vue';
 interface Records {
     data: {
+        id: number,
         supplier_code: string,
         item_code: [],
         bunit: number,
@@ -83,9 +84,11 @@ const columns = ref([
 ]);
 const isSending = ref<boolean>(false);
 const sendEmail = (data: any) => {
+    console.log(data);
     router.get(route('nesa.send.email'), {
         sup: data.supplier_code,
         docs: data.documents,
+        id: data.id
     }, {
         onStart: () => {
             isSending.value = true;
@@ -99,4 +102,7 @@ const sendEmail = (data: any) => {
         }
     });
 }
+const downloadPdf = (filename: string) => {
+    window.location.href = `/nesa/download/${filename}`;
+};
 </script>

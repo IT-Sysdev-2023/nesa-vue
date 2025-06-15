@@ -8,6 +8,7 @@ use App\Http\Controllers\WeatherController;
 use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -66,6 +67,10 @@ Route::middleware('auth')->group(function () {
             Route::get('search-nesa-supplier', [NesaController::class, 'nesaList'])->name('search.supplier');
             Route::get('consolidate', [NesaController::class, 'consolidateProcess'])->name('consolidate');
             Route::get('consolidate-list', [NesaController::class, 'consolidatedList'])->name('get.consolidated');
+            Route::get('/download/{filename}', function ($filename) {
+                $filePath = storage_path('app/public/' . $filename);
+                return response()->download($filePath);
+            })->where('filename', '.*')->name('download');
         });
     });
 });

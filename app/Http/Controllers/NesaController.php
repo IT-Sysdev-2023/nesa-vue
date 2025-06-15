@@ -96,6 +96,11 @@ class NesaController extends Controller
             ->send(new SupplierEmail($request->all()));
 
         if ($sent) {
+
+            ConsolidatedRequest::findOrFail($request->id)->update([
+                'status' => 1
+            ]);
+
             return redirect()->back();
         }
     }
@@ -124,7 +129,7 @@ class NesaController extends Controller
             $pdf->setPaper('A4', 'portrait');
             $pdf->render();
 
-            $filename = "nesa/supcode-{$supplier}.pdf";
+            $filename = "nesa/{$supplier}-" . substr(md5(uniqid()), 0, 6) . ".pdf";
 
             $itemCode = [];
 
@@ -144,6 +149,7 @@ class NesaController extends Controller
                     'item_code' =>  $itemCode,
                     'documents' => $filename,
                     'batch' => 1,
+                    'status' => 0,
                 ]);
             });
 
@@ -167,8 +173,11 @@ class NesaController extends Controller
 
     public function consolidatedList()
     {
-        $data = ConsolidatedRequest::join('suppliers', 'suppliers.supplier_code', '=', 'suplier_code')
+        $data = ConsolidatedRequest::select('consolidated_requests.id', 'suppliers.*', 'consolidated_requests.*')
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'suplier_code')
+            ->where('status', 0)
             ->paginate(10);
+
         $data->each(function ($item) {
             $names = [];
             collect($item->item_code)->each(function ($i) use (&$names) {

@@ -30,15 +30,17 @@
 </head>
 
 <body>
-    <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
-        <div>
-            <p>Vend142or Name: {{ $supp_code }}</p>
-            <p>Vendor Code: {{ $supplier }}</p>
-        </div>
-        <div>
-            <p style="text-align: right;">Date: {{ now()->format('F j, Y') }}</p>
-        </div>
-    </div>
+    <table style="width: 100%; border: none; border-collapse: collapse; margin-bottom: 10px;">
+        <tr>
+            <td style="vertical-align: top; border: none;">
+                <p style="margin: 0;">Vendor Name: {{ $supp_code }}</p>
+                <p style="margin: 0;">Vendor Code: {{ $supplier }}</p>
+            </td>
+            <td style="vertical-align: top; text-align: right; border: none;">
+                <p style="margin: 0;">Date: {{ now()->format('F j, Y') }}</p>
+            </td>
+        </tr>
+    </table>
 
     <table>
         <thead>
