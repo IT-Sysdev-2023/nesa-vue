@@ -41,6 +41,15 @@ return [
             'journal_mode' => null,
             'synchronous' => null,
         ],
+        
+        'pis' => [
+            'driver' => env('DB_CONNECTIONPIS'),
+            'host' => env('DB_HOSTPIS'),
+            'port' => env('DB_PORTPIS'),
+            'database' => env('DB_DATABASEPIS'),
+            'username' => env('DB_USERNAMEPIS'),
+            'password' => env('DB_PASSWORDPIS'),
+        ],
 
         'mysql' => [
             'driver' => 'mysql',
@@ -169,7 +178,6 @@ return [
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
-
     ],
 
 ];

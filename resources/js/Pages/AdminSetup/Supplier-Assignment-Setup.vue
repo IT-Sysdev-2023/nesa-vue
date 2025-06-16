@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="mt-4 text-center">
-                        <a-tag color="yellow" class="text-[15px] text-yellow-700 px-4 py-2 flex justify-between">
+                        <a-tag color="yellow" class="text-sm text-yellow-700 px-4 py-2 flex ">
                             <svg class="w-5 h-5 mr-2 text-yellow-800" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -86,7 +86,7 @@
                         <!-- table showing all the suppliers  -->
                         <a-spin :spinning="loadingSuppliers">
                             <a-table :data-source="allSupplier" :columns="supplierColumns" size="small" class="w-full"
-                                :loading="loadingSuppliers">
+                                :pagination="false" :loading="loadingSuppliers">
                                 <template #bodyCell="{ column, record }">
                                     <template v-if="column.dataIndex === 'action'">
                                         <a-checkbox :checked="isSupplierSelected(record)"
@@ -108,13 +108,34 @@
                                     </div>
                                 </template>
                             </a-table>
+                            <div
+                                class="flex justify-between items-center mt-4 px-2 py-2 bg-gray-50 border-t border-gray-200">
+                                <div class="text-sm text-gray-600">
+                                    Showing {{ from }} to {{ to }} of {{ total }} records
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button @click="fetchSupplier(currentPage - 1)" :disabled="currentPage === 1"
+                                        class="px-3 py-1 border rounded-md text-sm"
+                                        :class="currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'">
+                                        Previous
+                                    </button>
+                                    <span class="px-3 py-1 text-sm text-gray-700">
+                                        Page {{ currentPage }} of {{ lastPage }}
+                                    </span>
+                                    <button @click="fetchSupplier(currentPage + 1)" :disabled="currentPage === lastPage"
+                                        class="px-3 py-1 border rounded-md text-sm"
+                                        :class="currentPage === lastPage ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'">
+                                        Next
+                                    </button>
+                                </div>
+                            </div>
                         </a-spin>
                     </div>
                 </div>
             </div>
             <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
                 <button @click="exitButton" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition">
-                    Cancel
+                    Close
                 </button>
                 <button @click="cancelSupplierButton"
                     class="px-4 py-2 text-red-600 hover:bg-red-50 rounded-md transition">
@@ -149,7 +170,7 @@ const emit = defineEmits(['update:open', 'update:selected-suppliers']);
 const loadingSuppliers = ref<boolean>(false);
 interface Supplier {
     label: string;
-    value: string; // Changed to string to match your data format
+    value: string;
 }
 
 const selectedSuppliers = ref<Supplier[]>([]);
@@ -182,12 +203,34 @@ watch(() => props.open, async (newVal) => {
     }
 });
 
-const fetchSupplier = async () => {
+const currentPage = ref<any | []>([]);
+const perPage = ref<any | []>([]);
+const total = ref<any | []>([]);
+const lastPage = ref<any | []>([]);
+const from = ref<any | []>([]);
+const to = ref<any | []>([]);
+
+
+const fetchSupplier = async (page = 1) => {
     try {
         loadingSuppliers.value = true;
-        const response = await axios.get(route('admin.selectedSupplier'));
+        const response = await axios.get(route('admin.selectedSupplier'), {
+            params: {
+                page: page,
+                search: supplierSearch.value
+            }
+        });
+
         allSupplier.value = response.data.specifiedProducts || [];
         supplierColumns.value = response.data.productColumns || [];
+
+        currentPage.value = response.data.pagination?.current_page || 1;
+        perPage.value = response.data.pagination?.per_page || 10;
+        total.value = response.data.pagination?.total || 0;
+        lastPage.value = response.data.pagination?.last_page || 1;
+        from.value = response.data.pagination?.from || 0;
+        to.value = response.data.pagination?.to || 0;
+
     } catch (error) {
         console.error('Error fetching supplier', error);
         notification.error({
@@ -231,7 +274,6 @@ const selectSupplierButton = () => {
     emit('update:open', false);
 };
 
-// Rest of your methods remain the same...
 const removeSupplier = (index: number) => {
     selectedSuppliers.value.splice(index, 1);
 };
@@ -247,44 +289,66 @@ const exitButton = () => {
 
 const toggleSelectAll = async (checked: boolean) => {
     selectAllLoading.value = true;
-    selectAll.value = checked;
 
     try {
         if (checked) {
-            // Add all visible suppliers that aren't already selected
-            const newSuppliers = allSupplier.value
-                .filter(record => !selectedSuppliers.value.some(s => s.value === record.supplierCode))
-                .map(record => ({
-                    label: record.supplierName,
-                    value: record.supplierCode
-                }));
-            selectedSuppliers.value = [...selectedSuppliers.value, ...newSuppliers];
+            // Fetch ALL suppliers that match current search
+            const response = await axios.get(route('admin.getSuppliers'), {
+                params: {
+                    search: supplierSearch.value
+                }
+            });
+
+            const allMatchingSuppliers = response.data || [];
+
+            // Create a map for quick lookup
+            const existingSelections = new Set(selectedSuppliers.value.map(s => s.value));
+
+            // Add only new suppliers that aren't already selected
+            selectedSuppliers.value = [
+                ...selectedSuppliers.value,
+                ...allMatchingSuppliers
+                    .filter(supplier => !existingSelections.has(supplier.value))
+                    .map(supplier => ({
+                        label: supplier.label,
+                        value: supplier.value
+                    }))
+            ];
+
+            selectAll.value = true;
         } else {
-            // Remove only the suppliers that are currently visible in the table
-            const visibleSupplierCodes = allSupplier.value.map(s => s.supplierCode);
-            selectedSuppliers.value = selectedSuppliers.value.filter(
-                s => !visibleSupplierCodes.includes(s.value)
-            );
+            if (supplierSearch.value) {
+                // If searching, remove only suppliers matching the search
+                const response = await axios.get(route('admin.getAllSupplierIds'), {
+                    params: {
+                        search: supplierSearch.value
+                    }
+                });
+
+                const codesToRemove = new Set(response.data.map(s => s.value));
+                selectedSuppliers.value = selectedSuppliers.value.filter(
+                    s => !codesToRemove.has(s.value)
+                );
+            } else {
+                selectedSuppliers.value = [];
+            }
+            selectAll.value = false;
         }
+    } catch (error) {
+        console.error('Error in select all:', error);
+        notification.error({
+            message: 'Error',
+            description: 'Failed to process select all'
+        });
     } finally {
         selectAllLoading.value = false;
     }
 };
-
 watch(supplierSearch, debounce(() => {
     searchFunction();
 }, 300));
 
 const searchFunction = async () => {
-    try {
-        const response = await axios.get(route('admin.selectedSupplier'), {
-            params: {
-                search: supplierSearch.value
-            }
-        });
-        allSupplier.value = response.data.specifiedProducts || [];
-    } catch (error) {
-        console.log('Failed to search supplier', error);
-    }
+    await fetchSupplier(1);
 };
 </script>

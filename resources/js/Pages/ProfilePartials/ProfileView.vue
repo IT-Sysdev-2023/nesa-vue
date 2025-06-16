@@ -20,12 +20,25 @@
 
             <!-- User info -->
             <div class="text-center mb-6">
-                <p class="text-sm text-gray-500 mb-1">Hello</p>
+                <div v-if="page.auth.user.employee_id === '1000048642'">
+                    <p class="text-medium italic font-bold text-gray-600 mb-1 tracking-wide">Oy Bossing ,</p>
+                </div>
+                <div v-else-if="page.auth.user.employee_id === '02484-2023'">
+                    <p class="text-medium italic font-bold text-gray-600 mb-1 tracking-wide">Ohayou gozaimasu Bossing ,
+                    </p>
+                </div>
+                <div v-else-if="page.auth.user.employee_id === '1000049981'">
+                    <p class="text-medium italic font-bold text-gray-600 mb-1 tracking-wide">O-genki desu ka Bossing ,
+                    </p>
+                </div>
+                <div v-else>
+                    <p class="text-medium italic font-bold text-gray-600 mb-1 tracking-wide">Hello ,</p>
+                </div>
                 <h3 class="text-lg font-semibold text-gray-800">{{ fullName }}</h3>
-                <div v-if="userTypes" class="mt-1">
-                    <span class="inline-block px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                <div v-if="userTypes" class="mt-2">
+                    <a-tag color="green">
                         {{ userTypes.name }}
-                    </span>
+                    </a-tag>
                 </div>
             </div>
 
@@ -68,6 +81,7 @@ interface User {
     lastname?: string;
     usertype?: string;
     id?: string;
+    employee_id: string
 }
 
 interface PageProps {
