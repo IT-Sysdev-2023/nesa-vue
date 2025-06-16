@@ -73,7 +73,7 @@
                         <p class="font-medium text-gray-800 mb-3">For concerns please contact:</p>
                         <div class="space-y-2">
                             <!-- Phone Option -->
-                            <div class="flex items-center justify-center">
+                            <div class="flex items-center justify-center gap-2">
                                 <svg class="w-6 h-6 text-gray-800 dark:text-blue-600" aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                     viewBox="0 0 24 24">
@@ -85,7 +85,7 @@
                             </div>
 
                             <!-- People Option -->
-                            <div class="flex items-center justify-center">
+                            <div class="flex items-center justify-center gap-2">
                                 <svg class="w-6 h-6 text-gray-800 dark:text-blue-600" aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                     viewBox="0 0 24 24">

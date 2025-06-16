@@ -4,14 +4,34 @@
 
     <AuthenticatedLayout>
         <div class="py-6 px-4 sm:px-6 lg:px-10">
-            <div class=" mb-8">
+            <div class="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-                    <p class="mt-2 text-sm text-gray-600">Welcome back! Here's what's happening today.</p>
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
+                    <p class="mt-1 md:mt-2 text-sm text-gray-600">Welcome back! Here's what's happening today.</p>
                 </div>
 
+                <div
+                    class="flex items-center gap-3">
+                    <div class="relative">
+                        <img src="/storage/images/robot.webp"
+                            class="w-16 h-16 md:w-20 md:h-20 object-contain hover:scale-105 transition-transform"
+                            alt="Assistant Robot" />
+                        <div
+                            class="absolute -bottom-1 -right-1 bg-indigo-100 text-indigo-600 rounded-full p-1 shadow-sm border border-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Hello</p>
+                        <p class="text-sm md:text-base font-medium text-gray-700">{{ user.employee_name }}</p>
+                    </div>
+                </div>
             </div>
-
             <!-- Stats Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -175,7 +195,7 @@
                             </div>
                             <div class="ml-3">
                                 <p class="text-sm font-medium text-gray-900">New review</p>
-                                <p class="text-sm text-gray-500">5-star rating from Sarah Johnson</p>
+                                <p class="text-sm text-gray-500">5-star rating from {{ user.employee_name }}</p>
                                 <p class="text-xs text-gray-400 mt-1">5 hours ago</p>
                             </div>
                         </div>
@@ -187,10 +207,11 @@
 </template>
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import axios from 'axios';
+
 
 const info = ref<[] | null>(null);
 const usersCount = ref<number | null>(null);
@@ -205,5 +226,33 @@ const fetchingInfo = async () => {
 };
 onMounted(() => {
     fetchingInfo();
+});
+
+const page = usePage().props as unknown as PageProps;
+interface PageProps {
+    auth: {
+        user: User;
+    }
+};
+interface User {
+    firstname: string;
+    lastname: string
+};
+
+const formatName = computed(() => {
+    return `${page.auth.user.lastname}, ${page.auth.user.firstname}`;
+});
+const value = ref<string>(formatName.value);
+const user = ref<any>({});
+const fetchUser = async () => {
+    const response = await axios.get('http://172.16.161.34/api/gc/filter/employee/name', {
+        params: {
+            q: value.value
+        }
+    });
+    user.value = response.data.data.employee[0];
+};
+onMounted(() => {
+    fetchUser();
 });
 </script>

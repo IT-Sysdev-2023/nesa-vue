@@ -158,7 +158,7 @@
                                                     : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                                             ]" />
                                         <p v-if="errors.username" class="text-red-600 text-sm mt-1">{{ errors.username
-                                            }}</p>
+                                        }}</p>
                                     </div>
                                 </div>
                                 <div class="mt-10">
@@ -195,7 +195,7 @@
                                                     : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                                             ]" />
                                         <p v-if="errors.password" class="text-red-600 text-sm mt-1">{{ errors.password
-                                            }}</p>
+                                        }}</p>
                                     </div>
 
                                     <div class="flex-1">
@@ -267,7 +267,7 @@
                                 </p>
                                 <div class="mt-6">
                                     <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-blue-500 rounded-full animate-pulse" style="width: 60%">
+                                        <div class="h-full bg-blue-500 rounded-full animate-pulse" style="width: 10%">
                                         </div>
                                     </div>
                                     <p class="text-xs text-gray-500 mt-2">Development in progress</p>
