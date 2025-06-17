@@ -146,11 +146,11 @@ class NesaController extends Controller
                 $disk->delete($filename); // optional, for clarity or logging
             }
 
-            DB::transaction(function () use ( $nesa_id , $supplier, $itemCode, $filename) {
+            DB::transaction(function () use ($nesa_id, $supplier, $itemCode, $filename) {
                 ConsolidatedRequest::create([
                     'suplier_code' => $supplier,
                     'item_code' =>  $itemCode,
-                    'nesa_id' =>   $nesa_id ,
+                    'nesa_id' =>   $nesa_id,
                     'documents' => $filename,
                     'batch' => 1,
                     'status' => 0,
@@ -220,7 +220,25 @@ class NesaController extends Controller
         ]);
     }
 
-    public function nesaHistoryDetails(Request $request){
-        return inertia('Nesa/NesaHistoryDetails');
+    public function nesaHistoryDetails(Request $request)
+    {
+
+        $collect = collect($request->item_code);
+
+        $collectedData = [];
+
+        $collect->each(function ($item) use (&$collectedData) {
+
+            $nesa = NesaRequest::join('business_units', 'business_units.id', '=', 'nesa_requests.bu')
+            ->join('products', 'products.itemcode', '=','nesa_requests.itemcode')
+                ->where('nesa_requests.itemcode', $item)->get();
+
+            $collectedData[] = $nesa;
+        });
+
+        return inertia('Nesa/NesaHistoryDetails', [
+            'records' => $collectedData,
+            'supplier' => Supplier::where('supplier_code', $request->supplier)->value('name')
+        ]);
     }
 }

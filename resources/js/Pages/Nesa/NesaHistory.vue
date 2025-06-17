@@ -1,9 +1,15 @@
 <template>
     <AuthenticatedLayout>
+        <div class=" mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Near Expiry History</h1>
+                <p class="mt-2 text-sm text-gray-600">Viewing History</p>
+            </div>
+        </div>
         <a-table size="small" bordered :data-source="records.data" :columns="columns">
-            <template #bodyCell="{column, record}">
+            <template #bodyCell="{ column, record }">
                 <template v-if="column.key == 'action'">
-                    <a-button @click="details(record)">
+                    <a-button @click="details(record)" size="small">
                         <details></details>
                     </a-button>
                 </template>
@@ -45,7 +51,8 @@ const columns = ref([
 
 const details = (record: any) => {
     router.get(route('nesa.get.details'), {
-        item_codes: record.item_code
+        item_code: record.item_code,
+        supplier: record.supplier_code
     });
 }
 
