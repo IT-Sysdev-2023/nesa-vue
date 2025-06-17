@@ -5,8 +5,7 @@
             <div class="flex justify-between h-16">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="#" class="flex items-center space-x-2">
-
+                    <a :href="route('dashboard')" class="flex items-center space-x-2">
                         <img class="w-10 h-10" src="/storage/images/logo.png" alt="Nesa Logo">
                         <span class="text-xl font-bold text-gray-900">Nesa</span>
                     </a>
@@ -120,7 +119,7 @@
 
                 <!-- CTA Buttons -->
                 <div class="hidden md:flex items-center space-x-4">
-                    <div class="relative group">
+                    <div class="relative group mr-20">
                         <button @click="showProfile = !showProfile"
                             class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                             <img class="w-10 h-10 rounded-full object-cover"

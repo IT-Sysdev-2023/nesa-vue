@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\ColumnHelper;
 
+use function Laravel\Prompts\select;
+
 class AdminController extends Controller
 {
     public function about()
     {
         return inertia('About-Setup');
     }
-
     public function masterFile(Request $request)
     {
         $query = Product::query()
@@ -124,6 +125,21 @@ class AdminController extends Controller
         ]);
     }
 
+    public function getSuppliers(Request $request)
+    {
+        $suppliers = DB::table('suppliers')
+            ->select('supplier_code as value', 'name as label')
+            ->when($request->search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('supplier_code', 'like', '%' . $search . '%');
+                });
+            })
+            ->get();
+
+        return response()->json($suppliers);
+    }
+
     public function selectedSupplier(Request $request)
     {
         $specifiedProducts = DB::table('suppliers')
@@ -134,7 +150,7 @@ class AdminController extends Controller
                 $query->where('name', 'like', '%' . $search . '%')
                     ->orWhere('supplier_code', 'like', '%' . $search . '%');
             })
-            ->get();
+            ->paginate(10);
 
         $columns = array_map(
             fn($name, $field) => ColumnHelper::arrayHelper($name, $field),
@@ -143,9 +159,17 @@ class AdminController extends Controller
         );
 
         return response()->json([
-            'specifiedProducts' => $specifiedProducts,
+            'specifiedProducts' => $specifiedProducts->items(),
             'productColumns' => $columns,
-            'search' => $request->search
+            'search' => $request->search,
+            'pagination' => [
+                'current_page' => $specifiedProducts->currentPage(),
+                'per_page' => $specifiedProducts->perPage(),
+                'total' => $specifiedProducts->total(),
+                'last_page' => $specifiedProducts->lastPage(),
+                'from' => $specifiedProducts->firstItem(),
+                'to' => $specifiedProducts->lastItem()
+            ]
         ]);
     }
 
@@ -201,6 +225,19 @@ class AdminController extends Controller
 
     public function viewProfile()
     {
+        // $result = DB::connection('pis')
+        //     ->table('employee3')
+        //     // ->select('photo', 'firstname', 'lastname')
+        //     ->join('applicant', 'app_id', '=', 'emp_id')
+        //     ->whereYear('startdate', '2025')
+        //     ->where('emp_type', 'ojt')
+        //     ->where('current_status', 'active')
+        //     ->where('gender', 'Female')
+        //     ->where('tag_as', 'new')
+        //     ->where('school', 'Holy Name University')
+        //     ->limit(100)
+        //     ->get();
+        // dd($result);
         return inertia('AdminSetup/ViewProfile-Setup');
     }
 
