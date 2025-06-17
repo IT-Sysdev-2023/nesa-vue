@@ -61,7 +61,7 @@
             </div>
         </div>
         <!-- update modal  -->
-        <a-modal v-model:open="updateModal" width="50%" title="Update User Credentials">
+        <a-modal v-model:open="updateModal" width="50%" title="Update User Data">
             <div class="space-y-4 mt-10">
                 <!-- Username -->
                 <div class="w-full max-w-md mx-auto">
@@ -109,7 +109,8 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Name Extension - <a-tag color="red">Optional</a-tag></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Name Extension - <a-tag
+                                color="red">Optional</a-tag></label>
                         <input v-model="updateForm.nameExtention" type="text"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
@@ -125,7 +126,7 @@
                                 ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
                                 : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                         ]">
-                            <option v-for="item in props.businessUnit" :key="item.id" :value="item.id">{{ item.name }}
+                            <option v-for="item in filterBusiness" :key="item.id" :value="item.id">{{ item.name }}
                             </option>
                         </select>
                         <p class="text-red-600 text-sm mt-1">{{ errors.businessUnit }}</p>
@@ -406,6 +407,13 @@ const filterDisplay = computed(() => {
     }
     return props.users.data;
 });
+
+const filterBusiness = computed(() => {
+    if (user.auth.user.usertype !== 1) {
+        return props.businessUnit.filter(item => item.id !== 8);
+    }
+    return props.businessUnit
+})
 
 const updateForm = useForm({
     username: '',

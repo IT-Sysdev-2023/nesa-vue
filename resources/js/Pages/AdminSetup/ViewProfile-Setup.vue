@@ -158,7 +158,7 @@
                                                     : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                                             ]" />
                                         <p v-if="errors.username" class="text-red-600 text-sm mt-1">{{ errors.username
-                                        }}</p>
+                                            }}</p>
                                     </div>
                                 </div>
                                 <div class="mt-10">
@@ -195,7 +195,7 @@
                                                     : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                                             ]" />
                                         <p v-if="errors.password" class="text-red-600 text-sm mt-1">{{ errors.password
-                                        }}</p>
+                                            }}</p>
                                     </div>
 
                                     <div class="flex-1">
@@ -213,20 +213,10 @@
                                     </div>
                                 </div>
                                 <div class="mt-10">
-                                    <button @click="updatePassword"
+                                    <button @click="updatePasswordModal = true"
                                         class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                         Update Password
                                     </button>
-                                    <p
-                                        class="flex items-center justify-center text-yellow-800 bg-yellow-100 border border-yellow-400 text-sm mt-5 p-3 rounded-md max-w-2xl mx-auto">
-                                        <svg class="w-5 h-5 mr-2 text-yellow-800" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 9v2m0 4h.01M5.93 19h12.14a2 2 0 001.74-2.99l-6.07-10.5a2 2 0 00-3.48 0L4.19 16.01A2 2 0 005.93 19z" />
-                                        </svg>
-                                        Please make sure to remember your password, as it will be required the next time
-                                        you log in.
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -302,9 +292,39 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 9v2m0 4h.01M5.93 19h12.14a2 2 0 001.74-2.99l-6.07-10.5a2 2 0 00-3.48 0L4.19 16.01A2 2 0 005.93 19z" />
                     </svg>
-                    Please make sure to remember your username, as it will be required the next time
-                    you log in.
+                    Please remember your username for future logins.
                 </p>
+            </div>
+        </a-modal>
+        <a-modal v-model:open="updatePasswordModal" centered :footer="null" width="400px">
+            <div class="p-6 text-center">
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Confirmation</h3>
+                    <p class="text-gray-600">Are you sure, {{ page.auth.user.firstname }}?</p>
+                </div>
+
+                <div class="flex items-start bg-yellow-50 rounded-lg p-4 mb-6 text-left">
+                    <svg class="flex-shrink-0 w-5 h-5 mt-0.5 text-yellow-500" xmlns="http://www.w3.org/2000/svg"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.74 4h12.52a2 2 0 001.74-2.99l-6.07-10.5a2 2 0 00-3.48 0L4.19 16.01A2 2 0 005.93 19z" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700">Please make sure to remember your password, as it will be
+                            required the next time
+                            you log in</p>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 mt-8">
+                    <button @click="updatePasswordModal = false"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        Cancel
+                    </button>
+                    <button @click="updatePassword"
+                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        Confirm
+                    </button>
+                </div>
             </div>
         </a-modal>
     </AuthenticatedLayout>
@@ -317,8 +337,7 @@ import { computed, ref } from 'vue';
 import { onMounted, createVNode } from 'vue';
 import axios from "axios";
 import { router } from '@inertiajs/vue3';
-import { Modal, notification } from 'ant-design-vue';
-import { ExclamationCircleFilled } from '@ant-design/icons-vue';
+import { notification } from 'ant-design-vue';
 
 const page = usePage().props as unknown as PageProps;
 const pages = usePage();
@@ -366,37 +385,29 @@ const getUserDetails = async () => {
 onMounted(() => {
     getUserDetails();
 });
-
+const updatePasswordModal = ref<boolean>(false);
 const updatePassword = () => {
-    Modal.confirm({
-        title: 'Confirmation',
-        icon: createVNode(ExclamationCircleFilled),
-        content: 'Are you sure to update your password ?',
-        onOk: () => {
-            router.post(route('admin.updatePassword'), {
-                oldPassword: form.oldPassword,
-                password: form.password,
-                confirmPassword: form.confirmPassword,
-                id: page.auth.user.id
-            }, {
-                onSuccess: (page: any) => {
-                    if (page.props.flash.success) {
-                        notification.success({
-                            message: 'Success',
-                            description: page.props.flash.success
-                        });
-                        form.reset();
-                    } else if (page.props.flash.error) {
-                        notification.error({
-                            message: 'Failed',
-                            description: page.props.flash.error
-                        });
-                    }
-                }
-            });
-        },
-        onCancel: () => {
-            console.log('cancel');
+    router.post(route('admin.updatePassword'), {
+        oldPassword: form.oldPassword,
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+        id: page.auth.user.id
+    }, {
+        onSuccess: (page: any) => {
+            if (page.props.flash.success) {
+                notification.success({
+                    message: 'Success',
+                    description: page.props.flash.success
+                });
+                form.reset();
+                updatePasswordModal.value = false;
+            } else if (page.props.flash.error) {
+                notification.error({
+                    message: 'Failed',
+                    description: page.props.flash.error
+                });
+                updatePasswordModal.value = false;
+            }
         }
     });
 };

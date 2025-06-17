@@ -1,6 +1,6 @@
 <template>
     <a-modal v-model:open="props.open" width="90%" :footer="null" class="rounded-lg" centered
-        @cancel="cancelSupplierButton">
+        @cancel="cancelSupplierButton" :closable="false">
         <div class="p-1">
             <div class="mb-6">
 

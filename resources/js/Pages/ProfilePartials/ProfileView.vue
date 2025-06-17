@@ -31,6 +31,13 @@
                     <p class="text-medium italic font-bold text-gray-600 mb-1 tracking-wide">O-genki desu ka Bossing ,
                     </p>
                 </div>
+                <div v-else-if="page.auth.user.employee_id === '1000052515'">
+                    <p class="text-medium italic font-bold text-gray-600 mb-1 tracking-wide">sa-wat-dee kâ ,
+                    </p>
+                </div>
+                <div v-else-if="page.auth.user.employee_id === '1000033976'">
+                    <p class="text-medium italic font-bold text-gray-600 mb-1 tracking-wide"> Anyeong beshie ,</p>
+                </div>
                 <div v-else>
                     <p class="text-medium italic font-bold text-gray-600 mb-1 tracking-wide">Hello ,</p>
                 </div>

@@ -33,7 +33,7 @@
                                 'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                                 errors.firstname
                                     ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                             ]" />
                             <p v-if="errors.firstname" class="text-red-500 text-sm mt-1">{{ errors.firstname }}</p>
                         </div>
@@ -45,7 +45,7 @@
                                 'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                                 errors.middlename
                                     ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                             ]" />
                             <p v-if="errors.middlename" class="text-red-600 text-medium mt-1">{{ errors.middlename }}
                             </p>
@@ -58,7 +58,7 @@
                                 'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                                 errors.username
                                     ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                             ]" />
                             <p v-if="errors.username" class="text-red-600 text-medium mt-1">{{ errors.username }}</p>
                         </div>
@@ -69,14 +69,14 @@
                                 'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                                 errors.businessUnit
                                     ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                             ]">
-                                <option v-for="item in props.businessUnit" :key="item.id" :value="item.id">{{ item.name
-                                    }}
+                                <option v-for="item in filterBusiness" :key="item.id" :value="item.id">{{ item.name
+                                }}
                                 </option>
                             </select>
                             <p v-if="errors.businessUnit" class="text-red-600 text-medium mt-1">{{ errors.businessUnit
-                            }}
+                                }}
                             </p>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                                 'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                                 errors.lastname
                                     ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                             ]" />
                             <p v-if="errors.lastname" class="text-red-600 text-medium mt-1">{{ errors.lastname }}</p>
                         </div>
@@ -102,10 +102,10 @@
                                 'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                                 errors.nameExtention
                                     ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                             ]" />
                             <p v-if="errors.nameExtention" class="text-red-600 text-medium mt-1">{{ errors.nameExtention
-                            }}
+                                }}
                             </p>
 
                         </div>
@@ -117,7 +117,7 @@
                                 'w-full px-4 py-2 border rounded-lg focus:ring-2 transition',
                                 errors.usertype
                                     ? 'border-red-500 focus:ring-red-300 focus:border-red-500'
-                                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                             ]">
                                 <option v-for="item in filterUsertypes" :key="item.id" :value="item.id">{{ item.name }}
                                 </option>
@@ -138,7 +138,7 @@
                             </button>
                             <p v-if="errors.specifiedSupplier" class="text-red-600 text-medium mt-3">{{
                                 errors.specifiedSupplier
-                            }}</p>
+                                }}</p>
                         </div>
                         <SupplierAssignmentSetup v-model:open="showSupplierModal"
                             @update:selected-suppliers="handleSelectedSuppliers" />
@@ -150,21 +150,39 @@
                             class="px-6 py-2 mr-4 text-medium font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
                             Cancel
                         </button>
-                        <button type="submit" @click="submitButton"
+                        <button type="submit" @click="addConfirmationModal = true"
                             class="px-6 py-2 text-medium font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
                             Create User
                         </button>
                     </div>
-                    <div>
-                        <p
-                            class="flex items-start text-sm text-blue-800 bg-blue-50 border border-blue-300 mt-5 p-3 rounded-md max-w-md mx-auto px-2">
-                            <span><strong>' NESA2025 '</strong> is the default
-                                password for every newly added user.</span>
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
+        <a-modal v-model:open="addConfirmationModal" centered :footer="null" width="400px">
+            <div class="p-6 text-center">
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Confirmation</h3>
+                    <p class="text-gray-600">Are you sure to add this new user ?</p>
+                </div>
+                <div>
+                    <p
+                        class="flex items-start text-sm text-blue-800 bg-blue-50 border border-blue-300 mt-5 p-3 rounded-md max-w-md mx-auto px-2">
+                        <span><strong>' NESA2025 '</strong> is the default
+                            password for every newly added user.</span>
+                    </p>
+                </div>
+                <div class="flex justify-end gap-3 mt-8">
+                    <button @click="addConfirmationModal = false"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        Cancel
+                    </button>
+                    <button @click="submitButton"
+                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </a-modal>
     </AuthenticatedLayout>
 </template>
 
@@ -209,6 +227,13 @@ const filterUsertypes = computed(() => {
     return props.usertypes;
 });
 
+const filterBusiness = computed(() => {
+    if (page.auth.user.usertype !== 1) {
+        return props.businessUnit.filter(item => item.id !== 8);
+    }
+    return props.businessUnit;
+})
+
 interface userType {
     name: string;
     id: number;
@@ -232,6 +257,8 @@ const forms = useForm({
 const cancelButton = () => {
     forms.reset();
 };
+
+const addConfirmationModal = ref<boolean>(false);
 const submitButton = () => {
     router.post(route('admin.submitUser'), {
         firstname: forms.firstname,
@@ -254,11 +281,13 @@ const submitButton = () => {
                 });
                 forms.reset();
                 searchUser.value = null;
+                addConfirmationModal.value = false;
             } else if (page?.props?.flash?.error) {
                 notification.error({
                     message: 'Oops',
                     description: page.props.flash.error
                 });
+                addConfirmationModal.value = false;
             }
         },
     });
