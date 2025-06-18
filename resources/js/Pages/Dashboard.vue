@@ -10,24 +10,19 @@
                     <p class="mt-1 md:mt-2 text-sm text-gray-600">Welcome back! Here's what's happening today.</p>
                 </div>
 
-                <div
-                    class="flex items-center gap-3">
+                <div class="flex items-center gap-3">
                     <div class="relative">
-                        <img src="/storage/images/robot.webp"
-                            class="w-16 h-16 md:w-20 md:h-20 object-contain hover:scale-105 transition-transform"
-                            alt="Assistant Robot" />
-                        <div
-                            class="absolute -bottom-1 -right-1 bg-indigo-100 text-indigo-600 rounded-full p-1 shadow-sm border border-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
+                        <a-tooltip color="#108ee9">
+                            <template #title>
+                                Hello {{ page.auth.user.firstname }}, I'm bot chokoy.
+                            </template>
+                            <img src="/storage/images/robot.webp"
+                                class="w-16 h-16 md:w-20 md:h-20 object-contain hover:scale-105 transition-transform robot-wave"
+                                alt="Assistant Robot" />
+                        </a-tooltip>
                     </div>
-                    <div class="text-right">
-                        <p class="text-xs text-gray-500">Hello</p>
+                    <div>
+                        <p class="text-md italic text-gray-900 font-bold">Hello</p>
                         <p class="text-sm md:text-base font-medium text-gray-700">{{ user.employee_name }}</p>
                     </div>
                 </div>
@@ -256,3 +251,28 @@ onMounted(() => {
     fetchUser();
 });
 </script>
+<style>
+/* Robot waving animation */
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(20deg);
+  }
+  75% {
+    transform: rotate(-20deg);
+  }
+}
+
+.robot-wave {
+  transition: all 0.3s ease;
+  transform-origin: bottom center;
+  will-change: transform;
+}
+
+.robot-wave:hover {
+  animation: wave 0.8s ease-in-out 2;
+  transform: scale(1.05);
+}
+</style>

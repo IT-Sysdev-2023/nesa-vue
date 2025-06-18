@@ -16,13 +16,13 @@
                     <div class="hidden md:flex space-x-8">
 
                         <button
-                            class="flex items-center gap-1 text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">
+                            class="flex items-center gap-1 text-gray-900 hover:text-blue-600 px-1 py-2 text-sm font-medium transition-colors duration-200">
                             <HomeOutlined />
                             <Link :href="route('dashboard')"><span>Home</span></Link>
                         </button>
                         <div class="relative">
                             <button @click="toggleDropdown"
-                                class="text-gray-900 gap-1 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
+                                class="text-gray-900 gap-1 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <NotificationOutlined />
                                 <span>Nesa</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -38,24 +38,24 @@
                                 class="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition-all duration-200 transform scale-100 z-50">
                                 <div class="py-1">
                                     <Link :href="route('nesa.get.list')"
-                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                     Near Expiry Stock Advise
                                     </Link>
                                     <Link :href="route('nesa.get.consolidated')"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                     Consolidated List
                                     </Link>
                                     <Link :href="route('nesa.get.history')"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
-                                       Nesa History
-                                </Link>
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                    Nesa History
+                                    </Link>
                                 </div>
                             </div>
                         </div>
 
                         <div class="relative" v-if="page.auth.user.usertype == '1' || page.auth.user.usertype == '2'">
                             <button @click="toggleMasterfileDropdown"
-                                class="text-gray-900 gap-1 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
+                                class="text-gray-900 gap-1 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <DeploymentUnitOutlined />
                                 <span>Masterfile</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -71,11 +71,11 @@
                                 class="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition-all duration-200 transform scale-100 z-50">
                                 <div class="py-1">
                                     <Link :href="route('admin.masterfile')"
-                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                     Products
                                     </Link>
                                     <Link :href="route('admin.supplier.list')"
-                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                     Supplier List
                                     </Link>
                                 </div>
@@ -83,7 +83,7 @@
                         </div>
                         <div class="relative" v-if="page.auth.user.usertype == '1' || page.auth.user.usertype == '2'">
                             <button @click="toggleSetupDropdown"
-                                class="text-gray-900 gap-1 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
+                                class="text-gray-900 gap-1 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <SettingOutlined />
                                 <span>Setup</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -99,11 +99,11 @@
                                 class="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition-all duration-200 transform scale-100 z-50">
                                 <div class="py-1">
                                     <Link :href="route('admin.addUser')"
-                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                     Add User
                                     </Link>
                                     <Link :href="route('admin.setupUser')"
-                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                     Setup Users
                                     </Link>
                                 </div>
@@ -111,7 +111,7 @@
                         </div>
 
                         <button
-                            class="flex items-center gap-1 text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium transition-colors duration-200">
+                            class="flex items-center gap-1 text-gray-900 hover:text-blue-600 px-1 py-2 text-sm font-medium transition-colors duration-200">
                             <Link :href="route('admin.about')"><span>About</span></Link>
                         </button>
                     </div>
@@ -121,7 +121,7 @@
                 <div class="hidden md:flex items-center space-x-4">
                     <div class="relative group mr-20">
                         <button @click="showProfile = !showProfile"
-                            class="text-gray-900 hover:text-indigo-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
+                            class="text-gray-900 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                             <img class="w-10 h-10 rounded-full object-cover"
                                 :src="userDetails && userDetails.employee_photo ? 'http://172.16.161.34:8080/hrms' + userDetails.employee_photo : '/storage/images/noUser.jpg'"
                                 alt="">
@@ -145,7 +145,7 @@
                 <!-- Mobile menu button -->
                 <div class="md:hidden flex items-center">
                     <button @click="toggleMobileMenu" type="button"
-                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-gray-100 focus:outline-none transition duration-150 ease-in-out"
+                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none transition duration-150 ease-in-out"
                         :aria-expanded="isMobileMenuOpen" aria-controls="mobile-menu">
                         <span class="sr-only">Open main menu</span>
                         <svg :class="{ 'hidden': isMobileMenuOpen, 'block': !isMobileMenuOpen }" class="h-6 w-6"
@@ -167,12 +167,12 @@
         <div v-show="isMobileMenuOpen" class="md:hidden origin-top" id="mobile-menu">
             <div class="pt-2 pb-3 space-y-1">
                 <a href="#"
-                    class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-indigo-600 hover:bg-gray-50">Home</a>
+                    class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-blue-600 hover:bg-gray-50">Home</a>
 
                 <!-- Mobile dropdown -->
                 <div class="px-3 py-2">
                     <button @click="toggleMobileProductsMenu"
-                        class="w-full flex justify-between items-center text-base font-medium text-gray-900 hover:text-indigo-600"
+                        class="w-full flex justify-between items-center text-base font-medium text-gray-900 hover:text-blue-600"
                         :aria-expanded="isMobileProductsMenuOpen">
                         <span>Products</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -185,22 +185,22 @@
                     </button>
                     <div v-show="isMobileProductsMenuOpen" class="mt-2 space-y-1 pl-4">
                         <a href="#"
-                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">Web
+                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-blue-600 hover:bg-gray-50">Web
                             Design</a>
                         <a href="#"
-                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">Mobile
+                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-blue-600 hover:bg-gray-50">Mobile
                             Apps</a>
                         <a href="#"
-                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">UI/UX</a>
+                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-blue-600 hover:bg-gray-50">UI/UX</a>
                         <a href="#"
-                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">Development</a>
+                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-blue-600 hover:bg-gray-50">Development</a>
                     </div>
                 </div>
                 <a href="#"
-                    class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-indigo-600 hover:bg-gray-50">About</a>
+                    class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-blue-600 hover:bg-gray-50">About</a>
                 <div class="px-3 py-2">
                     <button @click="toggleMobileSetupMenu"
-                        class="w-full flex justify-between items-center text-base font-medium text-gray-900 hover:text-indigo-600"
+                        class="w-full flex justify-between items-center text-base font-medium text-gray-900 hover:text-blue-600"
                         :aria-expanded="isMobileSetupMenuOpen">
                         <span>Setup</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -213,12 +213,12 @@
                     </button>
                     <div v-show="isMobileSetupMenuOpen" class="mt-2 space-y-1 pl-4">
                         <a :href="route('admin.addUser')"
-                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">Add
+                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-blue-600 hover:bg-gray-50">Add
                             User</a>
                     </div>
                     <div v-show="isMobileSetupMenuOpen" class="mt-2 space-y-1 pl-4">
                         <a :href="route('admin.setupUser')"
-                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-indigo-600 hover:bg-gray-50">Setup
+                            class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-blue-600 hover:bg-gray-50">Setup
                             Users</a>
                     </div>
                 </div>
@@ -226,20 +226,22 @@
             <div class="pt-4 pb-3 border-t border-gray-200">
                 <div class="space-y-1 px-3">
                     <a href="#"
-                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:text-indigo-600 hover:bg-gray-50">Log
+                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:text-blue-600 hover:bg-gray-50">Log
                         in</a>
                     <a href="#"
-                        class="block w-full px-3 py-2 rounded-md text-base font-medium text-center text-white bg-indigo-600 hover:bg-indigo-700">Sign
+                        class="block w-full px-3 py-2 rounded-md text-base font-medium text-center text-white bg-blue-600 hover:bg-blue-700">Sign
                         up</a>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Weather section  -->
     <a-popover trigger="click">
         <template #content>
             <weather-forecast-setup />
         </template>
-        <a-float-button type="primary">
+        <a-float-button type="primary" style="display: flex; justify-content: center; align-items: center;">
             <template #icon>
                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -254,20 +256,22 @@
             </template>
         </a-float-button>
     </a-popover>
+
     <!-- Content  -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mt-5"></div>
         <slot />
     </div>
+
     <!-- Footer -->
     <div class="mt-10 py-6 border-t border-gray-100">
         <div class="flex flex-col items-center justify-center gap-4 text-center">
-            <div class="text-sm text-gray-700">
+            <div class="text-md text-gray-700">
                 © {{ dayjs().year() }} Near Expiry Stock Advice (NESA)
             </div>
 
             <div class="flex flex-col items-center gap-2">
-                <p class="text-xs text-gray-600">Powered by</p>
+                <p class="text-sm text-gray-600">Powered by</p>
                 <div class="flex items-center justify-center gap-4">
                     <div class="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <svg class="w-5 h-5 text-red-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
