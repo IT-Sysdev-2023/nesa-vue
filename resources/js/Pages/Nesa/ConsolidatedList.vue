@@ -19,7 +19,8 @@
                                     <a-tag v-for="item in record.desc" class="mt-1" color="blue">{{ item }}</a-tag>
                                 </template>
                                 <template v-if="column.key == 'action'" class="text-center">
-                                    <button
+                                    <!-- {{ record }} -->
+                                    <button @click="downloadPdf(record.documents)"
                                         class="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
                                             fill="currentColor">
@@ -91,7 +92,7 @@ const columns = ref([
 ]);
 const isSending = ref<boolean>(false);
 const sendEmail = (data: any) => {
-    console.log(data);
+    
     router.get(route('nesa.send.email'), {
         sup: data.supplier_code,
         docs: data.documents,
@@ -100,13 +101,27 @@ const sendEmail = (data: any) => {
         onStart: () => {
             isSending.value = true;
         },
-        onSuccess: () => {
-            Swal.fire({
-                title: "Success",
-                text: "Email Successfuly sent!",
-                icon: "success"
-            });
+        onSuccess: (e: any) => {
+            if (e.props.flash.status == 'error') {
+                Swal.fire({
+                    title: "Opps Something Missing",
+                    text: "Please put Email Address On this Supplier",
+                    icon: "question"
+                });
+            } else {
+
+                Swal.fire({
+                    title: "Success",
+                    text: "Email Successfuly sent!",
+                    icon: "success"
+                });
+            }
         }
     });
 }
+const downloadPdf = (supplier) => {
+
+    window.location.href = `/nesa/download/${supplier}`;
+};
+
 </script>

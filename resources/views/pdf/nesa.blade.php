@@ -62,7 +62,9 @@
                     <td style="padding: 0; margin: 0;">
                         <div>
                             @foreach ($value as $subitem)
-                                <div style="padding: 2px; border-bottom: 1px solid rgb(99, 99, 99);">{{ $subitem->name }}
+                                <div
+                                    style="padding: 2px; @if (!$loop->first) border-top: 1px solid rgb(99, 99, 99); @endif">
+                                    {{ $subitem->name }}
                                 </div>
                             @endforeach
                         </div>
@@ -70,7 +72,8 @@
                     <td style="padding: 0; margin: 0;">
                         <div>
                             @foreach ($value as $subitem)
-                                <div style="padding: 2px; border-bottom: 1px solid rgb(99, 99, 99);">
+                                <div
+                                    style="padding: 2px; @if (!$loop->first) border-top: 1px solid rgb(99, 99, 99); @endif">
                                     {{ $subitem->description }}</div>
                             @endforeach
                         </div>
@@ -78,7 +81,9 @@
                     <td style="padding: 0; margin: 0; text-align:center">
                         <div>
                             @foreach ($value as $subitem)
-                                <div style="padding: 2px; border-bottom: 1px solid rgb(99, 99, 99);">{{ $subitem->uom }}
+                                <div
+                                    style="padding: 2px; @if (!$loop->first) border-top: 1px solid rgb(99, 99, 99); @endif">
+                                    {{ $subitem->uom }}
                                 </div>
                             @endforeach
                         </div>
@@ -86,7 +91,8 @@
                     <td style="padding: 0; margin: 0; text-align:center">
                         <div>
                             @foreach ($value as $subitem)
-                                <div style="padding: 2px; border-bottom: 1px solid rgb(99, 99, 99);">
+                                <div
+                                    style="padding: 2px; @if (!$loop->first) border-top: 1px solid rgb(99, 99, 99); @endif">
                                     {{ $subitem->quantity }}pcs</div>
                             @endforeach
                         </div>
@@ -94,8 +100,9 @@
                     <td style="padding: 0; margin: 0; text-align:center">
                         <div>
                             @foreach ($value as $subitem)
-                                <div style="padding: 2px; border-bottom: 1px solid rgb(99, 99, 99);">
-                                    {{ $subitem->expiry }}</div>
+                                <div
+                                    style="padding: 2px; @if (!$loop->first) border-top: 1px solid rgb(99, 99, 99); @endif">
+                                    {{ \Carbon\Carbon::parse($subitem->expiry)->format('F d, Y') }}</div>
                             @endforeach
                         </div>
                     </td>

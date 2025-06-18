@@ -35,12 +35,12 @@ class NesaController extends Controller
             'nesa_requests.created_at',
             'suppliers.name as supname',
             'business_units.name as buname',
-            'description',
-            'supplier',
+            'products.description',
         )
-            ->join('suppliers', 'supplier_code', '=', 'supplier')
             ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
-            ->join('business_units', 'business_units.id', '=', 'bu')
+            ->join('suppliers', 'supplier_code', '=', 'products.vendor_no')
+            ->join('users', 'employee_id', '=', 'created_by')
+            ->join('business_units', 'business_units.id', '=', 'users.bu')
             ->when($request->search, function ($query) use ($request) {
                 $query->where('suppliers.name', 'like', '%' . $request->search . '%');
             })->where('nesa_requests.is_consolidated', 0)
@@ -66,13 +66,14 @@ class NesaController extends Controller
             'expiry',
             'suppliers.name as supname',
             'business_units.name as buname',
-            'description',
+            'products.description',
             'quantity',
             'uom'
         )
-            ->join('suppliers', 'supplier_code', '=', 'supplier')
             ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
-            ->join('business_units', 'business_units.id', '=', 'bu')
+            ->join('suppliers', 'supplier_code', '=', 'products.vendor_no')
+            ->join('users', 'employee_id', '=', 'created_by')
+            ->join('business_units', 'business_units.id', '=', 'users.bu')
             ->where('nesa_requests.itemcode', $itemcode)
             ->paginate(10)
             ->withQueryString();
@@ -91,9 +92,14 @@ class NesaController extends Controller
     public function sendEmailFunction(Request $request)
     {
         $getEmail = Supplier::where('supplier_code', $request->sup)->value('email');
-
-        $sent =  Mail::to($getEmail)
-            ->send(new SupplierEmail($request->all()));
+        if ($getEmail != '0') {
+            $sent =  Mail::to($getEmail)
+                ->send(new SupplierEmail($request->all()));
+        } else {
+            return redirect()->back()->with([
+                'status' => 'error',
+            ]);
+        }
 
         if ($sent) {
 
@@ -107,11 +113,23 @@ class NesaController extends Controller
 
     public function consolidateProcess()
     {
-        $nesa = NesaRequest::join('suppliers', 'supplier_code', '=', 'supplier')
-            ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
-            ->join('business_units', 'business_units.id', '=', 'bu')
+        $nesa = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->join('suppliers', 'supplier_code', '=', 'products.vendor_no')
+            ->join('users', 'employee_id', '=', 'created_by')
+            ->join('business_units', 'business_units.id', '=', 'users.bu')
+            ->select(
+                'nesa_requests.id as nesaId',
+                'products.vendor_no',
+                'products.description',
+                'products.uom',
+                'nesa_requests.itemcode',
+                'nesa_requests.*',
+                'suppliers.supplier_code',
+                'users.bu',
+                'business_units.name'
+            )
             ->get()
-            ->groupBy(['supplier', 'itemcode']);
+            ->groupBy(['vendor_no', 'itemcode']);
 
         $nesa->each(function ($itemcode, $supplier) {
 
@@ -164,7 +182,7 @@ class NesaController extends Controller
         $nesa->flatten(2)->each(function ($item) {
 
             DB::transaction(function () use (&$item) {
-                NesaRequest::where('id', $item->nesa_no)->update([
+                NesaRequest::where('id', $item->nesaId)->update([
                     'is_consolidated' => 1
                 ]);
 
@@ -211,6 +229,7 @@ class NesaController extends Controller
                 $names[] = Product::where('itemcode', $i)->value('description');
                 return $i;
             });
+            $item->nesa_date = Date::parse($item->updated_at)->toFormattedDateString();
             $item->desc = $names;
             return $item;
         });
@@ -229,8 +248,15 @@ class NesaController extends Controller
 
         $collect->each(function ($item) use (&$collectedData) {
 
-            $nesa = NesaRequest::join('business_units', 'business_units.id', '=', 'nesa_requests.bu')
-            ->join('products', 'products.itemcode', '=','nesa_requests.itemcode')
+            $nesa = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+                ->join('users', 'employee_id', '=', 'created_by')
+                ->join('business_units', 'business_units.id', '=', 'users.bu')
+                ->select(
+                    'business_units.name',
+                    'users.bu',
+                    'nesa_requests.*',
+                    'products.description',
+                )
                 ->where('nesa_requests.itemcode', $item)->get();
 
             $collectedData[] = $nesa;
