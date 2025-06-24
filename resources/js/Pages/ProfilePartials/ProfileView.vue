@@ -60,7 +60,7 @@
                     </svg>
                     <span>View Profile</span>
                 </button>
-                <button @click="logout"
+                <button @click="logoutModal = true"
                     class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -72,6 +72,28 @@
             </div>
         </div>
     </div>
+    <a-modal v-model:open="logoutModal" centered width="500px" :closable="false" :maskClosable="false">
+        <template #title>
+            <div class="flex items-center gap-3 border-b pb-4 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <h3 class="text-lg font-semibold text-gray-900">Confirm Logout</h3>
+            </div>
+        </template>
+        <p class="text-gray-700 text-lg text-center mb-10">Are you sure you want to logout?</p>
+        <template #footer>
+            <button @click="logoutModal = false" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-md">
+                Cancel
+            </button>
+            <button @click="logoutModal = false; router.post(route('logout'))"
+                class="ml-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-md">
+                Logout
+            </button>
+        </template>
+    </a-modal>
 </template>
 
 <script setup lang="ts">
@@ -99,9 +121,11 @@ interface PageProps {
 
 const page = usePage().props as unknown as PageProps;
 
-const logout = () => {
-    router.post(route('logout'));
-};
+const logoutModal = ref<boolean>(false);
+// const logout = () => {
+//     logoutModal.value = true;
+//     // router.post(route('logout'));
+// };
 const userTypes = ref<Types | null>(null);
 
 interface Types {

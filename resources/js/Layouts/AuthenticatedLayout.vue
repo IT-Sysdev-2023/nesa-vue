@@ -112,7 +112,12 @@
 
                         <button
                             class="flex items-center gap-1 text-gray-900 hover:text-blue-600 px-1 py-2 text-sm font-medium transition-colors duration-200">
-                            <Link :href="route('admin.about')"><span>About</span></Link>
+                            <Link :href="route('admin.about')">
+                            <div class="flex items-center space-x-1">
+                                <QuestionCircleOutlined />
+                                <span>About</span>
+                            </div>
+                            </Link>
                         </button>
                     </div>
                 </div>
@@ -349,7 +354,7 @@
 
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { HomeOutlined, NotificationOutlined, DeploymentUnitOutlined, SettingOutlined } from '@ant-design/icons-vue';
+import { HomeOutlined, NotificationOutlined, DeploymentUnitOutlined, SettingOutlined, QuestionCircleFilled, QuestionOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
 import { usePage } from "@inertiajs/vue3";
 import ProfileView from "../Pages/ProfilePartials/ProfileView.vue"
