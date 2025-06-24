@@ -21,10 +21,7 @@
                         {{ record.quantity }} pcs
                     </template>
                     <template v-if="column.key == 'action'">
-                        <a-select :value="record.coa" placeholder="Select Type" ref="select" style="width: 100%"
-                            @change="(value) => handleChangeCourseOfAction(value, record.id)">
-                            <a-select-option v-for="record in coa" :value="record.id">{{ record.name }}</a-select-option>
-                        </a-select>
+                        {{coa.find(item => item.id === record.coa)?.name || 'N/A'}}
                     </template>
                 </template>
             </a-table>
@@ -44,7 +41,7 @@ import Swal from 'sweetalert2';
 const props = defineProps<{
     records: DataType,
     supplier: string,
-    coa: any,
+    coa: any[]
 }>();
 
 interface DataType {
@@ -54,6 +51,7 @@ interface DataType {
     description: string;
     signature: string;
 }[]
+
 
 const columns = ref<TableColumnType<DataType>[]>([
     {
@@ -88,31 +86,5 @@ const columns = ref<TableColumnType<DataType>[]>([
         align: 'center',
     },
 ]);
-
-
-const handleChangeCourseOfAction = (value: number, id: number) => {
-    router.put(route('nesa.update.course_of_action'), {
-        id: id,
-        coa: value,
-    }, {
-        onSuccess: (e: any) => {
-            if (e.props.flash.status == 'error') {
-                Swal.fire({
-                    title: e.props.flash.title,
-                    text: e.props.flash.msg,
-                    icon: "error"
-                });
-            }
-            if (e.props.flash.status == 'success') {
-                Swal.fire({
-                    title: e.props.flash.title,
-                    text: e.props.flash.msg,
-                    icon: "success"
-                });
-            }
-        }
-    })
-    // form.coa = value;
-}
 
 </script>

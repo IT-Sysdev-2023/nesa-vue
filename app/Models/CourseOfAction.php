@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class NesaRequest extends Model
+class CourseOfAction extends Model
 {
     //
     protected $guarded = [];

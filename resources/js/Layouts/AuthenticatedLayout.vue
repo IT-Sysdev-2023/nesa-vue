@@ -20,7 +20,7 @@
                             <HomeOutlined />
                             <Link :href="route('dashboard')"><span>Home</span></Link>
                         </button>
-                        <div class="relative">
+                        <div class="relative" v-if="page.auth.user.usertype == '5'">
                             <button @click="toggleDropdown"
                                 class="text-gray-900 gap-1 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <NotificationOutlined />
@@ -48,6 +48,34 @@
                                     <Link :href="route('nesa.get.history')"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                     Nesa History
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative" v-if="page.auth.user.usertype == '6'">
+                            <button @click="toggleDropdown"
+                                class="text-gray-900 gap-1 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
+                                <NotificationOutlined />
+                                <span>Approval</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-4 h-4 transform transition-transform duration-200"
+                                    :class="{ 'rotate-180': showDropdown }">
+                                    <path fill-rule="evenodd"
+                                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+
+                            <div v-show="showDropdown"
+                                class="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition-all duration-200 transform scale-100 z-50">
+                                <div class="py-1">
+                                    <Link :href="route('nesa.get.pending.for.approval')"
+                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                    Pending For Approval
+                                    </Link>
+                                    <Link :href="route('nesa.get.list')"
+                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                    Approved Nesa
                                     </Link>
                                 </div>
                             </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\SupplierEmail;
 use App\Models\ConsolidatedRequest;
+use App\Models\CourseOfAction;
 use App\Models\NesaRequest;
 use App\Models\Product;
 use App\Models\Supplier;
@@ -251,6 +252,7 @@ class NesaController extends Controller
             $nesa = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
                 ->join('users', 'employee_id', '=', 'created_by')
                 ->join('business_units', 'business_units.id', '=', 'users.bu')
+                ->leftJoin('course_of_actions', 'course_of_actions.id', '=', 'nesa_requests.coa')
                 ->select(
                     'business_units.name',
                     'users.bu',
@@ -262,10 +264,91 @@ class NesaController extends Controller
             $collectedData[] = $nesa;
         });
 
-
         return inertia('Nesa/NesaHistoryDetails', [
             'records' => $collectedData,
-            'supplier' => Supplier::where('supplier_code', $request->supplier)->value('name')
+            'supplier' => Supplier::where('supplier_code', $request->supplier)->value('name'),
+            'coa' => CourseOfAction::all(),
+        ]);
+    }
+    public function updateCourseOfAction(Request $request)
+    {
+        $queue = NesaRequest::findOrFail($request->id)->update([
+            'coa' => $request->coa,
+        ]);
+
+        if (!$queue) {
+            return redirect()->back()->with([
+                'status' => 'error',
+                'title' => 'Error',
+                'msg' => 'Something Went Wrong!',
+            ]);
+        }
+        return redirect()->back()->with([
+            'status' => 'success',
+            'title' => 'Successful',
+            'msg' => 'Successfully Updated Action',
+        ]);
+    }
+
+    public function pendingApproval()
+    {
+        $data = ConsolidatedRequest::select(
+            DB::raw("CONCAT_WS(' ', users.firstname, users.middlename, users.lastname, users.name_extention) AS full_name"),
+            'consolidated_requests.id',
+            'suppliers.*',
+            'consolidated_requests.*'
+        )
+            ->join('users', 'users.id', '=', 'pre_approval')
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'suplier_code')
+            ->where('status', 1)
+            ->whereNotNull('pre_approval')
+            ->whereNull('approval')
+            ->paginate(10);
+
+        $data->each(function ($item) {
+            $names = [];
+            collect($item->item_code)->each(function ($i) use (&$names) {
+                // dd($i);
+                $names[] = Product::where('itemcode', $i)->value('description');
+                return $i;
+            });
+            $item->desc = $names;
+            return $item;
+        });
+
+        return inertia('Nesa/Pendings/PendingApproval', [
+            'records' => $data,
+        ]);
+    }
+
+    public function pendingDetails(Request $request)
+    {
+
+        $collect = collect($request->item_code);
+
+        $collectedData = collect();
+
+        $collect->each(function ($item) use (&$collectedData) {
+
+            $nesa = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+                ->join('users', 'employee_id', '=', 'created_by')
+                ->join('business_units', 'business_units.id', '=', 'users.bu')
+                ->leftJoin('course_of_actions', 'course_of_actions.id', '=', 'nesa_requests.coa')
+                ->select(
+                    'business_units.name',
+                    'users.bu',
+                    'nesa_requests.*',
+                    'products.description',
+                )
+                ->where('nesa_requests.itemcode', $item)->paginate(10);
+
+            $collectedData[] = $nesa;
+        });
+
+        return inertia('Nesa/Pendings/PendingDetails', [
+            'records' => $collectedData,
+            'supplier' => Supplier::where('supplier_code', $request->supplier)->value('name'),
+            'coa' => CourseOfAction::all(),
         ]);
     }
 }

@@ -70,6 +70,9 @@ Route::middleware('auth')->group(function () {
             Route::get('consolidate-list', [NesaController::class, 'consolidatedList'])->name('get.consolidated');
             Route::get('nesa-history', [NesaController::class, 'nesaHistory'])->name('get.history');
             Route::get('nesa-history-details', [NesaController::class, 'nesaHistoryDetails'])->name('get.details');
+            Route::get('nesa-pending-details', [NesaController::class, 'pendingDetails'])->name('get.pending.details');
+            Route::put('nesa-update-course-of-course', [NesaController::class, 'updateCourseOfAction'])->name('update.course_of_action');
+            Route::get('nesa-pending-for-approval', [NesaController::class, 'pendingApproval'])->name('get.pending.for.approval');
             Route::get('/download/{filename}', function ($filename) {
                 $filePath = storage_path('app/public/' . $filename);
                 return response()->download($filePath);
