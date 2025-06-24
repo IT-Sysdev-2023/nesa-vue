@@ -244,7 +244,7 @@ class NesaController extends Controller
 
         $collect = collect($request->item_code);
 
-        $collectedData = [];
+        $collectedData = collect();
 
         $collect->each(function ($item) use (&$collectedData) {
 
@@ -257,10 +257,11 @@ class NesaController extends Controller
                     'nesa_requests.*',
                     'products.description',
                 )
-                ->where('nesa_requests.itemcode', $item)->get();
+                ->where('nesa_requests.itemcode', $item)->paginate(10);
 
             $collectedData[] = $nesa;
         });
+
 
         return inertia('Nesa/NesaHistoryDetails', [
             'records' => $collectedData,
