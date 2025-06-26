@@ -2,8 +2,8 @@
     <AuthenticatedLayout>
         <div class=" mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Approval Nesa Pending</h1>
-                <p class="mt-2 text-sm text-gray-600">Viewing Pending</p>
+                <h1 class="text-3xl font-bold text-gray-900">Approved Nesa Request</h1>
+                <p class="mt-2 text-sm text-gray-600">Viewing Approved Request</p>
             </div>
         </div>
         <a-card>
@@ -13,9 +13,7 @@
                         <a-button @click="details(record)">
                             <details></details>
                         </a-button>
-                        <a-button type="primary" class="mx-2" @click="approve(record.id)">
-                            Approve
-                        </a-button>
+
                     </template>
                 </template>
             </a-table>
@@ -46,8 +44,13 @@ const columns = ref([
         key: 'updated_at',
     },
     {
+        title: 'Tagged By',
+        dataIndex: 'tagby',
+        key: 'updated_at',
+    },
+    {
         title: 'Approved By',
-        dataIndex: 'full_name',
+        dataIndex: 'appby',
         key: 'updated_at',
     },
     {
@@ -57,32 +60,10 @@ const columns = ref([
     },
 ]);
 const details = (record: any) => {
-    router.get(route('nesa.get.pending.details'), {
+    router.get(route('nesa.get.approved.details'), {
         item_code: record.item_code,
         supplier: record.supplier_code
     });
 }
 
-const approve = (id: number) => {
-    router.put(route('nesa.approve.pending.nesa'), {
-        id,
-    }, {
-        onSuccess: (e: any) => {
-            if (e.props.flash.status == 'error') {
-                Swal.fire({
-                    title: e.props.flash.title,
-                    text: e.props.flash.msg,
-                    icon: "error"
-                });
-            }
-            if (e.props.flash.status == 'success') {
-                Swal.fire({
-                    title: e.props.flash.title,
-                    text: e.props.flash.msg,
-                    icon: "success"
-                });
-            }
-        }
-    });
-}
 </script>

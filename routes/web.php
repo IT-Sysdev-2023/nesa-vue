@@ -75,6 +75,8 @@ Route::middleware('auth')->group(function () {
             Route::get('nesa-pending-for-approval', [NesaController::class, 'pendingApproval'])->name('get.pending.for.approval');
             Route::get('nesa-get-approved', [NesaController::class, 'getApprovedNesa'])->name('get.approved.nesa');
             Route::put('nesa-tag-coa', [NesaController::class, 'tagCoa'])->name('tag.coa');
+            Route::put('approve-pending-nesa', [NesaController::class, 'approvePendingNesa'])->name('approve.pending.nesa');
+            Route::get('approve-details', [NesaController::class, 'approvedDetails'])->name('get.approved.details');
             Route::get('/download/{filename}', function ($filename) {
                 $filePath = storage_path('app/public/' . $filename);
                 return response()->download($filePath);

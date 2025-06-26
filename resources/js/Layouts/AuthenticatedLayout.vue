@@ -18,9 +18,10 @@
                         <button
                             class="flex items-center gap-1 text-gray-900 hover:text-blue-600 px-1 py-2 text-sm font-medium transition-colors duration-200">
                             <HomeOutlined />
+
                             <Link :href="route('dashboard')"><span>Home</span></Link>
                         </button>
-                        <div class="relative" v-if="page.auth.user.usertype == '5'">
+                        <div class="relative" v-if="[1, 5].includes(page.auth.user.usertype)">
                             <button @click="toggleDropdown"
                                 class="text-gray-900 gap-1 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <NotificationOutlined />
@@ -51,12 +52,12 @@
                                     </Link>
                                     <Link :href="route('nesa.get.approved.nesa')"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                                   Approved Nesa
+                                    Approved Nesa
                                     </Link>
                                 </div>
                             </div>
                         </div>
-                        <div class="relative" v-if="page.auth.user.usertype == '6'">
+                        <div class="relative" v-if="[1, 6].includes(page.auth.user.usertype)">
                             <button @click="toggleDropdown"
                                 class="text-gray-900 gap-1 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <NotificationOutlined />
@@ -77,15 +78,15 @@
                                         class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                     Pending For Approval
                                     </Link>
-                                    <Link :href="route('nesa.get.list')"
-                                        class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                    <Link :href="route('nesa.get.approved.nesa')"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                     Approved Nesa
                                     </Link>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="relative" v-if="page.auth.user.usertype == '1' || page.auth.user.usertype == '2'">
+                        <div class="relative" v-if="[1, '2'].includes(page.auth.user.usertype)">
                             <button @click="toggleMasterfileDropdown"
                                 class="text-gray-900 gap-1 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <DeploymentUnitOutlined />
@@ -113,7 +114,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="relative" v-if="page.auth.user.usertype == '1' || page.auth.user.usertype == '2'">
+                        <div class="relative" v-if="[1, 2].includes(page.auth.user.usertype)">
                             <button @click="toggleSetupDropdown"
                                 class="text-gray-900 gap-1 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <SettingOutlined />
@@ -446,9 +447,9 @@ interface User {
     firstname?: string;
     middlename?: string;
     lastname?: string;
-    usertype?: string;
+    usertype?: number;
     username?: string;
-    id?: string;
+    id?: number;
 }
 
 interface PageProps {

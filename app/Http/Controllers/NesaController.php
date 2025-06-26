@@ -376,4 +376,90 @@ class NesaController extends Controller
             'msg' => 'Tagging Nesa Successfully',
         ]);
     }
+
+    public function approvePendingNesa(Request $request)
+    {
+        $queue = ConsolidatedRequest::findOrFail($request->id)->update([
+            'approval' => $request->user()->id,
+        ]);
+
+        if (!$queue) {
+            return redirect()->back()->with([
+                'status' => 'error',
+                'title' => 'Error',
+                'msg' => 'Something Went Wrong!',
+            ]);
+        }
+        return redirect()->back()->with([
+            'status' => 'success',
+            'title' => 'Successful',
+            'msg' => 'Approve Nesa Successfully',
+        ]);
+    }
+
+    public function getApprovedNesa()
+    {
+        $data = ConsolidatedRequest::select(
+            DB::raw("CONCAT_WS(' ', tag.firstname, tag.middlename, tag.lastname, tag.name_extention) AS tagby"),
+            DB::raw("CONCAT_WS(' ', appr.firstname, appr.middlename, appr.lastname, appr.name_extention) AS appby"),
+            'consolidated_requests.id',
+            'suppliers.*',
+            'consolidated_requests.*'
+        )
+            ->join('users as tag', 'tag.id', '=', 'pre_approval')
+            ->join('users as appr', 'appr.id', '=', 'approval')
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'suplier_code')
+            ->where('status', 1)
+            ->whereNotNull('pre_approval')
+            ->whereNotNull('approval')
+            ->paginate(10);
+
+        $data->each(function ($item) {
+            $names = [];
+            collect($item->item_code)->each(function ($i) use (&$names) {
+                // dd($i);
+                $names[] = Product::where('itemcode', $i)->value('description');
+                return $i;
+            });
+            $item->desc = $names;
+            return $item;
+        });
+
+        return inertia('Nesa/Approved/ApprovedNesa', [
+            'records' => $data,
+        ]);
+    }
+
+    public function approvedDetails(Request $request)
+    {
+
+        $collect = collect($request->item_code);
+
+        $collectedData = collect();
+
+        $collect->each(function ($item) use (&$collectedData) {
+
+            $nesa = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+                ->join('users', 'employee_id', '=', 'created_by')
+                ->join('business_units', 'business_units.id', '=', 'users.bu')
+                ->leftJoin('course_of_actions', 'course_of_actions.id', '=', 'nesa_requests.coa')
+                ->select(
+                    'business_units.name',
+                    'users.bu',
+                    'nesa_requests.*',
+                    'products.description',
+                )
+                ->where('nesa_requests.itemcode', $item)->paginate(10);
+
+            $collectedData[] = $nesa;
+        });
+
+        return inertia('Nesa/Approved/ApprovedDetails', [
+            'records' => $collectedData,
+            'supplier' => Supplier::where('supplier_code', $request->supplier)->value('name'),
+            'coa' => CourseOfAction::all(),
+        ]);
+    }
+
+
 }
