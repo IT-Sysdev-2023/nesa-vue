@@ -2,13 +2,13 @@
     <AuthenticatedLayout>
         <div class=" mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Near Expiry History</h1>
+                <h1 class="text-3xl font-bold text-gray-900">Approval Expiry History</h1>
                 <p class="mt-2 text-sm text-gray-600">Viewing History</p>
             </div>
         </div>
         <a-card>
             <div class="flex justify-end mb-3">
-                <a-button @click="router.get(route('nesa.get.history'))">
+                <a-button @click="router.get(route('nesa.get.pending.for.approval'))">
                     Back to Summary
                 </a-button>
             </div>
@@ -88,3 +88,4 @@ const columns = ref<TableColumnType<DataType>[]>([
 ]);
 
 </script>
+

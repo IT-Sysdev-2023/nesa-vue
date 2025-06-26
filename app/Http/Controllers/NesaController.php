@@ -220,16 +220,21 @@ class NesaController extends Controller
     {
         $data = ConsolidatedRequest::select('consolidated_requests.id', 'suppliers.*', 'consolidated_requests.*')
             ->join('suppliers', 'suppliers.supplier_code', '=', 'suplier_code')
+            ->whereNull('pre_approval')
+            ->whereNull('approval')
             ->where('status', 1)
             ->paginate(10);
 
         $data->each(function ($item) {
             $names = [];
-            collect($item->item_code)->each(function ($i) use (&$names) {
+            $approvable = [];
+            collect($item->item_code)->each(function ($i) use (&$names, &$approvable) {
                 // dd($i);
                 $names[] = Product::where('itemcode', $i)->value('description');
+                $approvable[] = NesaRequest::where('itemcode', $i)->whereNull('coa')->count();
                 return $i;
             });
+            $item->approvable = $approvable[0] ?  true : false;
             $item->nesa_date = Date::parse($item->updated_at)->toFormattedDateString();
             $item->desc = $names;
             return $item;
@@ -349,6 +354,26 @@ class NesaController extends Controller
             'records' => $collectedData,
             'supplier' => Supplier::where('supplier_code', $request->supplier)->value('name'),
             'coa' => CourseOfAction::all(),
+        ]);
+    }
+
+    public function tagCoa(Request $request)
+    {
+        $queue = ConsolidatedRequest::findOrFail($request->id)->update([
+            'pre_approval' => $request->user()->id,
+        ]);
+
+        if (!$queue) {
+            return redirect()->back()->with([
+                'status' => 'error',
+                'title' => 'Error',
+                'msg' => 'Something Went Wrong!',
+            ]);
+        }
+        return redirect()->back()->with([
+            'status' => 'success',
+            'title' => 'Successful',
+            'msg' => 'Tagging Nesa Successfully',
         ]);
     }
 }

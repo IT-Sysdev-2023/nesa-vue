@@ -23,7 +23,8 @@
                     <template v-if="column.key == 'action'">
                         <a-select :value="record.coa" placeholder="Select Type" ref="select" style="width: 100%"
                             @change="(value) => handleChangeCourseOfAction(value, record.id)">
-                            <a-select-option v-for="record in coa" :value="record.id">{{ record.name }}</a-select-option>
+                            <a-select-option v-for="record in coa" :value="record.id">{{ record.name
+                                }}</a-select-option>
                         </a-select>
                     </template>
                 </template>
@@ -107,7 +108,7 @@ const handleChangeCourseOfAction = (value: number, id: number) => {
                 Swal.fire({
                     title: e.props.flash.title,
                     text: e.props.flash.msg,
-                    icon: "success"
+                    icon: "success",
                 });
             }
         }

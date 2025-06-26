@@ -2,15 +2,15 @@
     <AuthenticatedLayout>
         <div class=" mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Near Expiry History</h1>
-                <p class="mt-2 text-sm text-gray-600">Viewing History</p>
+                <h1 class="text-3xl font-bold text-gray-900">Approval Nesa Pending</h1>
+                <p class="mt-2 text-sm text-gray-600">Viewing Pending</p>
             </div>
         </div>
         <a-card>
             <a-table :pagination="false" size="small" bordered :data-source="records.data" :columns="columns">
                 <template #bodyCell="{ column, record }">
                     <template v-if="column.key == 'action'">
-                        <a-button @click="details(record)" size="small">
+                        <a-button @click="details(record)">
                             <details></details>
                         </a-button>
                     </template>

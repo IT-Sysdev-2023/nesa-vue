@@ -47,7 +47,11 @@
                                     </Link>
                                     <Link :href="route('nesa.get.history')"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                                    Nesa History
+                                    Summary Of SWAF
+                                    </Link>
+                                    <Link :href="route('nesa.get.approved.nesa')"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                   Approved Nesa
                                     </Link>
                                 </div>
                             </div>
