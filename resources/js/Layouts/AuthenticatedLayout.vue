@@ -58,20 +58,20 @@
                             </div>
                         </div>
                         <div class="relative" v-if="[1, 6].includes(page.auth.user.usertype)">
-                            <button @click="toggleDropdown"
+                            <button @click="toggleDropdownApprove"
                                 class="text-gray-900 gap-1 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <NotificationOutlined />
                                 <span>Approval</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                     class="w-4 h-4 transform transition-transform duration-200"
-                                    :class="{ 'rotate-180': showDropdown }">
+                                    :class="{ 'rotate-180': showDropdownApprove }">
                                     <path fill-rule="evenodd"
                                         d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
                                         clip-rule="evenodd" />
                                 </svg>
                             </button>
 
-                            <div v-show="showDropdown"
+                            <div v-show="showDropdownApprove"
                                 class="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition-all duration-200 transform scale-100 z-50">
                                 <div class="py-1">
                                     <Link :href="route('nesa.get.pending.for.approval')"
@@ -410,6 +410,9 @@ const toggleMobileMenu = () => {
 const toggleMobileProductsMenu = () => {
     isMobileProductsMenuOpen.value = !isMobileProductsMenuOpen.value;
 };
+const toggleDropdownApprove = () => {
+    showDropdownApprove.value = !showDropdownApprove.value;
+};
 
 const toggleMobileSetupMenu = () => {
     isMobileSetupMenuOpen.value = !isMobileSetupMenuOpen.value
@@ -419,6 +422,7 @@ const toggleMobileSetupMenu = () => {
 const showDropdown = ref(false);
 
 const showMasterfileDropdown = ref(false);
+const showDropdownApprove = ref(false);
 
 function toggleDropdown() {
     showDropdown.value = !showDropdown.value;
