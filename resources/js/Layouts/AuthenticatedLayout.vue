@@ -418,9 +418,8 @@ const toggleMobileSetupMenu = () => {
     isMobileSetupMenuOpen.value = !isMobileSetupMenuOpen.value
 }
 
-
 const showDropdown = ref(false);
-
+const showApprovalDropdown = ref(false);
 const showMasterfileDropdown = ref(false);
 const showDropdownApprove = ref(false);
 
@@ -428,12 +427,21 @@ function toggleDropdown() {
     showDropdown.value = !showDropdown.value;
     showMasterfileDropdown.value = false;
     showSetupDropdown.value = false;
+    showApprovalDropdown.value = false;
+}
+
+function toggleApprovalDropdown() {
+    showApprovalDropdown.value = !showApprovalDropdown.value;
+    showMasterfileDropdown.value = false;
+    showSetupDropdown.value = false;
+    showDropdown.value = false;
 }
 
 function toggleMasterfileDropdown() {
     showMasterfileDropdown.value = !showMasterfileDropdown.value;
     showDropdown.value = false;
     showSetupDropdown.value = false;
+    showApprovalDropdown.value = false;
 }
 
 const showSetupDropdown = ref(false);
@@ -442,6 +450,7 @@ function toggleSetupDropdown() {
     showSetupDropdown.value = !showSetupDropdown.value;
     showMasterfileDropdown.value = false;
     showDropdown.value = false;
+    showApprovalDropdown.value = false;
 
 }
 const page = usePage().props as unknown as PageProps;

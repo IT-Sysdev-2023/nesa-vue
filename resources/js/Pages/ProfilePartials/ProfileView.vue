@@ -122,10 +122,7 @@ interface PageProps {
 const page = usePage().props as unknown as PageProps;
 
 const logoutModal = ref<boolean>(false);
-// const logout = () => {
-//     logoutModal.value = true;
-//     // router.post(route('logout'));
-// };
+
 const userTypes = ref<Types | null>(null);
 
 interface Types {
