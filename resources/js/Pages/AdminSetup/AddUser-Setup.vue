@@ -271,7 +271,6 @@ const submitButton = () => {
         businessUnit: forms.businessUnit,
         employee_id: forms.employee_no,
         specifiedSupplier: forms.productPermission
-
     }, {
         onSuccess: (page: any) => {
             if (page?.props?.flash?.success) {
@@ -290,6 +289,10 @@ const submitButton = () => {
                 addConfirmationModal.value = false;
             }
         },
+        onError: (errors: any) => {
+            console.error('Error submitting form:', errors);
+            addConfirmationModal.value = false;
+        }
     });
 };
 
@@ -349,7 +352,7 @@ const getUserInfo = async () => {
 
             autoFillData.value = [{
                 employee_name: firstEmployee.employee_name,
-                username: `${lastname}.${firstname.replace(' ', '')}`,
+                username: `${lastname.toLowerCase()}.${firstname.toLowerCase().replace(' ', '')}`,
                 lastname,
                 firstname,
                 middlename,

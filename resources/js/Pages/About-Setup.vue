@@ -42,7 +42,13 @@
                                         {{ employee.employee_name || employee.originalName }}
                                     </h3>
                                     <p class="mt-2 text-blue-600 font-medium">
-                                        {{ employee.employee_position || 'Team Member' }}
+                                        <a-tag color="blue">
+                                            {{ employee.employee_position || 'Team Member' }}
+                                        </a-tag>
+                                    </p>
+                                    <p class="text-gray-600 text-md mt-5"
+                                        v-if="employee.employee_name === 'Fuertes, Maria Neliza Uy'"> CPA, CIA, CSCU,
+                                        CISA, REB, REA, CICA, CrFA, REC
                                     </p>
                                 </div>
 
@@ -96,7 +102,7 @@
                                         {{ employee.employee_name || employee.originalName }}
                                     </h3>
                                     <p class="mt-2 text-blue-600 font-medium">
-                                        {{ employee.employee_position || 'Team Member' }}
+                                        <a-tag color="blue"> {{ employee.employee_position || 'Team Member' }}</a-tag>
                                     </p>
                                 </div>
 
@@ -149,7 +155,7 @@
                                         {{ employee.employee_name || employee.originalName }}
                                     </h3>
                                     <p class="mt-2 text-blue-600 font-medium">
-                                        {{ employee.employee_position || 'Team Member' }}
+                                        <a-tag color="blue"> {{ employee.employee_position || 'Team Member' }}</a-tag>
                                     </p>
                                 </div>
 
@@ -169,7 +175,7 @@
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> 
             </div>
         </div>
         <div v-else class="py-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
@@ -200,6 +206,7 @@ interface Employee {
 }
 
 const supervised = ['fuertes, maria', 'evarle, maria'];
+const extentions = ['CPA', 'CIA', 'CSCU', 'CISA', 'REB', 'REA', 'CICA', 'CrFA', 'REC'];
 const programmers = ['gamale, teofredo', 'barace, harvey', 'abarquez, kent'];
 const analysts = ['pantilag, hazel', 'cagas, claire'];
 
