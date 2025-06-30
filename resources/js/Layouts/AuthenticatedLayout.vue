@@ -403,6 +403,12 @@ const isMobileMenuOpen = ref(false);
 const isMobileProductsMenuOpen = ref(false);
 const isMobileSetupMenuOpen = ref(false);
 
+const showDropdown = ref(false);
+const showApprovalDropdown = ref(false);
+const showMasterfileDropdown = ref(false);
+const showDropdownApprove = ref(false);
+const showSetupDropdown = ref(false);
+
 const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value;
 };
@@ -412,22 +418,22 @@ const toggleMobileProductsMenu = () => {
 };
 const toggleDropdownApprove = () => {
     showDropdownApprove.value = !showDropdownApprove.value;
+    showMasterfileDropdown.value = false;
+    showSetupDropdown.value = false;
+    showApprovalDropdown.value = false;
+    showDropdown.value = false;
 };
 
 const toggleMobileSetupMenu = () => {
     isMobileSetupMenuOpen.value = !isMobileSetupMenuOpen.value
 }
 
-const showDropdown = ref(false);
-const showApprovalDropdown = ref(false);
-const showMasterfileDropdown = ref(false);
-const showDropdownApprove = ref(false);
-
 function toggleDropdown() {
     showDropdown.value = !showDropdown.value;
     showMasterfileDropdown.value = false;
     showSetupDropdown.value = false;
     showApprovalDropdown.value = false;
+    showDropdownApprove.value = false;
 }
 
 function toggleApprovalDropdown() {
@@ -435,6 +441,7 @@ function toggleApprovalDropdown() {
     showMasterfileDropdown.value = false;
     showSetupDropdown.value = false;
     showDropdown.value = false;
+    showDropdownApprove.value = false;
 }
 
 function toggleMasterfileDropdown() {
@@ -442,9 +449,9 @@ function toggleMasterfileDropdown() {
     showDropdown.value = false;
     showSetupDropdown.value = false;
     showApprovalDropdown.value = false;
+    showDropdownApprove.value = false;
 }
 
-const showSetupDropdown = ref(false);
 
 function toggleSetupDropdown() {
     showSetupDropdown.value = !showSetupDropdown.value;
