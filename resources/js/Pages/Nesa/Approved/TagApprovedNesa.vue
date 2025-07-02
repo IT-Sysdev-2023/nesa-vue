@@ -29,13 +29,15 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 interface Record {
-    tagby: string,
-    appby: string,
-    id: number,
-    name: string,
+    data: {
+        tagby: string,
+        appby: string,
+        id: number,
+        name: string,
+    }[]
 }
 const props = defineProps<{
-    records: any
+    records: Record
 }>();
 
 
