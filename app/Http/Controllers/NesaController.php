@@ -461,5 +461,57 @@ class NesaController extends Controller
         ]);
     }
 
+    public function taggedApprovedDetails(Request $request)
+    {
+        $tagged =  ConsolidatedRequest::findOrFail($request->id)->update([
+            'tag' => $request->user()->id,
+        ]);
 
+        if (!$tagged) {
+            return redirect()->back()->with([
+                'status' => 'error',
+                'title' => 'Error',
+                'msg' => 'Something Went Wrong!',
+            ]);
+        }
+        return redirect()->back()->with([
+            'status' => 'success',
+            'title' => 'Successful',
+            'msg' => 'Tag Nesa Successfully',
+        ]);
+    }
+
+    public function tagApprovedIndex()
+    {
+        $data = ConsolidatedRequest::select(
+            DB::raw("CONCAT_WS(' ', tag.firstname, tag.middlename, tag.lastname, tag.name_extention) AS tagby"),
+            DB::raw("CONCAT_WS(' ', appr.firstname, appr.middlename, appr.lastname, appr.name_extention) AS appby"),
+            'consolidated_requests.id',
+            'suppliers.*',
+            'consolidated_requests.*'
+        )
+            ->join('users as tag', 'tag.id', '=', 'pre_approval')
+            ->join('users as appr', 'appr.id', '=', 'approval')
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'suplier_code')
+            ->where('status', 1)
+            ->whereNotNull('pre_approval')
+            ->whereNotNull('tag')
+            ->whereNotNull('approval')
+            ->paginate(10);
+
+        $data->each(function ($item) {
+            $names = [];
+            collect($item->item_code)->each(function ($i) use (&$names) {
+                // dd($i);
+                $names[] = Product::where('itemcode', $i)->value('description');
+                return $i;
+            });
+            $item->desc = $names;
+            return $item;
+        });
+
+        return inertia('Nesa/Approved/TagApprovedNesa', [
+            'records' => $data,
+        ]);
+    }
 }

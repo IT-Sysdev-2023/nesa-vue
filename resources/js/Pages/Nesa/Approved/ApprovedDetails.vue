@@ -8,11 +8,6 @@
             </div>
         </div>
         <a-card>
-            <div class="flex justify-end mb-3">
-                <a-button @click="router.get(route('nesa.get.approved.nesa'))">
-                    Back to Summary
-                </a-button>
-            </div>
             <a-table size="small" bordered :pagination="false" :data-source="records[0].data" :columns="columns">
                 <template #bodyCell="{ column, record }">
                     <template v-if="column.key == 'signature'">
