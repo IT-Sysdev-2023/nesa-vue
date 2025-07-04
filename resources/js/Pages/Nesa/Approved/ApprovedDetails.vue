@@ -28,11 +28,9 @@
 
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import type { TableColumnType } from 'ant-design-vue';
 import Pagination from '@/Components/Pagination.vue';
-import { router, useForm } from '@inertiajs/vue3';
-import Swal from 'sweetalert2';
 
 const props = defineProps<{
     records: DataType,
