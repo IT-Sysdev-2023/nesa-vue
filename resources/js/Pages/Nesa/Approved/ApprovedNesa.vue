@@ -30,8 +30,6 @@
                                     d="M4.5 2A2.5 2.5 0 0 0 2 4.5v3.879a2.5 2.5 0 0 0 .732 1.767l7.5 7.5a2.5 2.5 0 0 0 3.536 0l3.878-3.878a2.5 2.5 0 0 0 0-3.536l-7.5-7.5A2.5 2.5 0 0 0 8.38 2H4.5ZM5 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
                                     clip-rule="evenodd" />
                             </svg>
-
-
                         </div>
                     </template>
                 </template>
@@ -43,13 +41,22 @@
 <script setup lang="ts">
 import Pagination from '@/Components/Pagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { router } from '@inertiajs/vue3';
 import Swal from 'sweetalert2';
 
 import { ref, watch } from 'vue';
+
+interface Records {
+    data: {
+        name: string,
+        updated_at: string,
+        tagby: string,
+        appby: string,
+    }[]
+}
+
 const props = defineProps<{
-    records: any
+    records: Records
 }>();
 
 const columns = ref([
