@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Str;
 
 class AndroidController extends Controller
 {
@@ -93,15 +94,22 @@ class AndroidController extends Controller
         try {
             $itemcode = $request->itemcode;
             $quantity = $request->quantity;
-            $expirydata = $request->expirydata;
+            $expirydate = $request->expirydate;
             $employee_id = $request->employee_id;
-            $filename = $file->getClientOriginalName();
+            $originalExtension = $file->getClientOriginalExtension();
+            $filename = time() . '_' . Str::random(10) . '.' . $originalExtension;
+            NesaRequest::create([
+                'itemcode' => $itemcode,
+                'quantity' => $quantity,
+                'expiry' => $expirydate,
+                'created_by' => $employee_id,
+                'signature' => $filename
+            ]);
             $path = storage_path('app/public/signatures');
 
             if (!is_dir($path)) {
                 mkdir($path, 0755, true);
             }
-
 
             $file->move($path, $filename);
 
