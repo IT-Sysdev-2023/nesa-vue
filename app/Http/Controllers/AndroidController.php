@@ -65,16 +65,18 @@ class AndroidController extends Controller
 
     public function getStoreUploads(Request $request)
     {
-        $data = NesaRequest::select('name')->where('itemcode', $request->itemcode)
-            ->join('business_units', 'business_units.id', '=', 'nesa_requests.bu')
+        $data = NesaRequest::select('business_units.name')->where('itemcode', $request->itemcode)
+            ->join('users', 'users.employee_id', '=', 'nesa_requests.created_by')
+            ->join('business_units', 'business_units.id', '=', 'users.bu')
             ->get();
-        return response()->json($data ?? []);
+
+        return response()->json($data);
     }
 
     public function getAllStoreUploads(Request $request)
     {
         $user = User::find($request->id);
-        $selectedSuppliers = json_decode($user->selected_supplier, true);
+        $selectedSuppliers = $user->selected_supplier;
         $data = NesaRequest::select('nesa_requests.itemcode', 'products.description')
             ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
             ->whereIn('products.vendor_no', $selectedSuppliers)
@@ -85,12 +87,12 @@ class AndroidController extends Controller
 
     public function uploadRequest(Request $request)
     {
+
         $file = $request->file('image');
 
         if (!$file || !$file->isValid()) {
             return response()->json(['error' => 'Invalid file upload'], 400);
         }
-
         try {
             $itemcode = $request->itemcode;
             $quantity = $request->quantity;
@@ -98,7 +100,7 @@ class AndroidController extends Controller
             $employee_id = $request->employee_id;
             $originalExtension = $file->getClientOriginalExtension();
             $filename = time() . '_' . Str::random(10) . '.' . $originalExtension;
-            NesaRequest::create([
+            NesaRequest::insert([
                 'itemcode' => $itemcode,
                 'quantity' => $quantity,
                 'expiry' => $expirydate,

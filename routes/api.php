@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return 'api';
+});
 Route::get('/user', [AndroidController::class, 'user']);
 
 Route::get('item-codes', [AndroidController::class, 'ItemCodes']);
