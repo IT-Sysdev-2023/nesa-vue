@@ -28,5 +28,7 @@ Route::get('getAllStoreUploads', [AndroidController::class, 'getAllStoreUploads'
 
 Route::post('uploadRequest', [AndroidController::class, 'uploadRequest']);
 
+Route::get('isConsolidated', [AndroidController::class, 'isConsolidated']);
+
 
 

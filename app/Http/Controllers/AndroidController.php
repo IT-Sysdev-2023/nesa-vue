@@ -29,8 +29,9 @@ class AndroidController extends Controller
             ->get());
     }
 
-    public function ItemCodes()
+    public function ItemCodes(Request $request)
     {
+        $user = User::findOrFail($request->user_id);
         return response()->json(
             Product::select(
                 'id',
@@ -40,26 +41,31 @@ class AndroidController extends Controller
                 'uom',
                 'uom_price',
                 'vendor_no'
-            )->cursorPaginate(100)
+            )
+                ->whereIn('vendor_no', $user->selected_supplier)
+                ->cursorPaginate(100)
         );
     }
 
-    public function countItemCodes()
+    public function countItemCodes(Request $request)
     {
+        $user = User::findOrFail($request->user_id);
         return response()->json(
-            Product::count()
+            Product::whereIn('vendor_no', $user->selected_supplier)->count()
         );
     }
 
-    public function supplier()
+    public function supplier(Request $request)
     {
-        return response()->json(Supplier::select('id', 'supplier_code', 'name')->cursorPaginate(100));
+        $user = User::findOrFail($request->user_id);
+        return response()->json(Supplier::select('id', 'supplier_code', 'name')->whereIn('supplier_code', $user->selected_supplier)->cursorPaginate(100));
     }
 
-    public function countSupplier()
+    public function countSupplier(Request $request)
     {
+        $user = User::findOrFail($request->user_id);
         return response()->json(
-            Supplier::count()
+            Supplier::whereIn('supplier_code', $user->selected_supplier)->count()
         );
     }
 
@@ -123,6 +129,14 @@ class AndroidController extends Controller
                 'trace' => $e->getTraceAsString(),
             ], 500);
         }
+    }
+
+    public function isConsolidated(Request $request)
+    {
+        $query = NesaRequest::where('itemcode', $request->itemcode)
+            ->where('created_by', $request->employee_id)
+            ->first();
+        return response()->json(['is_consolidated' => $query['is_consolidated'] === 1 ? true : false]);
     }
 
 
