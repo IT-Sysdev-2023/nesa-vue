@@ -111,7 +111,8 @@ class AndroidController extends Controller
                 'quantity' => $quantity,
                 'expiry' => $expirydate,
                 'created_by' => $employee_id,
-                'signature' => $filename
+                'signature' => $filename,
+                'created_at' => now()
             ]);
             $path = storage_path('app/public/signatures');
 
