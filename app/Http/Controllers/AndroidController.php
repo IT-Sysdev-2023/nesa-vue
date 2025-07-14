@@ -105,7 +105,7 @@ class AndroidController extends Controller
             $expirydate = $request->expirydate;
             $employee_id = $request->employee_id;
             $originalExtension = $file->getClientOriginalExtension();
-            $filename = time() . '_' . Str::random(10) . '.' . $originalExtension;
+            $filename =Str::random(10) . '.' . $originalExtension;
             NesaRequest::insert([
                 'itemcode' => $itemcode,
                 'quantity' => $quantity,
@@ -138,6 +138,14 @@ class AndroidController extends Controller
             ->where('created_by', $request->employee_id)
             ->first();
         return response()->json(['is_consolidated' => $query['is_consolidated'] === 1 ? true : false]);
+    }
+
+    public function getCOA(Request $request)
+    {
+        $query = NesaRequest::select('name')->where('itemcode', $request->itemcode)
+            ->join('course_of_actions', 'course_of_actions.id', '=', 'nesa_requests.coa')
+            ->first();
+        return response()->json($query);
     }
 
 

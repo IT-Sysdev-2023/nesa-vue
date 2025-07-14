@@ -24,5 +24,6 @@ Route::post('uploadRequest', [AndroidController::class, 'uploadRequest']);
 
 Route::get('isConsolidated', [AndroidController::class, 'isConsolidated']);
 
+Route::get('get-coa', [AndroidController::class, 'getCOA']);
 
 
