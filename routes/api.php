@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return 'api';
+});
 Route::get('/user', [AndroidController::class, 'user']);
 
 Route::get('item-codes', [AndroidController::class, 'ItemCodes']);
@@ -24,6 +27,8 @@ Route::get('getStoreUploads', [AndroidController::class, 'getStoreUploads']);
 Route::get('getAllStoreUploads', [AndroidController::class, 'getAllStoreUploads']);
 
 Route::post('uploadRequest', [AndroidController::class, 'uploadRequest']);
+
+Route::get('isConsolidated', [AndroidController::class, 'isConsolidated']);
 
 
 
