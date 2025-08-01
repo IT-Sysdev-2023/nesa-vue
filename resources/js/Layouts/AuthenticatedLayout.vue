@@ -387,7 +387,7 @@
 
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { HomeOutlined, NotificationOutlined, DeploymentUnitOutlined, SettingOutlined, QuestionCircleFilled, QuestionOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
+import { HomeOutlined, NotificationOutlined, DeploymentUnitOutlined, SettingOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
 import { usePage } from "@inertiajs/vue3";
 import ProfileView from "../Pages/ProfilePartials/ProfileView.vue"
