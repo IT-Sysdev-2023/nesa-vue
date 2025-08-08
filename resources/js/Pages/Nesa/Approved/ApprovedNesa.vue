@@ -7,7 +7,7 @@
             </div>
         </div>
         <a-card>
-            <a-table :pagination="false" size="small" bordered :data-source="records.data" :columns="columns">
+            <a-table :pagination="false" size="small" lbordered :data-source="records.data" :columns="columns">
                 <template #bodyCell="{ column, record }">
                     <template v-if="column.key == 'action'">
                         <div class="flex">
