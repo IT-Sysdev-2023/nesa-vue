@@ -24,7 +24,6 @@ Route::post('uploadRequest', [AndroidController::class, 'uploadRequest']);
 
 Route::get('isConsolidated', [AndroidController::class, 'isConsolidated']);
 
-<<<<<<< HEAD
 Route::get('get-pending-request', [AndroidController::class, 'getPendingRequest']);
 
 Route::get('view-request-details', [AndroidController::class, 'ViewRequestDetails']);
@@ -32,8 +31,8 @@ Route::get('view-request-details', [AndroidController::class, 'ViewRequestDetail
 Route::post('approve-request', [AndroidController::class, 'ApproveRequest']);
 
 
-=======
+
 Route::get('get-coa', [AndroidController::class, 'getCOA']);
->>>>>>> hartzy
+
 
 

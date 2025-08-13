@@ -105,7 +105,7 @@ class AndroidController extends Controller
             $expirydate = $request->expirydate;
             $employee_id = $request->employee_id;
             $originalExtension = $file->getClientOriginalExtension();
-            $filename =Str::random(10) . '.' . $originalExtension;
+            $filename = Str::random(10) . '.' . $originalExtension;
             NesaRequest::insert([
                 'itemcode' => $itemcode,
                 'quantity' => $quantity,
