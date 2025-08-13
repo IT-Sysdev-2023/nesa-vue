@@ -1,12 +1,6 @@
 <?php
 
 use App\Http\Controllers\AndroidController;
-use App\Models\NesaRequest;
-use App\Models\Product;
-use App\Models\Supplier;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -30,6 +24,7 @@ Route::post('uploadRequest', [AndroidController::class, 'uploadRequest']);
 
 Route::get('isConsolidated', [AndroidController::class, 'isConsolidated']);
 
+<<<<<<< HEAD
 Route::get('get-pending-request', [AndroidController::class, 'getPendingRequest']);
 
 Route::get('view-request-details', [AndroidController::class, 'ViewRequestDetails']);
@@ -37,5 +32,8 @@ Route::get('view-request-details', [AndroidController::class, 'ViewRequestDetail
 Route::post('approve-request', [AndroidController::class, 'ApproveRequest']);
 
 
+=======
+Route::get('get-coa', [AndroidController::class, 'getCOA']);
+>>>>>>> hartzy
 
 
