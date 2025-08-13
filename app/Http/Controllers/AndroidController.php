@@ -139,5 +139,75 @@ class AndroidController extends Controller
         return response()->json(['is_consolidated' => $query['is_consolidated'] === 1 ? true : false]);
     }
 
+    public function getPendingRequest(Request $request)
+    {
+        $usertype = User::where('employee_id', $request->user)
+            ->value('usertype');
+
+        $query = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->where('status', 'pending');
+
+        if ($usertype === 3) {
+            $query->where('created_by', $request->user)->where('status', 'pending');
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
+    public function ViewRequestDetails(Request $request)
+    {
+        $nesa = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
+            ->join('users', 'users.employee_id', '=', 'nesa_requests.created_by')
+            ->where('nesa_requests.itemcode', $request->itemcode)
+            ->select(
+                'suppliers.name as vendor',
+                'nesa_requests.itemcode',
+                'nesa_requests.quantity',
+                'nesa_requests.expiry',
+                'products.description',
+                'products.uom',
+                'users.firstname',
+                'users.lastname'
+            )
+            ->first();
+
+        return response()->json($nesa);
+    }
+
+
+    public function ApproveRequest(Request $request)
+    {
+        $filename = $request->filename;
+        $file = $request->file('image');
+
+        if (!$file || !$file->isValid()) {
+            return response()->json(['error' => 'Invalid file upload'], 400);
+        }
+
+        try {
+            NesaRequest::where('itemcode', $request->itemcode)->update([
+                'ric_section_head_signature' => $filename,
+                'ric_section_head' => $request->employee_id,
+                'status' => $request->status
+            ]);
+
+            $path = storage_path('app/public/signatures');
+            if (!is_dir($path)) {
+                mkdir($path, 0755, true);
+            }
+
+            $file->move($path, $filename);
+            return response()->json(true);
+
+        } catch (\Exception $e) {
+            return response()->json(false);
+        }
+    }
+
+
+
 
 }
