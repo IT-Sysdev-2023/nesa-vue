@@ -8,6 +8,7 @@ use App\Models\CourseOfAction;
 use App\Models\NesaRequest;
 use App\Models\Product;
 use App\Models\Supplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Illuminate\Support\Facades\Log;
 
 class NesaController extends Controller
 {
@@ -116,6 +118,7 @@ class NesaController extends Controller
 
     public function consolidateProcess()
     {
+
         $nesa = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
             ->join('suppliers', 'supplier_code', '=', 'products.vendor_no')
             ->join('users', 'employee_id', '=', 'created_by')

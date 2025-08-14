@@ -42,7 +42,7 @@
                             <h3 class="text-sm font-medium text-gray-500">Total Users</h3>
                             <p v-if="usersCount" class="text-2xl font-semibold text-gray-900">{{ usersCount }}</p>
                             <p v-else class="text-lg font-semibold text-gray-900">Counting...</p>
-                            <p class="text-xs text-green-600 mt-1">+12.5% from last month</p>
+                            <p class="text-xs text-green-600 mt-1">{{ usersCountToday }}</p>
                         </div>
                     </div>
                 </div>
@@ -57,9 +57,9 @@
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <h3 class="text-sm font-medium text-gray-500">Total Sales</h3>
-                            <p class="text-2xl font-semibold text-gray-900">$24,573</p>
-                            <p class="text-xs text-green-600 mt-1">+8.2% from last month</p>
+                            <h3 class="text-sm font-medium text-gray-500">Nesa</h3>
+                            <p class="text-2xl font-semibold text-gray-900">{{ nesaCount }}</p>
+                            <p class="text-xs text-green-600 mt-1">{{ nesaThisMonth }}</p>
                         </div>
                     </div>
                 </div>
@@ -210,11 +210,17 @@ import axios from 'axios';
 
 const info = ref<[] | null>(null);
 const usersCount = ref<number | null>(null);
+const usersCountToday = ref<number | null>(null);
+const nesaThisMonth = ref<number | null>(null);
+const nesaCount = ref<number | null>(null);
 const fetchingInfo = async () => {
     try {
         const response = await axios.get(route('dashboardInfo'));
         info.value = response.data.user
         usersCount.value = response.data.usersCount
+        usersCountToday.value = response.data.usersCountToday
+        nesaThisMonth.value = response.data.nesaThisMonth
+        nesaCount.value = response.data.nesaCount
     } catch (error) {
         console.log(error);
     }
