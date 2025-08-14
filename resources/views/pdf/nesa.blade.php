@@ -93,7 +93,7 @@
                             @foreach ($value as $subitem)
                                 <div
                                     style="padding: 2px; @if (!$loop->first) border-top: 1px solid rgb(99, 99, 99); @endif">
-                                    {{ $subitem->quantity }}pcs</div>
+                                    {{ $subitem->quantity }} pcs</div>
                             @endforeach
                         </div>
                     </td>
@@ -110,6 +110,11 @@
             @endforeach
         </tbody>
     </table>
+    <div>
+        <p style="margin: 0; text-align: right; font-weight: bold; margin-top: 10px;">
+            Total Quantity: {{ $totalQty }} pcs
+        </p>
+    </div>
 </body>
 
 </html>

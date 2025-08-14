@@ -21,6 +21,7 @@ class NesaController extends Controller
     //
     public function nesaList(Request $request)
     {
+        // dd();
         $nesa = NesaRequest::select(
             'nesa_requests.itemcode',
             DB::raw('MIN(nesa_requests.id) as id') // get the earliest ID per itemcode
@@ -46,11 +47,12 @@ class NesaController extends Controller
                 $query->where('suppliers.name', 'like', '%' . $request->search . '%');
             })->where('nesa_requests.is_consolidated', 0)
             ->whereIn('nesa_requests.id', $nesa)
+            ->where('nesa_requests.status', 'approved')
             ->paginate(10)
             ->withQueryString();
 
         $nesa->transform(function ($item) {
-            $item->nesa_date = $item->created_at->toFormattedDateString();
+            $item->nesa_date = $item->created_at->toFormattedDateString() ?? null;
             return $item;
         });
 
@@ -134,12 +136,22 @@ class NesaController extends Controller
 
         $nesa->each(function ($itemcode, $supplier) {
 
+            $allQty = 0;
+
+            $itemcode->each(function ($item)  use (&$allQty) {
+                $allQty = $item->sum('quantity');
+
+                return $item;
+            });
+
+
             $supplierName = Supplier::where('supplier_code', $supplier)->value('name');
 
             $html = view('pdf.nesa', [
                 'supp_code' => $supplier,
                 'supplier' => $supplierName,
                 'items' => $itemcode,
+                'totalQty' => $allQty,
             ])->render();
 
             // // Generate PDF
