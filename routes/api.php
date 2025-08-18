@@ -30,6 +30,13 @@ Route::get('view-request-details', [AndroidController::class, 'ViewRequestDetail
 
 Route::post('approve-request', [AndroidController::class, 'ApproveRequest']);
 
+Route::get('find-item-code', [AndroidController::class, 'findItemCode']);
+
+Route::get('get-confirmed-nesa-request', [AndroidController::class, 'getConfirmedNesaRequest']);
+
+
+Route::post('updated-request', [AndroidController::class, 'updateRequest']);
+
 
 
 Route::get('get-coa', [AndroidController::class, 'getCOA']);
