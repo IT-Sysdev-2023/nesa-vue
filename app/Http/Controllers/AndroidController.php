@@ -254,6 +254,26 @@ class AndroidController extends Controller
     }
 
 
+    public function getCOA(Request $request)
+    {
+        $user = User::where('id', $request->id)->first();
+        $query = NesaRequest::join('course_of_actions', 'course_of_actions.id', '=', 'nesa_requests.coa')
+            ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->whereNot('is_consolidated', 0)
+            ->whereNot('coa', null)
+            ->select('nesa_requests.*', 'course_of_actions.name', 'products.*');
+
+        if ($user['usertype'] === 3) {
+            $data = $query->where('created_by', $user['employee_id'])->get();
+            return response()->json($data);
+        } else {
+            $data = $query->get();
+            return response()->json($data);
+        }
+    }
+
+
+
 
 
 }
