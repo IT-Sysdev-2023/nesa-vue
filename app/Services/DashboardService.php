@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\NesaRequest;
+use App\Models\User;
+use Carbon\Carbon;
 
 class DashboardService
 {
@@ -10,20 +12,23 @@ class DashboardService
     {
         //
     }
-    public function userCountEveryDayAndMoth($users)
+    public function userCountEveryDayAndMoth()
     {
-        $todayCount = $users->where('created_at', '>=', now()->startOfDay())->count();
+        $todayCount = User::whereDate('created_at', Carbon::today())->get();
 
-        if ($todayCount > 0) {
-            return '+ ' . $todayCount . ' today';
+
+        if ($todayCount->count() > 0) {
+            return '+ ' . $todayCount->count() . ' today';
         } else {
-            $monthCount = $users->where('created_at', '>=', now()->startOfMonth())->count();
+            $monthCount = $todayCount->where('created_at', '>=', now()->startOfMonth())->count();
             if ($monthCount > 0) {
-                return '+ ' . $monthCount . ' this month';
+                return '+ ' . $monthCount->count() . ' this month';
             } else {
-                $yearCount = $users->where('created_at', '>=', now()->startOfYear())->count();
+                $yearCount = $todayCount->where('created_at', '>=', now(
+                    
+                )->startOfYear())->count();
                 if ($yearCount > 0) {
-                    return '+ ' . $yearCount . ' this year';
+                    return '+ ' . $yearCount->count() . ' this year';
                 }
             }
         }
@@ -38,7 +43,7 @@ class DashboardService
 
     public function nesaThisMonth()
     {
-       $nesa = NesaRequest::where('created_at', '>=', now()->startOfMonth())
+        $nesa = NesaRequest::where('created_at', '>=', now()->startOfMonth())
             ->count();
 
         if ($nesa > 0) {

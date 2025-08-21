@@ -20,7 +20,7 @@ class DashboardController extends Controller
         return response()->json([
             'user' => $users,
             'usersCount' => $users->count(),
-            'usersCountToday' => $this->dashboardService->userCountEveryDayAndMoth($users),
+            'usersCountToday' => $this->dashboardService->userCountEveryDayAndMoth(),
             'nesaCount' => $this->dashboardService->nesaCount(),
             'nesaThisMonth' => $this->dashboardService->nesaThisMonth(),
         ]);
