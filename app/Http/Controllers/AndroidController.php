@@ -146,10 +146,35 @@ class AndroidController extends Controller
             ->value('usertype');
 
         $query = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
-            ->where('status', 'pending');
+            ->where('status', 'pending')
+            ->select('nesa_requests.*', 'products.description');
 
         if ($usertype === 3) {
             $query->where('created_by', $request->user)->where('status', 'pending');
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+    public function getConfirmedNesaRequest(Request $request)
+    {
+        $usertype = User::where('employee_id', $request->employee_id)
+            ->value('usertype');
+
+        $query = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->join('users', 'users.employee_id', '=', 'nesa_requests.created_by')
+            ->join('suppliers', 'suppliers.supplier_code', 'products.vendor_no')
+            ->where('is_consolidated', 0)
+            ->where('coa', null)
+            ->where('status', 'approved')
+            ->select('nesa_requests.*', 'products.*', 'users.firstname', 'users.lastname', 'suppliers.name as vendor_name');
+
+        if ($usertype === 3) {
+            $query->where('created_by', $request->employee_id)
+                ->where('is_consolidated', 0)
+                ->where('coa', null)
+                ->where('status', 'approved');
         }
 
         $data = $query->get();
@@ -189,10 +214,11 @@ class AndroidController extends Controller
         }
 
         try {
-            NesaRequest::where('itemcode', $request->itemcode)->update([
+            NesaRequest::where('id', $request->id)->update([
                 'ric_section_head_signature' => $filename,
                 'ric_section_head' => $request->employee_id,
-                'status' => $request->status
+                'status' => $request->status,
+                'date_approved' => now()
             ]);
 
             $path = storage_path('app/public/signatures');
@@ -207,6 +233,45 @@ class AndroidController extends Controller
             return response()->json(false);
         }
     }
+
+    public function findItemCode(Request $request)
+    {
+        $data = Product::where('itemcode', $request->itemcode)
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
+            ->select('products.*', 'suppliers.name as vendor')
+            ->first();
+        return response()->json($data);
+    }
+
+    public function updateRequest(Request $request)
+    {
+
+        $update = NesaRequest::where('id', $request->id)->update([
+            $request->field => $request->newValue
+        ]);
+
+        return response()->json($update);
+    }
+
+
+    public function getCOA(Request $request)
+    {
+        $user = User::where('id', $request->id)->first();
+        $query = NesaRequest::join('course_of_actions', 'course_of_actions.id', '=', 'nesa_requests.coa')
+            ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->whereNot('is_consolidated', 0)
+            ->whereNot('coa', null)
+            ->select('nesa_requests.*', 'course_of_actions.name', 'products.*');
+
+        if ($user['usertype'] === 3) {
+            $data = $query->where('created_by', $user['employee_id'])->get();
+            return response()->json($data);
+        } else {
+            $data = $query->get();
+            return response()->json($data);
+        }
+    }
+
 
 
 
