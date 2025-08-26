@@ -28,6 +28,8 @@ Route::get('get-pending-request', [AndroidController::class, 'getPendingRequest'
 
 Route::get('view-request-details', [AndroidController::class, 'ViewRequestDetails']);
 
+Route::get('ViewRequestDetailsFirstSubmited', [AndroidController::class, 'ViewRequestDetailsFirstSubmited']);
+
 Route::post('approve-request', [AndroidController::class, 'ApproveRequest']);
 
 Route::get('find-item-code', [AndroidController::class, 'findItemCode']);

@@ -202,6 +202,27 @@ class AndroidController extends Controller
 
         return response()->json($nesa);
     }
+    public function ViewRequestDetailsFirstSubmited(Request $request)
+    {
+        $nesa = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
+            ->join('users', 'users.employee_id', '=', 'nesa_requests.created_by')
+            ->where('nesa_requests.itemcode', $request->itemcode)
+            ->orderBy('nesa_requests.created_at', 'asc')
+            ->select(
+                'suppliers.name as vendor',
+                'nesa_requests.itemcode',
+                'nesa_requests.quantity',
+                'nesa_requests.expiry',
+                'products.description',
+                'products.uom',
+                'users.firstname',
+                'users.lastname'
+            )
+            ->first();
+
+        return response()->json($nesa);
+    }
 
 
     public function ApproveRequest(Request $request)
