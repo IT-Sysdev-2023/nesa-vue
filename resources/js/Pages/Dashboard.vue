@@ -154,7 +154,7 @@
                             <div class="ml-3">
                                 <p class="text-sm font-medium text-gray-900">New order received</p>
                                 <p class="text-sm text-gray-500">Order #12345 for $249.99</p>
-                                <p class="text-xs text-gray-400 mt-1">1 hour ago</p>
+                                <p class="text-xs text-gray-400 mt-1">1 hour agos</p>
                             </div>
                         </div>
 
