@@ -18,7 +18,7 @@
             <div class="text-center mb-6">
                 <div class="flex justify-center mb-3">
                     <div class="bg-blue-100 rounded-full shadow-inner">
-                        <img src="/storage/images/logo.png" alt="Nesa Logo" class="h-24 w-24 object-cover">
+                        <img src="/images/logo.png" alt="Nesa Logo" class="h-24 w-24 object-cover">
                     </div>
                 </div>
                 <h1 class="text-3xl font-bold text-gray-800">NESA</h1>
