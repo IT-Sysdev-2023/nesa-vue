@@ -4,7 +4,7 @@
         <!-- Background Image Layer -->
         <div class="absolute inset-0">
             <div
-                class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')] bg-cover bg-center opacity-80 blur-sm">
+                class="absolute inset-0 bg-[url('../images/bg.png')] bg-cover bg-center opacity-80 blur-sm">
             </div>
         </div>
 
@@ -17,11 +17,12 @@
             <!-- Logo & Title -->
             <div class="text-center mb-6">
                 <div class="flex justify-center mb-3">
-                    <div class="bg-blue-100 rounded-full shadow-inner">
-                        <img src="/images/logo.png" alt="Nesa Logo" class="h-24 w-24 object-cover">
+                    <div class="rounded-full shadow-inner">
+                        <img src="/images/logonew.png" alt="Nesa Logo" class="h-24 w-24 object-cover">
                     </div>
                 </div>
-                <h1 class="text-3xl font-bold text-gray-800">NESA</h1>
+                <h1 class="text-3xl font-bold text-gray-800">BN</h1>
+                <h2 class="text-gray-600 mt-1 font-medium">Bad Order</h2>
                 <h2 class="text-gray-600 mt-1 font-medium">Near Expiry Stock Advice</h2>
                 <p class="text-gray-500 mt-3 text-sm">Welcome back, please sign in to continue</p>
             </div>
