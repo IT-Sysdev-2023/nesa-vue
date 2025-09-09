@@ -7,7 +7,10 @@
             </div>
         </div>
         <a-card>
-            <div class="flex justify-end mb-3">
+            <div class="flex justify-between mb-3">
+                <a-button @click="tag" type="primary" :disabled="records[0].data.filter(item => item.coa == null).length" style="width: 100px;">
+                    Tag
+                </a-button>
                 <a-button @click="router.get(route('nesa.get.history'))">
                     Back to Summary
                 </a-button>
@@ -24,7 +27,7 @@
                         <a-select :value="record.coa" placeholder="Select Type" ref="select" style="width: 100%"
                             @change="(value) => handleChangeCourseOfAction(value, record.id)">
                             <a-select-option v-for="record in coa" :value="record.id">{{ record.name
-                                }}</a-select-option>
+                            }}</a-select-option>
                         </a-select>
                     </template>
                 </template>
@@ -46,6 +49,7 @@ const props = defineProps<{
     records: DataType,
     supplier: string,
     coa: any,
+    id: number,
 }>();
 
 interface DataType {
@@ -114,6 +118,30 @@ const handleChangeCourseOfAction = (value: number, id: number) => {
         }
     })
     // form.coa = value;
+}
+
+const tag = () => {
+    router.put(route('nesa.tag.coa'), {
+        id: props.id
+    }, {
+        onSuccess: (e: any) => {
+            if (e.props.flash.status == 'error') {
+                Swal.fire({
+                    title: e.props.flash.title,
+                    text: e.props.flash.msg,
+                    icon: "error"
+                });
+            }
+            if (e.props.flash.status == 'success') {
+                Swal.fire({
+                    title: e.props.flash.title,
+                    text: e.props.flash.msg,
+                    icon: "success"
+                });
+                router.get(route('nesa.get.history'));
+            }
+        }
+    })
 }
 
 </script>

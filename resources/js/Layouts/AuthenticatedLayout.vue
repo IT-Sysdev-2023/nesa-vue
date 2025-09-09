@@ -21,7 +21,8 @@
 
                             <Link :href="route('dashboard')"><span>Home</span></Link>
                         </button>
-                        <div class="relative" v-if="[1, 5].includes(page.auth.user.usertype)">
+                        <div class="relative" v-if="[1,
+                        5].includes(page.auth.user.usertype)">
                             <button @click="toggleDropdown"
                                 class="text-gray-900 gap-1 hover:text-blue-600 px-1 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-200">
                                 <NotificationOutlined />

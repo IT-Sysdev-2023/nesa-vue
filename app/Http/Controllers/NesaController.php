@@ -262,7 +262,6 @@ class NesaController extends Controller
 
     public function nesaHistoryDetails(Request $request)
     {
-
         $collect = collect($request->item_code);
 
         $collectedData = collect();
@@ -288,6 +287,7 @@ class NesaController extends Controller
             'records' => $collectedData,
             'supplier' => Supplier::where('supplier_code', $request->supplier)->value('name'),
             'coa' => CourseOfAction::all(),
+            'id' => $request->id,
         ]);
     }
     public function updateCourseOfAction(Request $request)
