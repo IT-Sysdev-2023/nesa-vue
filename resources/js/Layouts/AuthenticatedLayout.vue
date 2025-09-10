@@ -6,8 +6,8 @@
                 <!-- Logo -->
                 <div class="flex items-center">
                     <a :href="route('dashboard')" class="flex items-center space-x-2">
-                        <img class="w-10 h-10" src="/images/logo.png" alt="Nesa Logo">
-                        <span class="text-xl font-bold text-gray-900">Nesa</span>
+                        <img class="w-10 h-8" src="/images/nesaLogo.png" alt="Nesa Logo">
+                        <span class="text-xl font-bold text-gray-900">BNS</span>
                     </a>
                 </div>
 
