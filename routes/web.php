@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::prefix('nesa')->group(function () {
         Route::name('nesa.')->group(function () {
+            Route::get('nesa-dashboard', [NesaController::class, 'dashboard'])->name('get.dashboard');
             Route::get('nesa-list', [NesaController::class, 'nesaList'])->name('get.list');
             Route::get('nesa-view-{itemcode}', [NesaController::class, 'nesaViewing'])->name('view.list');
             Route::get('send-email', [NesaController::class, 'sendEmailFunction'])->name('send.email');

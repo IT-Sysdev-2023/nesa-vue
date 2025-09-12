@@ -1,6 +1,7 @@
 import figlet from "figlet";
 import chalk from "chalk";
 
+// Create decorative border
 const createBorder = (width, char = '═') => char.repeat(width);
 const createSideBorder = (text, width) => {
   const padding = Math.max(0, width - text.length - 4);
@@ -9,8 +10,9 @@ const createSideBorder = (text, width) => {
   return `║ ${' '.repeat(leftPad)}${text}${' '.repeat(rightPad)} ║`;
 };
 
+
 // Generate ASCII art
-const asciiArt = figlet.textSync("BNS", {
+const asciiArt = figlet.textSync("NESA", {
   horizontalLayout: "default",
   font: "Big" // You can try: "Big", "Standard", "Slant", "3D-ASCII", "Doom"
 });

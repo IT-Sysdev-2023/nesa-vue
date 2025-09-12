@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Log;
 class NesaController extends Controller
 {
     //
+    public function dashboard(){
+        return inertia('Nesa/Dashboard');
+    }
     public function nesaList(Request $request)
     {
         // dd();
