@@ -200,6 +200,11 @@
                     </div>
                 </div>
             </header>
+            <a-float-button>
+                <template #icon>
+                    
+                </template>
+            </a-float-button>
             <!-- Page content -->
             <main class="flex-1 p-6">
                 <div class="max-w-7xl mx-auto">
@@ -209,10 +214,12 @@
                 </div>
             </main>
         </div>
+        <!-- <FlappyModal v-model:open="flappy"/> -->
     </div>
 </template>
 
 <script setup>
+import FlappyModal from "@/Components/DashboardComponents/FlappyModal.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { ref, reactive, onMounted, computed } from "vue";
@@ -222,6 +229,8 @@ const page = usePage().props;
 const sidebarOpen = ref(false);
 const activeItem = ref("");
 const searchQuery = ref("");
+
+const flappy = ref(true)
 
 // Menu items
 const menuItems = reactive([
