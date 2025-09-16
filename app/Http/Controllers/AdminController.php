@@ -20,6 +20,9 @@ class AdminController extends Controller
     {
         return inertia('About-Setup');
     }
+    public function masterfileIndex(){
+        return inertia('MasterFile/MasterFileIndex');
+    }
     public function masterFile(Request $request)
     {
         $query = Product::query()

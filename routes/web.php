@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::prefix('admin')->group(function () {
         Route::name('admin.')->group(function () {
+            Route::get('masterfile-index', [AdminController::class, 'masterFileIndex'])->name('masterfile.index');
             Route::get('masterfile', [AdminController::class, 'masterFile'])->name('masterfile');
             Route::get('sync-products', [AdminController::class, 'syncProducts'])->name('sync.products');
             Route::get('search-products', [AdminController::class, 'masterFile'])->name('search.products');
