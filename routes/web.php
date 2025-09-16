@@ -88,6 +88,8 @@ Route::middleware('auth')->group(function () {
 
             Route::name('count.')->group(function () {
                 Route::get('count-nesa', [NesaController::class, 'countNesa'])->name('data');
+                Route::get('count-nesa-approval', [NesaController::class, 'countNesaApproval'])->name('data.approval');
+                Route::get('count-nesa-approve', [NesaController::class, 'countNesaApproved'])->name('data.approved');
             });
         });
     });

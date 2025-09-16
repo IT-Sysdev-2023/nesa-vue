@@ -81,8 +81,9 @@
                                     d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <h2 class="text-xl font-bold text-gray-800"><img class="w-[60px] h-10"
-                                src="/images/nesaLogo.png" alt=""></h2>
+                        <h2 class="text-xl font-bold text-gray-800">
+                            <!-- //for another porpuses slot -->
+                        </h2>
                     </div>
 
                     <div class="flex items-center space-x-4">

@@ -31,8 +31,14 @@ class NesaController extends Controller
         return inertia('Nesa/NesaDashboard');
     }
 
-    public function countNesa(){
+    public function countNesa(): array{
        return $this->nesaService->countDashboardNesa();
+    }
+    public function countNesaApproval(): mixed{
+        return $this->nesaService->countApprovalDashboardNesa();
+    }
+    public function countNesaApproved(): mixed {
+        return $this->nesaService->countApproveListNesaDashboard();
     }
     public function nesaList(Request $request)
     {

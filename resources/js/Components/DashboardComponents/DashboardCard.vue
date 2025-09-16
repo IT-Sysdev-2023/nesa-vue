@@ -59,7 +59,7 @@
                     </div>
                     <span class="text-green-700">Approved Nesa</span>
                 </div>
-                <a-badge :count="100"></a-badge>
+                <a-badge :count="count.approvedCount"></a-badge>
             </a-button>
         </div>
     </div>

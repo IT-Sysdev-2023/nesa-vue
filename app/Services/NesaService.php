@@ -13,18 +13,18 @@ class NesaService
         //
     }
 
-    public function countDashboardNesa()
+    public function countDashboardNesa(): array
     {
 
         return [
             'nesaCount' => $this->getNesaPending(),
-            'approvedCount' => $this->getNesaConsolidated(),
-            'conCount' => 30,
-            'sonCount' => 20,
+            'approvedCount' => $this->getApprovedNesaCount(),
+            'conCount' => $this->getNesaConsolidated(),
+            'sonCount' => $this->getSummaryOfNesaCount(),
         ];
     }
 
-    public function getNesaPending()
+    public function getNesaPending(): mixed
     {
         $nesa = NesaRequest::select(
             'nesa_requests.itemcode',
@@ -41,8 +41,61 @@ class NesaService
             ->count();
     }
 
-    public function getNesaConsolidated(){
-        return ConsolidatedRequest::where('status', 0)
+    public function getNesaConsolidated(): mixed
+    {
+        return ConsolidatedRequest::where(column: 'status', operator: 0)
+            ->count();
+    }
+
+    public function getSummaryOfNesaCount(): mixed
+    {
+        return ConsolidatedRequest::whereNull('pre_approval')
+            ->whereNull('approval')
+            ->where('status', 1)
+            ->count();
+    }
+
+    public function getApprovedNesaCount(): mixed
+    {
+        return ConsolidatedRequest::where('status', 1)
+            ->whereNotNull('pre_approval')
+            ->whereNotNull('approval')
+            ->count();
+    }
+
+    public function countApprovalDashboardNesa(): array
+    {
+        return [
+            'approvalCount' => $this->getApprovalCount(),
+            'approvedCount' => $this->getApprovedNesaCountApprove(),
+        ];
+    }
+
+    public function getApprovalCount(): mixed
+    {
+      return ConsolidatedRequest::where('status', 1)
+            ->whereNotNull('pre_approval')
+            ->whereNull('approval')
+            ->count();
+    }
+
+    public function getApprovedNesaCountApprove(): mixed{
+      return  ConsolidatedRequest::where('status', 1)
+            ->whereNotNull('pre_approval')
+            ->whereNotNull('approval')
+            ->count();
+    }
+
+    public function countApproveListNesaDashboard(){
+        return [
+            'approvedCount' => $this->countApprovedNesa(),
+        ];
+    }
+    public function countApprovedNesa(){
+          return ConsolidatedRequest::where('status', 1)
+            ->whereNotNull('pre_approval')
+            ->whereNotNull('tag')
+            ->whereNotNull('approval')
             ->count();
     }
 }
