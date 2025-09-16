@@ -84,6 +84,11 @@ Route::middleware('auth')->group(function () {
                 $filePath = storage_path('app/public/' . $filename);
                 return response()->download($filePath);
             })->where('filename', '.*')->name('download');
+
+
+            Route::name('count.')->group(function () {
+                Route::get('count-nesa', [NesaController::class, 'countNesa'])->name('data');
+            });
         });
     });
 });

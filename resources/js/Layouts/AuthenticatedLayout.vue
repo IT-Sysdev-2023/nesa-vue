@@ -81,8 +81,8 @@
                                     d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <h2 class="text-xl font-bold text-gray-800"><img class="w-[60px] h-10" src="/images/nesaLogo.png"
-                            alt=""></h2>
+                        <h2 class="text-xl font-bold text-gray-800"><img class="w-[60px] h-10"
+                                src="/images/nesaLogo.png" alt=""></h2>
                     </div>
 
                     <div class="flex items-center space-x-4">
@@ -113,9 +113,7 @@
             <!-- Page content -->
             <main class="p-6">
                 <div class="max-w-7xl mx-auto">
-                    <div class="bg-white rounded-xl shadow-sm">
-                        <slot />
-                    </div>
+                    <slot />
                 </div>
             </main>
         </div>
@@ -136,9 +134,9 @@ const searchQuery = ref('')
 const menuItems = reactive([
     { id: 'dashboard', name: 'Dashboard', icon: '📊', routeTo: 'dashboard' },
     { id: 'nesa', name: 'Nesa', icon: '📈', routeTo: 'nesa.get.dashboard' },
-    { id: 'bad-order', name: 'Bad Order', icon: '🚚' , routeTo: 'nesa.get.badorder'},
-    { id: 'settings', name: 'Settings', icon: '⚙️'  ,routeTo: 'nesa.get.settings'},
-    { id: 'support', name: 'Support', icon: '💬' ,routeTo: 'nesa.get.support'},
+    { id: 'bad-order', name: 'Bad Order', icon: '🚚', routeTo: 'nesa.get.badorder' },
+    { id: 'settings', name: 'Settings', icon: '⚙️', routeTo: 'nesa.get.settings' },
+    { id: 'support', name: 'Support', icon: '💬', routeTo: 'nesa.get.support' },
 ])
 
 // Stats data

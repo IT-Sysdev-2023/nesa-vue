@@ -8,6 +8,7 @@ use App\Models\CourseOfAction;
 use App\Models\NesaRequest;
 use App\Models\Product;
 use App\Models\Supplier;
+use App\Services\NesaService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -20,9 +21,18 @@ use Illuminate\Support\Facades\Log;
 
 class NesaController extends Controller
 {
+
+    public function __construct(public NesaService $nesaService)
+    {
+
+    }
     //
     public function dashboard(){
-        return inertia('Nesa/Dashboard');
+        return inertia('Nesa/NesaDashboard');
+    }
+
+    public function countNesa(){
+       return $this->nesaService->countDashboardNesa();
     }
     public function nesaList(Request $request)
     {
