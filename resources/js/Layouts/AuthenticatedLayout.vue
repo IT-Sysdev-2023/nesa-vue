@@ -329,7 +329,6 @@ const userImage = async () => {
         }
     );
     userImageData.value = response.data.data.employee[0].employee_photo;
-    fullName.value = response.data.data.employee[0].employee_name;
 };
 
 onMounted(() => {

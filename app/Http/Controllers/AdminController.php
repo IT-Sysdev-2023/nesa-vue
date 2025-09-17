@@ -20,21 +20,25 @@ class AdminController extends Controller
     {
         return inertia('About-Setup');
     }
-    public function masterfileIndex(){
+    public function masterfileIndex()
+    {
         return inertia('MasterFile/MasterFileIndex');
     }
     public function masterFile(Request $request)
     {
-        $query = Product::query()
-            ->leftJoin('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no');
 
+        return inertia('MasterFile/Product');
+    }
 
-        if ($request->filled('search')) {
-            $query->where('itemcode', 'like', '%' . $request->search . '%');
-        }
+    public function getProductItemSupplier()
+    {
+        $data = Product::query()
+            ->select('products.id', 'products.itemcode', 'products.description', 'suppliers.name') // ✅ only needed cols
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
+            ->paginate(10);
 
-        return inertia('MasterFile/Product', [
-            'records' => $query->paginate(10)->withQueryString(),
+        return response()->json([
+            'records' => $data
         ]);
     }
 
