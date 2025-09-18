@@ -14,31 +14,19 @@
             </ProgressBar> -->
             <Card>
                 <div class="flex justify-between">
-                    <button
-                        @click="syncProducts"
-                        class="mb-3 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white rounded-md"
-                    >
+                    <button @click="syncProducts"
+                        class="mb-3 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white rounded-md">
                         Sync Products In Nav
                     </button>
 
-                    <input
-                        type="text"
-                        v-model="form.search"
+                    <input type="text" v-model="form.search"
                         class="w-[300px] border border-gray-300 rounded-md mb-2 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Search Item code"
-                    />
+                        placeholder="Search Item code" />
                 </div>
-                <Table
-                    class=""
-                    :pagination="false"
-                    bordered
-                    size="small"
-                    :loading="loadingTable"
-                    :data-source="records?.data"
-                    :columns="columns"
-                >
+                <Table class="" :pagination="false" bordered size="small" :loading="loadingTable"
+                    :data-source="records?.data" :columns="columns">
                 </Table>
-                <PaginationAxios class="mt-5" :datarecords="records" />
+                <PaginationAxios class="mt-5" :datarecords="records" @on-pagination="onChangePagination" />
             </Card>
         </div>
     </AuthenticatedLayout>
@@ -50,6 +38,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { usePage, router } from "@inertiajs/vue3";
 import { onMounted, ref, watch } from "vue";
 import axios from "axios";
+import Pagination from "@/Components/Pagination.vue";
 import PaginationAxios from "@/Components/PaginationAxios.vue";
 declare global {
     interface Window {
@@ -167,4 +156,11 @@ onMounted(() => {
         }
     );
 });
+
+const onChangePagination = async (link: any) => {
+    if (link.url) {
+        const { data } = await axios.get(link.url);
+        records.value = data.records;
+    }
+};
 </script>

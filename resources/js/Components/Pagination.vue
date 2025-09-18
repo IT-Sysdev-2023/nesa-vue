@@ -8,7 +8,7 @@
     </div>
     <div>
       <div class="inline-flex gap-[1px]">
-        <template v-for="(link, key) in datarecords.links" :key="`link-${key}`">
+        <template v-for="(link, key) in datarecords?.links" :key="`link-${key}`">
           <button style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;"
             @click="paginate(link)"
             v-html="link.label"

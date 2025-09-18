@@ -202,7 +202,7 @@
             </header>
             <a-float-button>
                 <template #icon>
-                    
+
                 </template>
             </a-float-button>
             <!-- Page content -->
@@ -251,7 +251,7 @@ const menuItems = reactive([
     {
         id: "profile",
         name: "Profile",
-        icon: "💬",
+        icon: "💂‍♂️",
         routeTo: "admin.viewProfile",
     },
 ]);
@@ -268,7 +268,7 @@ const openLogout = () => {
   }).then((result) => {
     if (result.isConfirmed) {
      router.post(route("logout"));
-    
+
     }
   });
 };

@@ -33,7 +33,7 @@ class AdminController extends Controller
     public function getProductItemSupplier()
     {
         $data = Product::query()
-            ->select('products.id', 'products.itemcode', 'products.description', 'suppliers.name') // ✅ only needed cols
+            ->select('products.id','products.uom','products.uom_price', 'products.itemcode', 'products.description', 'suppliers.name') // ✅ only needed cols
             ->join('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
             ->paginate(10);
 
