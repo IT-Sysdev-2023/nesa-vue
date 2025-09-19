@@ -1,14 +1,14 @@
 <template>
     <div class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
         <div
-            class="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1"
+            class="max-w-screen-lg  m-0 sm:m-10 bg-white shadow sm:rounded-[2rem] flex justify-center flex-1"
         >
-            <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
+            <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12 ">
                 <div>
-                    <img src="/images/nesaLogo.png" class="w-56 mx-auto" />
+                    <img src="/images/nesaLogo.png" class="w-[150px] mx-auto"  />
                 </div>
                 <div class="mt-12 flex flex-col items-center">
-                    <h1 class="text-2xl xl:text-3xl font-extrabold">Welcome Back</h1>
+                    <h1 class="text-2xl xl:text-3xl font-extrabold">Sign In</h1>
                     <div class="w-full flex-1 mt-8">
                         <div class="mx-auto max-w-xs">
                             <input
@@ -88,7 +88,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex-1 bg-indigo-100 text-center hidden lg:flex">
+            <div class="flex-1 bg-indigo-100 text-center  hidden lg:flex  rounded-r-[2rem]">
                 <img
                     src="/images/loginside.svg"
                     class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"

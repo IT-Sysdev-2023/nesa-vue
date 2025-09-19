@@ -97,4 +97,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+Route::fallback(function () {
+    return response()->view('errors.notfound', [], 404);
+});
+
+
 require __DIR__ . '/auth.php';

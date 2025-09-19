@@ -206,10 +206,12 @@
                 </template>
             </a-float-button>
             <!-- Page content -->
-            <main class="flex-1 p-6">
-                <div class="max-w-7xl mx-auto">
-                    <div class="slot-wrapper">
-                        <slot />
+            <main class="flex-1">
+                <div class="max-w-8xl mx-auto">
+                    <div class="bgsvg">
+                        <div class="slot-wrapper">
+                            <slot />
+                        </div>
                     </div>
                 </div>
             </main>
@@ -262,8 +264,8 @@ const openLogout = () => {
     text: "Are you sure you want to logout?",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
     confirmButtonText: "Confirm",
   }).then((result) => {
     if (result.isConfirmed) {
@@ -340,7 +342,25 @@ onMounted(() => {
 /* Custom styles if needed */
 
 .slot-wrapper {
-    height: 82vh;
-    overflow-y: auto; /* scroll only when content overflows */
+    height: 90vh;
+    overflow-y: auto; /* still scrollable */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.slot-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+.bgsvg {
+  position: relative;
+  background-image: url('/images/bgblue.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  padding: 16px;
+  /* add a semi-transparent overlay */
+  background-color: rgba(255, 255, 255, 0.945); /* adjust color + transparency */
+  background-blend-mode: overlay; /* or try multiply, screen, etc. */
 }
 </style>

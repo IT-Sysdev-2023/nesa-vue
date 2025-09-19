@@ -22,22 +22,23 @@ use Illuminate\Support\Facades\Log;
 class NesaController extends Controller
 {
 
-    public function __construct(public NesaService $nesaService)
-    {
-
-    }
+    public function __construct(public NesaService $nesaService) {}
     //
-    public function dashboard(){
+    public function dashboard()
+    {
         return inertia('Nesa/NesaDashboard');
     }
 
-    public function countNesa(): array{
-       return $this->nesaService->countDashboardNesa();
+    public function countNesa(): array
+    {
+        return $this->nesaService->countDashboardNesa();
     }
-    public function countNesaApproval(): mixed{
+    public function countNesaApproval(): mixed
+    {
         return $this->nesaService->countApprovalDashboardNesa();
     }
-    public function countNesaApproved(): mixed {
+    public function countNesaApproved(): mixed
+    {
         return $this->nesaService->countApproveListNesaDashboard();
     }
     public function nesaList(Request $request)
@@ -45,13 +46,11 @@ class NesaController extends Controller
         // dd();
         $nesa = NesaRequest::select(
             'nesa_requests.itemcode',
-            DB::raw('MIN(nesa_requests.id) as id') // get the earliest ID per itemcode
+            DB::raw('MIN(nesa_requests.id) as id')
         )
             ->groupBy('nesa_requests.itemcode')
             ->get()
             ->pluck('id');
-
-        // Then get the full rows for those selected IDs
         $nesa = NesaRequest::select(
             'nesa_requests.itemcode as item_code',
             'nesa_no',
@@ -156,16 +155,14 @@ class NesaController extends Controller
             ->get()
             ->groupBy(['vendor_no', 'itemcode']);
 
+
         $nesa->each(function ($itemcode, $supplier) {
 
             $allQty = 0;
 
-            $itemcode->each(function ($item)  use (&$allQty) {
-                $allQty = $item->sum('quantity');
-
-                return $item;
-            });
-
+            $allQty = $itemcode->flatMap(function ($item) {
+                return $item->pluck('quantity');
+            })->sum();
 
             $supplierName = Supplier::where('supplier_code', $supplier)->value('name');
 
@@ -188,19 +185,19 @@ class NesaController extends Controller
 
             $nesa_id = 0;
 
-            $itemcode->each(function ($item, $key) use (&$itemCode, &$nesa_id) {
+            $itemcode->each(function ($item, $key) use (&$itemCode, &$nesa_id): void {
                 $nesa_id = $item[0]->nesa_id;
                 $itemCode[] = $key;
             });
 
             $disk = Storage::disk('public');
 
-            if ($disk->exists($filename)) {
-                $disk->delete($filename); // optional, for clarity or logging
+            if ($disk->exists(path: $filename)) {
+                $disk->delete(paths: $filename); // optional, for clarity or logging
             }
 
-            DB::transaction(function () use ($nesa_id, $supplier, $itemCode, $filename) {
-                ConsolidatedRequest::create([
+            DB::transaction(callback: function () use ($nesa_id, $supplier, $itemCode, $filename) {
+                ConsolidatedRequest::create(attributes: [
                     'suplier_code' => $supplier,
                     'item_code' =>  $itemCode,
                     'nesa_id' =>   $nesa_id,
@@ -213,10 +210,9 @@ class NesaController extends Controller
             $disk->put($filename, $pdf->output());
         });
 
-
         $nesa->flatten(2)->each(function ($item) {
 
-            DB::transaction(function () use (&$item) {
+            DB::transaction(callback: function () use (&$item): mixed {
                 NesaRequest::where('id', $item->nesaId)->update([
                     'is_consolidated' => 1
                 ]);

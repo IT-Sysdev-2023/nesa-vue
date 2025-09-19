@@ -6,9 +6,10 @@
     <title>Supplier Report - {{ $supplier }}</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: "Times-Roman", Times, serif;
             font-size: 12px;
         }
+
 
         table {
             width: 100%;
@@ -16,15 +17,24 @@
             margin-top: 20px;
         }
 
-        th,
-        td {
-            border: 1px solid #000;
+        th {
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
             padding: 4px;
             text-align: left;
+            background: #f0f0f0;
         }
 
-        th {
-            background: #f0f0f0;
+        td {
+            padding: 4px;
+            margin-bottom: 5px
+            vertical-align: top;
+            font-size: 11px;
+        }
+
+        /* ✅ add bottom border for each row */
+        tbody tr {
+            border-bottom: 1px solid #ccc;
         }
     </style>
 </head>
@@ -59,57 +69,31 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td style="text-align:center">{{ $key }}</td>
-                    <td style="padding: 0; margin: 0;">
-                        <div>
-                            @foreach ($value as $subitem)
-                                <div
-                                    style="padding: 2px; @if (!$loop->first) border-top: 1px solid rgb(99, 99, 99); @endif">
-                                    {{ $subitem->name }}
-                                </div>
-                            @endforeach
-                        </div>
+
+                    <td>
+                        {!! implode('<br>', $value->pluck('name')->toArray()) !!}
                     </td>
-                    <td style="padding: 0; margin: 0;">
-                        <div>
-                            @foreach ($value as $subitem)
-                                <div
-                                    style="padding: 2px; @if (!$loop->first) border-top: 1px solid rgb(99, 99, 99); @endif">
-                                    {{ $subitem->description }}</div>
-                            @endforeach
-                        </div>
+
+                    <td>
+                        {!! implode('<br>', $value->pluck('description')->toArray()) !!}
                     </td>
-                    <td style="padding: 0; margin: 0; text-align:center">
-                        <div>
-                            @foreach ($value as $subitem)
-                                <div
-                                    style="padding: 2px; @if (!$loop->first) border-top: 1px solid rgb(99, 99, 99); @endif">
-                                    {{ $subitem->uom }}
-                                </div>
-                            @endforeach
-                        </div>
+
+                    <td style="text-align:center">
+                        {!! implode('<br>', $value->pluck('uom')->toArray()) !!}
                     </td>
-                    <td style="padding: 0; margin: 0; text-align:center">
-                        <div>
-                            @foreach ($value as $subitem)
-                                <div
-                                    style="padding: 2px; @if (!$loop->first) border-top: 1px solid rgb(99, 99, 99); @endif">
-                                    {{ $subitem->quantity }} pcs</div>
-                            @endforeach
-                        </div>
+
+                    <td style="text-align:center">
+                        {!! implode('<br>', $value->map(fn($x) => $x->quantity . ' pcs')->toArray()) !!}
                     </td>
-                    <td style="padding: 0; margin: 0; text-align:center">
-                        <div>
-                            @foreach ($value as $subitem)
-                                <div
-                                    style="padding: 2px; @if (!$loop->first) border-top: 1px solid rgb(99, 99, 99); @endif">
-                                    {{ \Carbon\Carbon::parse($subitem->expiry)->format('F d, Y') }}</div>
-                            @endforeach
-                        </div>
+
+                    <td style="text-align:center">
+                        {!! implode('<br>', $value->map(fn($x) => \Carbon\Carbon::parse($x->expiry)->format('F d, Y'))->toArray()) !!}
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+
     <div>
         <p style="margin: 0; text-align: right; font-weight: bold; margin-top: 10px;">
             Total Quantity: {{ $totalQty }} pcs
