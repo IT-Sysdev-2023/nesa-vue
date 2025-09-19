@@ -161,6 +161,72 @@
 
                     <div class="flex items-center space-x-4">
                         <!-- Search -->
+                        <div>
+                            <a-popconfirm
+                                overlay-class-name="custom-pop"
+                                placement="bottom"
+                                :ok-button-props="{
+                                    style: { display: 'none' },
+                                }"
+                                :cancel-button-props="{
+                                    style: { display: 'none' },
+                                }"
+                            >
+                                <template #icon>
+                                  
+                                </template>
+                                <template  #description> 
+                                    <MessageIndex/> 
+                                </template>
+                                <button
+                                    style="
+                                        position: relative;
+                                        margin-top: 10px;
+                                        font-size: 28px;
+                                        color: #111827;
+                                        background: none;
+                                        border: none;
+                                        cursor: pointer;
+                                    "
+                                >
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        width="1.2em"
+                                        height="1.2em"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <path
+                                            d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                                        />
+                                    </svg>
+
+                                    <span
+                                        style="
+                                            position: absolute;
+                                            top: -4px;
+                                            right: -6px;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            width: 18px;
+                                            height: 18px;
+                                            font-size: 12px;
+                                            font-weight: 600;
+                                            color: #fff;
+                                            background: #ef4444;
+                                            border-radius: 50%;
+                                            box-shadow: 0 2px 4px
+                                                rgba(0, 0, 0, 0.2);
+                                        "
+                                        >5</span
+                                    >
+                                </button>
+                            </a-popconfirm>
+                        </div>
                         <div class="relative">
                             <input
                                 v-model="searchQuery"
@@ -201,9 +267,7 @@
                 </div>
             </header>
             <a-float-button>
-                <template #icon>
-
-                </template>
+                <template #icon> </template>
             </a-float-button>
             <!-- Page content -->
             <main class="flex-1">
@@ -222,7 +286,9 @@
 
 <script setup>
 import FlappyModal from "@/Components/DashboardComponents/FlappyModal.vue";
+import MessageIndex from "@/Pages/Message/MessageIndex.vue";
 import { router, usePage } from "@inertiajs/vue3";
+import { template } from "lodash";
 import Swal from "sweetalert2";
 import { ref, reactive, onMounted, computed } from "vue";
 const page = usePage().props;
@@ -232,7 +298,7 @@ const sidebarOpen = ref(false);
 const activeItem = ref("");
 const searchQuery = ref("");
 
-const flappy = ref(true)
+const flappy = ref(true);
 
 // Menu items
 const menuItems = reactive([
@@ -259,22 +325,20 @@ const menuItems = reactive([
 ]);
 
 const openLogout = () => {
-  Swal.fire({
-    title: "Logout",
-    text: "Are you sure you want to logout?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Confirm",
-  }).then((result) => {
-    if (result.isConfirmed) {
-     router.post(route("logout"));
-
-    }
-  });
+    Swal.fire({
+        title: "Logout",
+        text: "Are you sure you want to logout?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Confirm",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            router.post(route("logout"));
+        }
+    });
 };
-
 
 // Stats data
 const stats = reactive([
@@ -336,9 +400,15 @@ const userImage = async () => {
 onMounted(() => {
     userImage();
 });
+
+const openMessModal = ref(false);
+
+const openMessageModal = () => {
+    openMessModal.value = true;
+};
 </script>
 
-<style scoped>
+<style>
 /* Custom styles if needed */
 
 .slot-wrapper {
@@ -352,15 +422,24 @@ onMounted(() => {
     display: none; /* Chrome, Safari, Opera */
 }
 .bgsvg {
-  position: relative;
-  background-image: url('/images/bgblue.svg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-radius: 8px;
-  padding: 16px;
-  /* add a semi-transparent overlay */
-  background-color: rgba(255, 255, 255, 0.945); /* adjust color + transparency */
-  background-blend-mode: overlay; /* or try multiply, screen, etc. */
+    position: relative;
+    background-image: url("/images/bgblue.svg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    padding: 16px;
+    /* add a semi-transparent overlay */
+    background-color: rgba(
+        255,
+        255,
+        255,
+        0.945
+    ); /* adjust color + transparency */
+    background-blend-mode: overlay; /* or try multiply, screen, etc. */
+}
+.custom-pop .ant-popover-inner {
+  background-color: #111824 !important; /* slate-800 */
+  color: #fff; /* text color */
 }
 </style>

@@ -66,7 +66,7 @@
         </thead>
         <tbody>
             @foreach ($items as $key => $value)
-                <tr>
+                <tr style="margin-bottom: 5px">
                     <td>{{ $loop->iteration }}</td>
                     <td style="text-align:center">{{ $key }}</td>
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MessengerController;
 use App\Http\Controllers\NesaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WeatherController;
@@ -93,6 +94,12 @@ Route::middleware('auth')->group(function () {
                 Route::get('count-nesa-approval', [NesaController::class, 'countNesaApproval'])->name('data.approval');
                 Route::get('count-nesa-approve', [NesaController::class, 'countNesaApproved'])->name('data.approved');
             });
+        });
+
+        Route::name('message.')->group(function () {
+            Route::get('get-users', [MessengerController::class, 'getUsers'])->name('get.users');
+            Route::get('get-every-message', [MessengerController::class, 'getEveryMessage'])->name('get.every.message');
+            Route::get('get-message', [MessengerController::class, 'getMessage'])->name('get.message');
         });
     });
 });
