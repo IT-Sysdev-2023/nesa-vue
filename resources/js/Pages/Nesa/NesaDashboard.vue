@@ -19,7 +19,7 @@
                   <ApprovalDashboard v-if="[6,1].includes(page.auth.user.usertype)" title="Nesa Approval"/>
                 </article>
                     <article >
-                  <ApprovedListDashboard v-if="[7,1].includes(page.auth.user.usertype)" title="Nesa Approval"/>
+                  <ApprovedListDashboard v-if="[7,1].includes(page.auth.user.usertype)" title="Nesa Approved List"/>
                 </article>
             </div>
         </div>
