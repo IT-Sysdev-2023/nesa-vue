@@ -6,15 +6,23 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return true;
 });
-Route::get('/user', [AndroidController::class, 'user']);
+Route::get('/users', [AndroidController::class, 'user']);
 
-Route::get('item-codes', [AndroidController::class, 'ItemCodes']);
 
-Route::get('count-item-codes', [AndroidController::class, 'countItemCodes']);
 
-Route::get('supplier', [AndroidController::class, 'supplier']);
 
-Route::get('count-supplier', [AndroidController::class, 'countSupplier']);
+Route::prefix('products')->group(function () {
+    Route::get('/', [AndroidController::class, 'ItemCodes']);
+    Route::get('count-item-codes', [AndroidController::class, 'countItemCodes']);
+});
+
+
+Route::prefix('suppliers')->group(function () {
+    Route::get('/', [AndroidController::class, 'suppliers']);
+    Route::get('count-all-suppliers', [AndroidController::class, 'countSuppliers']);
+});
+
+
 
 Route::get('getStoreUploads', [AndroidController::class, 'getStoreUploads']);
 

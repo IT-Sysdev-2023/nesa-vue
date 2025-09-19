@@ -31,43 +31,77 @@ class AndroidController extends Controller
 
     public function ItemCodes(Request $request)
     {
-        $user = User::findOrFail($request->user_id);
-        return response()->json(
-            Product::select(
-                'id',
-                'id',
-                'itemcode',
-                'description',
-                'uom',
-                'uom_price',
-                'vendor_no'
-            )
-                ->whereIn('vendor_no', $user->selected_supplier)
-                ->cursorPaginate(100)
-        );
+        $user = User::findOrFail($request->userId);
+        $vendorNumbers = is_array($user->selected_supplier)
+            ? $user->selected_supplier
+            : array_keys((array) $user->selected_supplier);
+        $limit = $request->get('limit', 100);
+        $offset = $request->get('offset', 0);
+        $products = Product::select(
+            'id',
+            'itemcode',
+            'description',
+            'uom',
+            'uom_price',
+            'vendor_no'
+        )
+            ->whereIn('vendor_no', $vendorNumbers)
+            ->skip($offset)
+            ->take($limit)
+            ->get();
+
+        return response()->json($products);
     }
+
 
     public function countItemCodes(Request $request)
     {
-        $user = User::findOrFail($request->user_id);
+        $user = User::findOrFail($request->userId);
         return response()->json(
             Product::whereIn('vendor_no', $user->selected_supplier)->count()
         );
     }
 
-    public function supplier(Request $request)
+    public function suppliers(Request $request)
     {
-        $user = User::findOrFail($request->user_id);
-        return response()->json(Supplier::select('id', 'supplier_code', 'name')->whereIn('supplier_code', $user->selected_supplier)->cursorPaginate(100));
+        $user = User::findOrFail($request->userId);
+
+        $vendorNumbers = is_array($user->selected_supplier)
+            ? $user->selected_supplier
+            : array_keys((array) $user->selected_supplier);
+
+        $limit = $request->get('limit', 100);
+        $offset = $request->get('offset', 0);
+
+        $suppliers = Supplier::select(
+            'id',
+            'supplier_code',
+            'name'
+        )
+            ->whereIn('supplier_code', $vendorNumbers)
+            ->skip($offset)
+            ->take($limit)
+            ->get();
+
+        return response()->json($suppliers);
     }
 
-    public function countSupplier(Request $request)
+
+
+
+    public function countSuppliers(Request $request)
     {
-        $user = User::findOrFail($request->user_id);
-        return response()->json(
-            Supplier::whereIn('supplier_code', $user->selected_supplier)->count()
-        );
+        $user = User::findOrFail($request->userId);
+
+        $vendorNumbers = is_array($user->selected_supplier)
+            ? $user->selected_supplier
+            : array_keys((array) $user->selected_supplier);
+
+        $count = Supplier::whereIn('supplier_code', $vendorNumbers)->count();
+
+        return response()->json($count);
     }
+
 
     public function getStoreUploads(Request $request)
     {
