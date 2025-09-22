@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageEvent;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -41,7 +42,26 @@ class MessengerController extends Controller
             ->orWhere('recipient_id', $request->user()->id)->get();
 
         return response()->json([
+            'rep_id' => $request->id,
             'messages' => $messages
+        ]);
+    }
+    public function sendMessage(Request $request)
+    {
+        $message = Message::create([
+            'sender_id' => $request->user()->id,
+            'message' => $request->message,
+            'recipient_id' => $request->id,
+            'attachment' => '',
+            'read' => 0
+        ]);
+
+        if($message){
+             broadcast(new MessageEvent($request->id,  $message))->toOthers();
+        }
+
+        return response()->json([
+            'message' => $message
         ]);
     }
 }

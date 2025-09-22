@@ -100,6 +100,7 @@ Route::middleware('auth')->group(function () {
             Route::get('get-users', [MessengerController::class, 'getUsers'])->name('get.users');
             Route::get('get-every-message', [MessengerController::class, 'getEveryMessage'])->name('get.every.message');
             Route::get('get-message', [MessengerController::class, 'getMessage'])->name('get.message');
+            Route::post('send-message', [MessengerController::class, 'sendMessage'])->name('send.message');
         });
     });
 });
