@@ -176,24 +176,50 @@ class AndroidController extends Controller
 
     public function getPendingRequest(Request $request)
     {
-        $usertype = User::where('employee_id', $request->user)
-            ->value('usertype');
+        $usertype = User::where('id', $request->id)->value('usertype');
 
         $query = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
-            ->where('status', 'pending')
-            ->select('nesa_requests.*', 'products.description');
+            ->join('users', 'users.id', '=', 'nesa_requests.created_by')
+            ->join('business_units', 'business_units.id', '=', 'users.bu')
+            ->select(
+                'nesa_requests.*',
+                'products.description',
+                'business_units.name as bu_name'
+            )
+            ->where('nesa_requests.status', 'pending');
 
         if ($usertype === 3) {
-            $query->where('created_by', $request->user)->where('status', 'pending');
+            $data = $query->where('created_by', $request->id)->get();
+        } else {
+            $data = $query->groupBy('nesa_requests.itemcode')->get();
         }
-
-        $data = $query->get();
 
         return response()->json($data);
     }
+
+    public function getPendingRequestbyItemcode(Request $request)
+    {
+        $data = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->join('users', 'users.id', '=', 'nesa_requests.created_by')
+            ->join('business_units', 'business_units.id', '=', 'users.bu')
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
+            ->select(
+                'nesa_requests.*',
+                'products.description',
+                'business_units.name as bu_name',
+                'suppliers.name as vendor'
+            )
+            ->where('nesa_requests.status', 'pending')
+            ->where('nesa_requests.itemcode', $request->itemcode)
+            ->get();
+
+        return response()->json($data);
+
+    }
+
     public function getConfirmedNesaRequest(Request $request)
     {
-        $usertype = User::where('employee_id', $request->employee_id)
+        $usertype = User::where('id', $request->id)
             ->value('usertype');
 
         $query = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
@@ -205,7 +231,7 @@ class AndroidController extends Controller
             ->select('nesa_requests.*', 'products.*', 'users.firstname', 'users.lastname', 'suppliers.name as vendor_name');
 
         if ($usertype === 3) {
-            $query->where('created_by', $request->employee_id)
+            $query->where('created_by', $request->id)
                 ->where('is_consolidated', 0)
                 ->where('coa', null)
                 ->where('status', 'approved');
@@ -220,8 +246,9 @@ class AndroidController extends Controller
     {
         $nesa = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
             ->join('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
-            ->join('users', 'users.employee_id', '=', 'nesa_requests.created_by')
-            ->where('nesa_requests.itemcode', $request->itemcode)
+            ->join('users', 'users.id', '=', 'nesa_requests.created_by')
+            ->join('business_units', 'business_units.id', '=', 'users.bu')
+            ->where('nesa_requests.id', $request->id)
             ->select(
                 'suppliers.name as vendor',
                 'nesa_requests.itemcode',
@@ -230,7 +257,8 @@ class AndroidController extends Controller
                 'products.description',
                 'products.uom',
                 'users.firstname',
-                'users.lastname'
+                'users.lastname',
+                'business_units.name as bu_name'
             )
             ->first();
 
