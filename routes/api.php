@@ -34,6 +34,8 @@ Route::get('isConsolidated', [AndroidController::class, 'isConsolidated']);
 
 Route::get('get-pending-request', [AndroidController::class, 'getPendingRequest']);
 
+Route::get('get-pending-request-by-itemcode', [AndroidController::class, 'getPendingRequestbyItemcode']);
+
 Route::get('view-request-details', [AndroidController::class, 'ViewRequestDetails']);
 
 Route::get('ViewRequestDetailsFirstSubmited', [AndroidController::class, 'ViewRequestDetailsFirstSubmited']);
