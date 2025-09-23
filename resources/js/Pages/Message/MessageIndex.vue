@@ -275,8 +275,34 @@ C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.
                                 </div>
                             </div>
                         </div>
+                        <div class="flex flex-row" v-if="typingIndicator">
+                            <!-- Avatar -->
+                            <div class="w-8 h-8 relative flex flex-shrink-0 mr-4 justify-start">
+                                <img class="shadow-md rounded-full w-full h-full object-cover"
+                                    src="https://randomuser.me/api/portraits/women/33.jpg" alt="" />
+                            </div>
+
+                            <!-- Messages -->
+                            <div class="messages text-sm text-gray-700 grid grid-flow-row gap-2">
+                                <div class="flex items-center group mb-2">
+                                    <!-- Bubble -->
+                                    <div
+                                        class="px-6 py-3 max-w-xs lg:max-w-md text-gray-200 rounded-b-[2rem] rounded-r-[2rem] bg-gray-800 relative">
+                                        <!-- Typing dots -->
+                                        <div class="flex items-end space-x-1">
+                                            <span class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-0"></span>
+                                            <span
+                                                class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-200"></span>
+                                            <span
+                                                class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-400"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    kanding
+
+
                     <div class="chat-footer flex-none">
 
                         <div class="flex flex-row items-center p-4">
@@ -312,8 +338,8 @@ C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.
                             <div class="relative flex-grow">
                                 <label>
                                     <input @keyup.enter="sendMessage()" @input="sendTyping" id="message-input"
-                                        @focus="sendTyping(true)" @blur="sendTyping(false)"
-                                        @mouseenter="sendTyping(true)" @mouseleave="sendTyping(false)"
+                                        @blur="sendTyping(false)"
+                                        @mouseleave="sendTyping(false)"
                                         class="rounded-full py-2 pl-3 pr-10 w-full border border-gray-800 focus:border-gray-700 bg-gray-800 focus:bg-gray-900 focus:outline-none text-gray-200 focus:shadow-md transition duration-300 ease-in"
                                         type="text" v-model="form.message" placeholder="Aa.." />
                                     <button type="button"
@@ -432,6 +458,7 @@ const echoMessage = () => {
             getEveryMessage()
         }
     ).listenForWhisper('typings', (e) => {
+        scrollToBottom();
         typingIndicator.value = e.typing;
     });
 };
@@ -443,13 +470,13 @@ const sendTyping = (isTyping) => {
     window.Echo.private(`message.${repId.value}`).whisper('typings', {
         typing: isTyping,
     });
+    scrollToBottom();
 };
 
 const input = document.getElementById("message-input");
 
 // Focused / hovered → true
 input?.addEventListener("focus", () => sendTyping(true));
-input?.addEventListener("mouseenter", () => sendTyping(true));
 
 // Lost focus / mouse leaves → false
 input?.addEventListener("blur", () => sendTyping(false));
@@ -463,7 +490,8 @@ const sendMessage = async () => {
     form.message = '';
     messages.value.push(data.message);
     scrollToBottom();
-    getEveryMessage()
+    getEveryMessage();
+    sendTyping(false);
 }
 
 onMounted(() => {
@@ -524,5 +552,38 @@ onMounted(() => {
 
 ::-webkit-scrollbar-corner {
     background: transparent;
+}
+
+@keyframes jump {
+
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.9;
+    }
+
+    50% {
+        transform: translateY(-6px);
+        opacity: 1;
+    }
+}
+
+/* generic animation utility */
+.animate-jump {
+    animation: jump 0.8s ease-in-out infinite;
+}
+
+/* simple delay helpers (Tailwind won't generate these unless configured, so we add them here) */
+.delay-0 {
+    animation-delay: 0s;
+}
+
+.delay-200 {
+    animation-delay: 0.12s;
+}
+
+/* slight stagger */
+.delay-400 {
+    animation-delay: 0.24s;
 }
 </style>
