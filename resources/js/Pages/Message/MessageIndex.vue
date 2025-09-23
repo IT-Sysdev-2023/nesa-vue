@@ -48,7 +48,7 @@
                         <p>Your Story</p>
                     </div> -->
                         <div class="text-sm text-center mr-4 cursor-pointer" v-for="item in messageUsers">
-                            <div class="p-1 border-4 border-blue-600 rounded-full" @click="getMesssage(item.id)">
+                            <div class="p-1 border-4 border-green-400 rounded-full" @click="getMesssage(item.id)">
                                 <div class="w-16 h-16 relative flex flex-shrink-0">
                                     <img class="shadow-md rounded-full w-full h-full object-cover"
                                         src="https://randomuser.me/api/portraits/women/12.jpg" alt="" />
@@ -57,17 +57,18 @@
                             <p>{{ item.firstname }}</p>
                         </div>
                     </div>
-                    <div class="contacts p-2 flex-1 overflow-y-scroll">
+                    <!-- <div class="contacts p-2 flex-1 overflow-y-scroll ">
                         <div v-for="item in everyMessage"
+                        :class=" item.count ? 'text-blue-300':''"
                             class="flex justify-between items-center p-3 hover:bg-gray-800 rounded-lg relative cursor-pointer"
                             @click="getMesssage(item.user_id)">
-                            <div class="w-16 h-16 relative flex flex-shrink-0">
-                                <img class="shadow-md rounded-full w-full h-full object-cover"
+                            <div class="w-16 h-16 relative flex justify-center items-center flex-shrink-0  rounded-full" :class="item.count ? 'bg-blue-300': ''">
+                                <img class="shadow-md rounded-full w-14 h-14"
                                     src="https://randomuser.me/api/portraits/women/23.jpg" alt="User2" />
                             </div>
                             <div class="flex-auto min-w-0 ml-4 mr-6 hidden md:block group-hover:block">
-                                <p class="truncate">{{ item.firstname }}, {{ item.lastname }}</p>
-                                <div class="flex items-center text-sm text-gray-600">
+                                <p class="truncate ">{{ item.firstname }}, {{ item.lastname }}</p>
+                                <div class="flex items-center text-sm " :class="item.count ? 'text-blue-500' : 'text-gray-400'">
                                     <div class="min-w-0">
                                         <p class="truncate">
                                             {{ item.message }}
@@ -83,7 +84,43 @@
                                     src="https://randomuser.me/api/portraits/women/23.jpg" />
                             </div>
                         </div>
+                    </div> -->
+                    <div class="contacts p-2 flex-1 overflow-y-scroll space-y-2">
+                        <div v-for="item in everyMessage" @click="getMesssage(item.user_id)"
+                            class="flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all duration-200 hover:bg-gray-800"
+                            :class="item.count ? 'bg-gray-900 shadow-lg' : ''">
+
+                            <!-- Avatar -->
+                            <div class="w-16 h-16 relative flex justify-center items-center flex-shrink-0  rounded-full"
+                                :class="item.count ? 'bg-blue-300' : ''">
+                                <img class="shadow-md rounded-full w-14 h-14"
+                                    src="https://randomuser.me/api/portraits/women/23.jpg" alt="User2" />
+                            </div>
+
+                            <!-- Message Info -->
+                            <div class="flex-auto min-w-0 ml-4 mr-6">
+                                <p :class="item.count ? 'font-bold text-blue-400' : 'text-gray-300'" class="truncate">
+                                    {{ item.firstname }} {{ item.lastname }}
+                                </p>
+                                <div class="flex items-center text-sm">
+                                    <p :class="item.count ? 'font-medium text-blue-400' : 'text-gray-400'"
+                                        class="truncate">
+                                        {{ item.message }}
+                                    </p>
+                                    <span class="ml-2 text-xs text-gray-500 whitespace-nowrap">
+                                        {{ item.latest_at }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Unread Badge -->
+                            <div v-if="item.count"
+                                class="flex items-center animate-pulse justify-center w-4 h-4 text-xs font-bold text-white bg-blue-500 rounded-full shadow-md">
+                                <!-- {{ item.count }} -->
+                            </div>
+                        </div>
                     </div>
+
                 </section>
 
                 <section v-if="repId != null" class="flex flex-col flex-auto border-l border-gray-800">
@@ -124,8 +161,8 @@
                     </div>
                     <!-- Chat Section -->
                     <div class="chat-body p-4 flex-1 overflow-y-scroll" ref="messagesContainer">
-                        <div v-for="item in messages">
-                            <div class="flex flex-row "
+                        <div v-for="item in messages" :key="item.id">
+                            <div class="flex flex-row"
                                 :class="item.sender_id == page.auth.user.id ? 'justify-end' : 'justify-start'">
                                 <div class="w-8 h-8 relative flex flex-shrink-0 mr-4 " v-if="item.attachment == ''">
                                     <img v-if="item.sender_id != page.auth.user.id"
@@ -133,6 +170,7 @@
                                         src="https://randomuser.me/api/portraits/women/33.jpg" alt="" />
                                 </div>
                                 <div class="messages text-sm text-gray-700 grid grid-flow-row gap-2">
+                                    <!-- {{ item.sender_id  }} {{ item.recipient_id === page.auth.user.id }}  {{ item.sender_id === page.auth.user.id}} -->
                                     <div class="flex items-center group mb-2"
                                         :class="item.sender_id == page.auth.user.id ? 'flex-row-reverse' : ''">
                                         <p class="px-6 py-3  max-w-xs lg:max-w-md text-gray-200"
@@ -167,40 +205,6 @@ C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.
                             <!-- <p class="p-4 text-center text-sm text-gray-500">
                                 FRI 3:04 PM
                             </p> -->
-                            <!-- <div class="flex flex-row justify-end" v-if="item.sender_id">
-                                {{ item.sender_id }}
-                                <div class="messages text-sm text-white grid grid-flow-row gap-2 mb-2">
-                                    <div class="flex items-center flex-row-reverse group">
-                                        <p class="px-6 py-3 rounded-t-[2rem] rounded-l-[2rem]   max-w-xs lg:max-w-md"
-                                            :class="item.attachment ? '' : 'bg-blue-700'">
-                                            {{ item.attachment ? '' : item.message }}
-                                        </p>
-                                        <button type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">
-                                            <svg viewBox="0 0 20 20" class="w-full h-full fill-current">
-                                                <path d="M10.001,7.8C8.786,7.8,7.8,8.785,7.8,10s0.986,2.2,2.201,2.2S12.2,11.215,12.2,10S11.216,7.8,10.001,7.8z
-	 M3.001,7.8C1.786,7.8,0.8,8.785,0.8,10s0.986,2.2,2.201,2.2S5.2,11.214,5.2,10S4.216,7.8,3.001,7.8z M17.001,7.8
-	C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.8,17.001,7.8z" />
-                                            </svg>
-                                        </button>
-                                        <button type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">
-                                            <svg viewBox="0 0 20 20" class="w-full h-full fill-current">
-                                                <path
-                                                    d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z" />
-                                            </svg>
-                                        </button>
-                                        <button type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">
-                                            <svg viewBox="0 0 24 24" class="w-full h-full fill-current">
-                                                <path
-                                                    d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-3.54-4.46a1 1 0 0 1 1.42-1.42 3 3 0 0 0 4.24 0 1 1 0 0 1 1.42 1.42 5 5 0 0 1-7.08 0zM9 11a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm6 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div> -->
-
                             <div class="flex flex-row justify-end">
                                 <div class="messages text-sm text-white grid grid-flow-row gap-2">
                                     <div class="flex items-center flex-row-reverse group"
@@ -275,31 +279,40 @@ C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-row" v-if="typingIndicator">
-                            <!-- Avatar -->
-                            <div class="w-8 h-8 relative flex flex-shrink-0 mr-4 justify-start">
-                                <img class="shadow-md rounded-full w-full h-full object-cover"
-                                    src="https://randomuser.me/api/portraits/women/33.jpg" alt="" />
-                            </div>
+                        <!-- {{ messages[0].recipient_id }}
+                        {{ messages[0].sender_id }}
+                        {{ page.auth.user.id }}
+                         {{ repId }} -->
 
-                            <!-- Messages -->
-                            <div class="messages text-sm text-gray-700 grid grid-flow-row gap-2">
-                                <div class="flex items-center group mb-2">
-                                    <!-- Bubble -->
-                                    <div
-                                        class="px-6 py-3 max-w-xs lg:max-w-md text-gray-200 rounded-b-[2rem] rounded-r-[2rem] bg-gray-800 relative">
-                                        <!-- Typing dots -->
-                                        <div class="flex items-end space-x-1">
-                                            <span class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-0"></span>
-                                            <span
-                                                class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-200"></span>
-                                            <span
-                                                class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-400"></span>
+                        <div >
+                            <div class="flex flex-row" v-if="typingIndicator">
+                                <!-- Avatar -->
+                                <div class="w-8 h-8 relative flex flex-shrink-0 mr-4 justify-start">
+                                    <img class="shadow-md rounded-full w-full h-full object-cover"
+                                        src="https://randomuser.me/api/portraits/women/33.jpg" alt="" />
+                                </div>
+
+                                <!-- Messages -->
+                                <div class="messages text-sm text-gray-700 grid grid-flow-row gap-2">
+                                    <div class="flex items-center group mb-2">
+                                        <!-- Bubble -->
+                                        <div
+                                            class="px-6 py-3 max-w-xs lg:max-w-md text-gray-200 rounded-b-[2rem] rounded-r-[2rem] bg-gray-800 relative">
+                                            <!-- Typing dots -->
+                                            <div class="flex items-end space-x-1">
+                                                <span
+                                                    class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-0"></span>
+                                                <span
+                                                    class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-200"></span>
+                                                <span
+                                                    class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-400"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
 
@@ -338,8 +351,7 @@ C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.
                             <div class="relative flex-grow">
                                 <label>
                                     <input @keyup.enter="sendMessage()" @input="sendTyping" id="message-input"
-                                        @blur="sendTyping(false)"
-                                        @mouseleave="sendTyping(false)"
+                                        @blur="sendTyping(false)" @mouseleave="sendTyping(false)"
                                         class="rounded-full py-2 pl-3 pr-10 w-full border border-gray-800 focus:border-gray-700 bg-gray-800 focus:bg-gray-900 focus:outline-none text-gray-200 focus:shadow-md transition duration-300 ease-in"
                                         type="text" v-model="form.message" placeholder="Aa.." />
                                     <button type="button"
@@ -402,12 +414,14 @@ interface EveryMessage {
     lastname: string;
     created_at: string;
     latest_at: string;
+    count: number
 }
 interface Messages {
     recipient_id: number;
     sender_id: number;
     message: string;
     attachment: string,
+    id: number
 }
 
 const messageUsers = ref<User[]>([]);
@@ -436,7 +450,7 @@ const scrollToBottom = () => {
 const getEveryMessage = async () => {
     const { data } = await axios.get(route("message.get.every.message"));
     everyMessage.value = data.users;
-
+    seenMessage();
 };
 
 const getMesssage = async (id: number) => {
@@ -446,7 +460,7 @@ const getMesssage = async (id: number) => {
 
     messages.value = data.messages;
     repId.value = data.rep_id;
-    scrollToBottom()
+    scrollToBottom();
 };
 
 const echoMessage = () => {
@@ -492,6 +506,13 @@ const sendMessage = async () => {
     scrollToBottom();
     getEveryMessage();
     sendTyping(false);
+}
+
+const seenMessage = async () => {
+    const { data } = await axios.put(route('message.seen.message'), {
+        id: repId.value
+    });
+    getEveryMessage();
 }
 
 onMounted(() => {

@@ -101,6 +101,7 @@ Route::middleware('auth')->group(function () {
             Route::get('get-every-message', [MessengerController::class, 'getEveryMessage'])->name('get.every.message');
             Route::get('get-message', [MessengerController::class, 'getMessage'])->name('get.message');
             Route::post('send-message', [MessengerController::class, 'sendMessage'])->name('send.message');
+            Route::put('seen-message', [MessengerController::class, 'seenMessage'])->name('seen.message');
         });
     });
 });

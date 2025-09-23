@@ -8,7 +8,7 @@
         </div>
         <div class="max-w-7xl mx-auto px-1 sm:px-6 lg:px-8 py-6">
             <!-- Responsive 1 / 2 / 3 column grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
                 <!-- Column item / card 1 -->
                 <article>
                     <MasterFileCard title="Products" routeTo="admin.masterfile"/>
@@ -19,6 +19,7 @@
                  <article>
                     <MasterFileCard title="Users" routeTo="admin.setupUser"/>
                 </article>
+    
             </div>
         </div>
     </AuthenticatedLayout>

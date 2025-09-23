@@ -406,4 +406,5 @@ class AdminController extends Controller
 
         return back()->with('success', 'User credentials updated successfully.');
     }
+    
 }
