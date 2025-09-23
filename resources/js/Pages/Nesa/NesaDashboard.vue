@@ -12,14 +12,14 @@
             <!-- Responsive 1 / 2 / 3 column grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Column item / card 1 -->
-                <article >
-                  <DashboardCard v-if="[5,1].includes(page.auth.user.usertype)" title="Near Expiry Stock Advice"/>
+                <article>
+                  <DashboardCard v-if="[5,1,2].includes(page.auth.user.usertype)" title="Near Expiry Stock Advice"/>
                 </article>
                  <article >
-                  <ApprovalDashboard v-if="[6,1].includes(page.auth.user.usertype)" title="Nesa Approval"/>
+                  <ApprovalDashboard v-if="[6,1,2].includes(page.auth.user.usertype)" title="Nesa Approval"/>
                 </article>
                     <article >
-                  <ApprovedListDashboard v-if="[7,1].includes(page.auth.user.usertype)" title="Nesa Approved List"/>
+                  <ApprovedListDashboard v-if="[7,1,2].includes(page.auth.user.usertype)" title="Nesa Approved List"/>
                 </article>
             </div>
         </div>

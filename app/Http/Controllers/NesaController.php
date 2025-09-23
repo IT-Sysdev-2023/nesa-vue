@@ -43,7 +43,6 @@ class NesaController extends Controller
     }
     public function nesaList(Request $request)
     {
-        // dd();
         $nesa = NesaRequest::select(
             'nesa_requests.itemcode',
             DB::raw('MIN(nesa_requests.id) as id')
