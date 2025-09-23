@@ -48,7 +48,6 @@
                         <p>Your Story</p>
                     </div> -->
                         <div class="text-sm text-center mr-4 cursor-pointer" v-for="item in messageUsers">
-                            {{ item.id }}
                             <div class="p-1 border-4 border-blue-600 rounded-full" @click="getMesssage(item.id)">
                                 <div class="w-16 h-16 relative flex flex-shrink-0">
                                     <img class="shadow-md rounded-full w-full h-full object-cover"
@@ -75,7 +74,7 @@
                                         </p>
                                     </div>
                                     <p class="ml-2 whitespace-no-wrap">
-                                        {{ dayjs(item.created_at).format("HH:mm") }}
+                                        {{ item.latest_at }}
                                     </p>
                                 </div>
                             </div>
@@ -237,7 +236,9 @@ C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.
                                     </div>
                                 </div>
                             </div>
+
                             <div class="flex flex-row justify-start">
+
                                 <div class="messages text-sm text-white grid grid-flow-row gap-2">
 
                                     <div class="flex items-center group"
@@ -275,6 +276,7 @@ C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.
                             </div>
                         </div>
                     </div>
+                    kanding
                     <div class="chat-footer flex-none">
 
                         <div class="flex flex-row items-center p-4">
@@ -306,10 +308,12 @@ C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.
                                         d="M9,18 L9,16.9379599 C5.05368842,16.4447356 2,13.0713165 2,9 L4,9 L4,9.00181488 C4,12.3172241 6.6862915,15 10,15 C13.3069658,15 16,12.314521 16,9.00181488 L16,9 L18,9 C18,13.0790094 14.9395595,16.4450043 11,16.9378859 L11,18 L14,18 L14,20 L6,20 L6,18 L9,18 L9,18 Z M6,4.00650452 C6,1.79377317 7.79535615,0 10,0 C12.209139,0 14,1.79394555 14,4.00650452 L14,8.99349548 C14,11.2062268 12.2046438,13 10,13 C7.790861,13 6,11.2060545 6,8.99349548 L6,4.00650452 L6,4.00650452 Z" />
                                 </svg>
                             </button>
+
                             <div class="relative flex-grow">
-                                <!-- chatting label -->
                                 <label>
-                                    <input @keyup.enter="sendMessage()"
+                                    <input @keyup.enter="sendMessage()" @input="sendTyping" id="message-input"
+                                        @focus="sendTyping(true)" @blur="sendTyping(false)"
+                                        @mouseenter="sendTyping(true)" @mouseleave="sendTyping(false)"
                                         class="rounded-full py-2 pl-3 pr-10 w-full border border-gray-800 focus:border-gray-700 bg-gray-800 focus:bg-gray-900 focus:outline-none text-gray-200 focus:shadow-md transition duration-300 ease-in"
                                         type="text" v-model="form.message" placeholder="Aa.." />
                                     <button type="button"
@@ -371,6 +375,7 @@ interface EveryMessage {
     firstname: string;
     lastname: string;
     created_at: string;
+    latest_at: string;
 }
 interface Messages {
     recipient_id: number;
@@ -423,10 +428,32 @@ const echoMessage = () => {
         ".message-event",
         (e) => {
             messages.value.push(e.message);
-              scrollToBottom();
+            scrollToBottom();
+            getEveryMessage()
         }
-    );
-}
+    ).listenForWhisper('typings', (e) => {
+        typingIndicator.value = e.typing;
+    });
+};
+
+
+const typingIndicator = ref(false);
+
+const sendTyping = (isTyping) => {
+    window.Echo.private(`message.${repId.value}`).whisper('typings', {
+        typing: isTyping,
+    });
+};
+
+const input = document.getElementById("message-input");
+
+// Focused / hovered → true
+input?.addEventListener("focus", () => sendTyping(true));
+input?.addEventListener("mouseenter", () => sendTyping(true));
+
+// Lost focus / mouse leaves → false
+input?.addEventListener("blur", () => sendTyping(false));
+input?.addEventListener("mouseleave", () => sendTyping(false));
 
 const sendMessage = async () => {
     const { data } = await axios.post(route('message.send.message'), {
@@ -436,6 +463,7 @@ const sendMessage = async () => {
     form.message = '';
     messages.value.push(data.message);
     scrollToBottom();
+    getEveryMessage()
 }
 
 onMounted(() => {
