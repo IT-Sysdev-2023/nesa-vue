@@ -7,6 +7,7 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MessengerController extends Controller
 {
@@ -20,15 +21,34 @@ class MessengerController extends Controller
         ]);
     }
 
-    public function  getEveryMessage()
+    public function getEveryMessage(Request $request)
     {
-        $users = User::select('users.id as user_id', 'messages.id as id', 'users.firstname', 'users.lastname', 'messages.*')
-            ->join('messages', 'messages.sender_id', '=', 'users.id')
-            ->where('messages.sender_id', '!=', Auth::user()->id)
-            ->selectRaw('MAX(messages.created_at) as last_message_at')
-            ->groupBy('users.id')
-            ->orderByDesc('last_message_at')
+
+        $users = User::select(
+            'users.username',
+            'users.firstname',
+            'users.lastname',
+            'users.id as user_id',
+            'm2.message',
+            DB::raw('MAX(m2.read) as read_unread'),
+            DB::raw('MAX(GREATEST(COALESCE(m1.id, 0), COALESCE(m2.id, 0))) as last_message_id'),
+            DB::raw('MAX(GREATEST(COALESCE(m1.created_at, "1970-01-01"), COALESCE(m2.created_at, "1970-01-01"))) as last_message_time')
+        )
+            ->leftJoin('messages as m1', 'm1.sender_id', '=', 'users.id')
+            ->leftJoin('messages as m2', 'm2.recipient_id', '=', 'users.id')
+            ->groupBy(
+                'users.username',
+                'users.firstname',
+                'users.lastname',
+                'users.id',
+            )
+            // 👉 sort ASC by last message timestamp
+            ->orderBy('last_message_time', 'desc')
             ->get();
+
+        // $userIds = $users->pluck('id')->all();
+
+
         return response()->json([
             'users' => $users
         ]);
@@ -36,10 +56,13 @@ class MessengerController extends Controller
 
     public function getMessage(Request $request)
     {
-        $messages = Message::where('sender_id', $request->user()->id)
-            ->where('recipient_id', $request->id)
-            ->orWhere('sender_id', $request->id)
-            ->orWhere('recipient_id', $request->user()->id)->get();
+        $messages = Message::where(function ($q) use ($request) {
+            $q->where('sender_id', $request->user()->id)
+                ->where('recipient_id', $request->id);
+        })->orWhere(function ($q) use ($request) {
+            $q->where('sender_id', $request->id)
+                ->where('recipient_id', $request->user()->id);
+        })->get();
 
         return response()->json([
             'rep_id' => $request->id,
@@ -56,8 +79,8 @@ class MessengerController extends Controller
             'read' => 0
         ]);
 
-        if($message){
-             broadcast(new MessageEvent($request->id,  $message))->toOthers();
+        if ($message) {
+            broadcast(new MessageEvent($request->id,  $message))->toOthers();
         }
 
         return response()->json([
