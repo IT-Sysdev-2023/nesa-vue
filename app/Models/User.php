@@ -56,4 +56,9 @@ class User extends Authenticatable
         );
     }
 
+    public function businessUnit()
+    {
+        return $this->belongsTo(BusinessUnit::class, 'bu', 'id');
+    }
+
 }
