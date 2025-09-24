@@ -24,9 +24,9 @@ Route::prefix('suppliers')->group(function () {
 
 
 
-Route::get('getStoreUploads', [AndroidController::class, 'getStoreUploads']);
+Route::get('getOtherStoreUploads', [AndroidController::class, 'getOtherStoreUploads']);
 
-Route::get('getAllStoreUploads', [AndroidController::class, 'getAllStoreUploads']);
+Route::get('getProductsNotYetUploaded', [AndroidController::class, 'getProductsNotYetUploaded']);
 
 Route::post('uploadRequest', [AndroidController::class, 'uploadRequest']);
 
