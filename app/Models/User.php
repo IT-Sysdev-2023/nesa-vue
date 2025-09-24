@@ -55,10 +55,13 @@ class User extends Authenticatable
             get: fn(mixed $value, array $attributes) => Str::title("{$attributes['firstname']} {$attributes['lastname']}")
         );
     }
+<<<<<<< HEAD
 
     public function businessUnit()
     {
         return $this->belongsTo(BusinessUnit::class, 'bu', 'id');
     }
 
+=======
+>>>>>>> 008b8c77db7655507ec946084fe5ea5f51daecea
 }

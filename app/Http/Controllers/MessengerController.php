@@ -118,7 +118,8 @@ class MessengerController extends Controller
 
         return response()->json([
             'rep_id' => $request->id,
-            'messages' => $messages
+            'messages' => $messages,
+            'name' => User::select('firstname','lastname')->where('id', $request->id)->value('fullName'),
         ]);
     }
     public function sendMessage(Request $request)
