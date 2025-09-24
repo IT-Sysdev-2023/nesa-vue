@@ -105,12 +105,20 @@ class AndroidController extends Controller
 
     public function getStoreUploads(Request $request)
     {
-        $data = NesaRequest::select('business_units.name')->where('itemcode', $request->itemcode)
-            ->join('users', 'users.employee_id', '=', 'nesa_requests.created_by')
-            ->join('business_units', 'business_units.id', '=', 'users.bu')
-            ->get();
+        $data = NesaRequest::with([
+            'user.businessUnit' => function ($q) {
+                $q->select('id', 'name');
+            }
+        ])
+            ->where('itemcode', $request->itemcode)
+            ->get(['id', 'created_by']);
+        $result = $data->map(function ($item) {
+            return [
+                'name' => optional($item->user->businessUnit)->name
+            ];
+        });
 
-        return response()->json($data);
+        return response()->json($result);
     }
 
     public function getAllStoreUploads(Request $request)

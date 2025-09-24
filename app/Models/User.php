@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Bus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -48,11 +49,16 @@ class User extends Authenticatable
         ];
     }
 
-       public function fullName(): Attribute
+    public function fullName(): Attribute
     {
         return Attribute::make(
             get: fn(mixed $value, array $attributes) => Str::title("{$attributes['firstname']} {$attributes['lastname']}")
         );
+    }
+
+    public function businessUnit()
+    {
+        return $this->belongsTo(BusinessUnit::class, 'bu', 'id');
     }
 
 }
