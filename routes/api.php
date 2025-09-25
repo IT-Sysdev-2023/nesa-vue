@@ -36,6 +36,8 @@ Route::get('get-pending-request', [AndroidController::class, 'getPendingRequest'
 
 Route::get('get-pending-request-by-itemcode', [AndroidController::class, 'getPendingRequestbyItemcode']);
 
+
+
 Route::get('view-request-details', [AndroidController::class, 'ViewRequestDetails']);
 
 Route::get('ViewRequestDetailsFirstSubmited', [AndroidController::class, 'ViewRequestDetailsFirstSubmited']);
@@ -45,6 +47,8 @@ Route::post('approve-request', [AndroidController::class, 'ApproveRequest']);
 Route::get('find-item-code', [AndroidController::class, 'findItemCode']);
 
 Route::get('get-confirmed-nesa-request', [AndroidController::class, 'getConfirmedNesaRequest']);
+
+Route::get('get-confirmed-request-by-itemcode', [AndroidController::class, 'getConfirmedRequestbyItemcode']);
 
 
 Route::post('updated-request', [AndroidController::class, 'updateRequest']);

@@ -249,6 +249,20 @@ class AndroidController extends Controller
         return response()->json($query->get());
     }
 
+    public function getConfirmedRequestbyItemcode(Request $request)
+    {
+        $query = NesaRequest::join('users', 'users.id', '=', 'nesa_requests.created_by')
+            ->join('business_units', 'business_units.id', '=', 'users.bu')
+            ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->join('suppliers', 'suppliers.supplier_code', 'products.vendor_no')
+            ->where('nesa_requests.itemcode', $request->itemcode)
+            ->select('business_units.name as bu_name', 'nesa_requests.*', 'products.*', 'users.firstname', 'users.lastname', 'suppliers.name as vendor_name')
+            ->get();
+
+        return response()->json($query);
+    }
+
+
     public function getPendingRequestbyItemcode(Request $request)
     {
         $data = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
