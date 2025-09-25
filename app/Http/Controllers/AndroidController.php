@@ -224,11 +224,11 @@ class AndroidController extends Controller
     }
     public function getConfirmedNesaRequest(Request $request)
     {
-        $usertype = User::where('employee_id', $request->employee_id)
+        $usertype = User::where('id', $request->id)
             ->value('usertype');
 
         $query = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
-            ->join('users', 'users.employee_id', '=', 'nesa_requests.created_by')
+            ->join('users', 'users.id', '=', 'nesa_requests.created_by')
             ->join('suppliers', 'suppliers.supplier_code', 'products.vendor_no')
             ->where('is_consolidated', 0)
             ->where('coa', null)
@@ -236,15 +236,15 @@ class AndroidController extends Controller
             ->select('nesa_requests.*', 'products.*', 'users.firstname', 'users.lastname', 'suppliers.name as vendor_name');
 
         if ($usertype === 3) {
-            $query->where('created_by', $request->employee_id)
+            $query->where('created_by', $request->id)
                 ->where('is_consolidated', 0)
                 ->where('coa', null)
                 ->where('status', 'approved');
+        } else {
+            $query->groupBy('nesa_requests.itemcode');
         }
 
-        $data = $query->get();
-
-        return response()->json($data);
+        return response()->json($query->get());
     }
 
     public function getPendingRequestbyItemcode(Request $request)
