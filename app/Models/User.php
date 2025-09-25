@@ -48,11 +48,10 @@ class User extends Authenticatable
         ];
     }
 
-       public function fullName(): Attribute
+    public function fullName(): Attribute
     {
         return Attribute::make(
             get: fn(mixed $value, array $attributes) => Str::title("{$attributes['firstname']} {$attributes['lastname']}")
         );
     }
-
 }

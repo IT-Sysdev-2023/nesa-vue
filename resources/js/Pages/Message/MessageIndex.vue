@@ -118,6 +118,12 @@
                                 class="flex items-center animate-pulse justify-center w-4 h-4 text-xs font-bold text-white bg-blue-500 rounded-full shadow-md">
                                 <!-- {{ item.count }} -->
                             </div>
+                            <div v-else-if="item.count !== null">
+                                <div class="w-4 h-4 flex flex-shrink-0 hidden md:block group-hover:block">
+                                    <img class="rounded-full w-full h-full object-cover" alt="user2"
+                                        src="https://randomuser.me/api/portraits/women/23.jpg" />
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -133,7 +139,7 @@
                                     src="https://randomuser.me/api/portraits/women/33.jpg" alt="" />
                             </div>
                             <div class="text-sm">
-                                <p class="font-bold">Scarlett Johansson</p>
+                                <p class="font-bold">{{ usersName }}</p>
                                 <p>Active 1h ago</p>
                             </div>
                         </div>
@@ -161,46 +167,64 @@
                     </div>
                     <!-- Chat Section -->
                     <div class="chat-body p-4 flex-1 overflow-y-scroll" ref="messagesContainer">
-                        <div v-for="item in messages" :key="item.id">
+                        <div v-for="(item, index) in messages" :key="item.id">
+                            <!-- {{ item }} -->
                             <div class="flex flex-row"
                                 :class="item.sender_id == page.auth.user.id ? 'justify-end' : 'justify-start'">
-                                <div class="w-8 h-8 relative flex flex-shrink-0 mr-4 " v-if="item.attachment == ''">
+                                <div class="w-7 h-7 border-none relative flex flex-shrink-0 mr-1 "
+                                    v-if="item.attachment == ''">
                                     <img v-if="item.sender_id != page.auth.user.id"
-                                        class="shadow-md rounded-full w-full h-full object-cover"
-                                        src="https://randomuser.me/api/portraits/women/33.jpg" alt="" />
+                                        :class="!messages[index - 1] || messages[index - 1].sender_id !== item.sender_id ? 'shadow-md rounded-full w-full h-full object-cover' : ''"
+                                        :src="!messages[index - 1] || messages[index - 1].sender_id !== item.sender_id ? 'https://randomuser.me/api/portraits/women/33.jpg' : ''"
+                                        alt="" />
                                 </div>
                                 <div class="messages text-sm text-gray-700 grid grid-flow-row gap-2">
-                                    <!-- {{ item.sender_id  }} {{ item.recipient_id === page.auth.user.id }}  {{ item.sender_id === page.auth.user.id}} -->
-                                    <div class="flex items-center group mb-2"
+                                    <div class="flex items-end group mb-2"
                                         :class="item.sender_id == page.auth.user.id ? 'flex-row-reverse' : ''">
-                                        <p class="px-6 py-3  max-w-xs lg:max-w-md text-gray-200"
-                                            :class="item.sender_id == page.auth.user.id ? 'bg-blue-700  rounded-b-[2rem] rounded-l-[2rem]' : 'bg-gray-800  rounded-b-[2rem] rounded-r-[2rem]'">
+                                        <div class="w-3 h-3 flex-shrink-0"
+                                            v-if="item.read === 1 && index === messages.length - 1 && item.sender_id == page.auth.user.id">
+                                            <img v-if="item.sender_id == page.auth.user.id"
+                                                class="rounded-full w-full h-full object-cover" alt="user avatar"
+                                                src="https://randomuser.me/api/portraits/women/23.jpg" />
+                                        </div>
+                                        <!-- Message bubble -->
+                                        <p class="px-6 py-3 max-w-xs lg:max-w-md text-gray-200 mx-2" :class="item.sender_id == page.auth.user.id
+                                            ? 'bg-blue-700 rounded-b-[2rem] rounded-l-[2rem]'
+                                            : 'bg-gray-800 rounded-b-[2rem] rounded-r-[2rem]'">
                                             {{ item.attachment ? '' : item.message }}
                                         </p>
-                                        <button type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-1 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">
-                                            <svg viewBox="0 0 20 20" class="w-full h-full fill-current">
-                                                <path d="M10.001,7.8C8.786,7.8,7.8,8.785,7.8,10s0.986,2.2,2.201,2.2S12.2,11.215,12.2,10S11.216,7.8,10.001,7.8z
- M3.001,7.8C1.786,7.8,0.8,8.785,0.8,10s0.986,2.2,2.201,2.2S5.2,11.214,5.2,10S4.216,7.8,3.001,7.8z M17.001,7.8
-C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.8,17.001,7.8z" />
-                                            </svg>
-                                        </button>
-                                        <button type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-1 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">
-                                            <svg viewBox="0 0 20 20" class="w-full h-full fill-current">
-                                                <path
-                                                    d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z" />
-                                            </svg>
-                                        </button>
-                                        <button type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-1 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">
-                                            <svg viewBox="0 0 24 24" class="w-full h-full fill-current">
-                                                <path
-                                                    d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-3.54-4.46a1 1 0 0 1 1.42-1.42 3 3 0 0 0 4.24 0 1 1 0 0 1 1.42 1.42 5 5 0 0 1-7.08 0zM9 11a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm6 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-                                            </svg>
-                                        </button>
+
+                                        <!-- Action buttons -->
+                                        <div class="hidden group-hover:flex space-x-1">
+                                            <button type="button"
+                                                class="flex flex-shrink-0 focus:outline-none rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">
+                                                <svg viewBox="0 0 20 20" class="w-full h-full fill-current">
+                                                    <path
+                                                        d="M10.001,7.8C8.786,7.8,7.8,8.785,7.8,10s0.986,2.2,2.201,2.2S12.2,11.215,12.2,10S11.216,7.8,10.001,7.8z
+            M3.001,7.8C1.786,7.8,0.8,8.785,0.8,10s0.986,2.2,2.201,2.2S5.2,11.214,5.2,10S4.216,7.8,3.001,7.8z
+            M17.001,7.8C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.8,17.001,7.8z" />
+                                                </svg>
+                                            </button>
+                                            <button type="button"
+                                                class="flex flex-shrink-0 focus:outline-none rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">
+                                                <svg viewBox="0 0 20 20" class="w-full h-full fill-current">
+                                                    <path
+                                                        d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z" />
+                                                </svg>
+                                            </button>
+                                            <button type="button"
+                                                class="flex flex-shrink-0 focus:outline-none rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">
+                                                <svg viewBox="0 0 24 24" class="w-full h-full fill-current">
+                                                    <path d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-3.54-4.46a1 1 0 0 1 1.42-1.42
+            3 3 0 0 0 4.24 0 1 1 0 0 1 1.42 1.42 5 5 0 0 1-7.08 0zM9 11a1 1 0 1 1 0-2
+            1 1 0 0 1 0 2zm6 0a1 1 0 1 1 0-2
+            1 1 0 0 1 0 2z" />
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
                             <!-- <p class="p-4 text-center text-sm text-gray-500">
                                 FRI 3:04 PM
@@ -279,12 +303,8 @@ C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.
                                 </div>
                             </div>
                         </div>
-                        <!-- {{ messages[0].recipient_id }}
-                        {{ messages[0].sender_id }}
-                        {{ page.auth.user.id }}
-                         {{ repId }} -->
 
-                        <div >
+                        <div>
                             <div class="flex flex-row" v-if="typingIndicator">
                                 <!-- Avatar -->
                                 <div class="w-8 h-8 relative flex flex-shrink-0 mr-4 justify-start">
@@ -390,8 +410,9 @@ import { usePage } from "@inertiajs/vue3";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { countBy } from "lodash";
 
-import { ref, onMounted, reactive, nextTick } from "vue";
+import { ref, onMounted, reactive, nextTick, watch } from "vue";
 
 dayjs.extend(relativeTime);
 const page = usePage<{
@@ -421,7 +442,8 @@ interface Messages {
     sender_id: number;
     message: string;
     attachment: string,
-    id: number
+    id: number,
+    read: number
 }
 
 const messageUsers = ref<User[]>([]);
@@ -429,6 +451,7 @@ const everyMessage = ref<EveryMessage[]>([]);
 const messages = ref<Messages[]>([]);
 const repId = ref<number>();
 const messagesContainer = ref<HTMLDivElement | null>(null);
+const usersName = ref<string>();
 
 const form = reactive({
     message: '' as string
@@ -457,19 +480,23 @@ const getMesssage = async (id: number) => {
     const { data } = await axios.get(route("message.get.message"), {
         params: { id: id },
     });
-
+    usersName.value = data.name;
     messages.value = data.messages;
     repId.value = data.rep_id;
     scrollToBottom();
+    seenMessage();
+    // getMesssage(repId.value)
 };
 
 const echoMessage = () => {
     window.Echo.private(`message.${page.auth.user.id}`).listen(
         ".message-event",
         (e) => {
-            messages.value.push(e.message);
-            scrollToBottom();
-            getEveryMessage()
+            if (repId.value == e.message.sender_id) {
+                messages.value.push(e.message);
+                scrollToBottom();
+                getEveryMessage();
+            }
         }
     ).listenForWhisper('typings', (e) => {
         scrollToBottom();
@@ -503,8 +530,10 @@ const sendMessage = async () => {
     });
     form.message = '';
     messages.value.push(data.message);
+
     scrollToBottom();
     getEveryMessage();
+    getMesssage(repId.value)
     sendTyping(false);
 }
 
@@ -519,7 +548,15 @@ onMounted(() => {
     getUsersMessage();
     getEveryMessage();
     echoMessage();
+    seenMessage();
+    getMesssage(repId.value)
 });
+
+watch(() => messages.value, (newVal, oldVal) => {
+//   console.log(newVal, oldVal)
+// Removed erroneous push to avoid type error
+})
+
 </script>
 
 <style scoped>
