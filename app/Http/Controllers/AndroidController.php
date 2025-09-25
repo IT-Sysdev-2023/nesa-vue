@@ -216,6 +216,8 @@ class AndroidController extends Controller
 
         if ($usertype == 3) {
             $query->where('created_by', $request->id)->where('status', 'pending');
+        } else {
+            $query->groupBy('nesa_requests.itemcode');
         }
 
         $data = $query->get();
