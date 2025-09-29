@@ -43,13 +43,14 @@ class NesaController extends Controller
     }
     public function nesaList(Request $request)
     {
-        $nesa = NesaRequest::select(
+        $nesaId = NesaRequest::select(
             'nesa_requests.itemcode',
             DB::raw('MIN(nesa_requests.id) as id')
         )
             ->groupBy('nesa_requests.itemcode')
             ->get()
             ->pluck('id');
+
         $nesa = NesaRequest::select(
             'nesa_requests.itemcode as item_code',
             'nesa_no',
@@ -60,12 +61,12 @@ class NesaController extends Controller
         )
             ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
             ->join('suppliers', 'supplier_code', '=', 'products.vendor_no')
-            ->join('users', 'employee_id', '=', 'created_by')
+            ->join('users', 'id', '=', 'created_by')
             ->join('business_units', 'business_units.id', '=', 'users.bu')
             ->when($request->search, function ($query) use ($request) {
                 $query->where('suppliers.name', 'like', '%' . $request->search . '%');
             })->where('nesa_requests.is_consolidated', 0)
-            ->whereIn('nesa_requests.id', $nesa)
+            ->whereIn('nesa_requests.id', $nesaId)
             ->where('nesa_requests.status', 'approved')
             ->paginate(10)
             ->withQueryString();
@@ -94,7 +95,7 @@ class NesaController extends Controller
         )
             ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
             ->join('suppliers', 'supplier_code', '=', 'products.vendor_no')
-            ->join('users', 'employee_id', '=', 'created_by')
+            ->join('users', 'id', '=', 'created_by')
             ->join('business_units', 'business_units.id', '=', 'users.bu')
             ->where('nesa_requests.itemcode', $itemcode)
             ->paginate(10)

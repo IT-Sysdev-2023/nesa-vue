@@ -9,3 +9,5 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 Broadcast::channel('syncing-products.{id}', fn(User $user, $id) => (int) $user->id === (int) $id);
 Broadcast::channel('message.{id}', fn(User $user, $id) => (int) $user->id === (int) $id);
+Broadcast::channel('message-seen.{id}', fn(User $user, $id) => (int) $user->id === (int) $id);
+Broadcast::channel('get-message.{id}', fn(User $user, $id) => (int) $user->id === (int) $id);

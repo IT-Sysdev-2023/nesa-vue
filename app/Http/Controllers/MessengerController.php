@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GetEveryMessageEvent;
 use App\Events\MessageEvent;
+use App\Events\SeenMessageEvent;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -68,7 +70,6 @@ class MessengerController extends Controller
                 ? $message->recipient_id
                 : $message->sender_id;
         });
-
         // 🔹 Count unread messages from others
         $unreadCounts = Message::where('read', 0)
             ->whereIn('sender_id', $userIds)
@@ -77,16 +78,29 @@ class MessengerController extends Controller
             ->groupBy('sender_id')
             ->pluck('count', 'sender_id');
 
+        $unreadCountsRe = Message::where('read', 0)
+            ->whereIn('recipient_id',  $userIds)
+            ->where('sender_id', $currentUser->id)
+            ->selectRaw('recipient_id, COUNT(*) as count')
+            ->groupBy('recipient_id')
+            ->pluck('count', 'recipient_id');
+
+        // dd($unreadCounts);
+
         $totalUnread = $unreadCounts->sum();
 
         // 🔹 Attach latest message + unread count
-        $users->transform(function ($user) use ($messageMap, $unreadCounts) {
+        $users->transform(function ($user) use ($messageMap, $unreadCounts, $currentUser, $unreadCountsRe) {
+
             $messages = $messageMap->get($user->user_id, collect());
+
             $latestMessage = $messages->first(); // already ordered DESC
+
 
             $user->latest_at = $latestMessage?->created_at
                 ? Date::parse($latestMessage->created_at)->format('h:i A')
                 : null;
+
             $user->count = $unreadCounts->get($user->user_id, 0);
 
             if ($unreadCounts->get($user->user_id, 0) >= 2) {
@@ -95,10 +109,16 @@ class MessengerController extends Controller
                 $getMessage = isset($latestMessage->message) ?  $latestMessage?->message : 'no message';
             }
 
+            $user->countUnread = $unreadCountsRe->get($user->user_id, 0);
+
             $user->message =  $getMessage;
 
             return $user;
         });
+
+ 
+
+        // dd($users->toArray());
 
         return response()->json([
             'users' => $users,
@@ -114,12 +134,12 @@ class MessengerController extends Controller
         })->orWhere(function ($q) use ($request) {
             $q->where('sender_id', $request->id)
                 ->where('recipient_id', $request->user()->id);
-        })->get();
+        })->orderBy('id')->get();
 
         return response()->json([
             'rep_id' => $request->id,
             'messages' => $messages,
-            'name' => User::select('firstname','lastname')->where('id', $request->id)->value('fullName'),
+            'name' => User::select('firstname', 'lastname')->where('id', $request->id)->value('fullName'),
         ]);
     }
     public function sendMessage(Request $request)
@@ -143,11 +163,23 @@ class MessengerController extends Controller
 
     public function seenMessage(Request $request)
     {
-        return  Message::where([
+        // dd($request->id);
+        $messages = Message::where([
             ['sender_id', $request->id],
+            ['recipient_id', $request->user()->id],
             ['read', 0],
-        ])->update([
-            'read' => 1
+        ])->get(); // get the records first
+
+        foreach ($messages as $msg) {
+            $msg->update(['read' => 1]);
+        }
+
+        if ($messages) {
+            broadcast(new SeenMessageEvent($request->id,  $messages->last()))->toOthers();
+        }
+
+        return response()->json([
+            'message' => $messages
         ]);
     }
 }

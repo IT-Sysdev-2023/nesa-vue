@@ -10,7 +10,7 @@
                                 src="https://avatars3.githubusercontent.com/u/22351907?s=60" />
                         </div>
                         <p class="text-md font-bold hidden md:block group-hover:block">
-                            Messenger
+                            Talk To Nesa
                         </p>
                         <a href="#"
                             class="block rounded-full hover:bg-gray-700 bg-gray-800 w-10 h-10 p-2 hidden md:block group-hover:block">
@@ -57,34 +57,6 @@
                             <p>{{ item.firstname }}</p>
                         </div>
                     </div>
-                    <!-- <div class="contacts p-2 flex-1 overflow-y-scroll ">
-                        <div v-for="item in everyMessage"
-                        :class=" item.count ? 'text-blue-300':''"
-                            class="flex justify-between items-center p-3 hover:bg-gray-800 rounded-lg relative cursor-pointer"
-                            @click="getMesssage(item.user_id)">
-                            <div class="w-16 h-16 relative flex justify-center items-center flex-shrink-0  rounded-full" :class="item.count ? 'bg-blue-300': ''">
-                                <img class="shadow-md rounded-full w-14 h-14"
-                                    src="https://randomuser.me/api/portraits/women/23.jpg" alt="User2" />
-                            </div>
-                            <div class="flex-auto min-w-0 ml-4 mr-6 hidden md:block group-hover:block">
-                                <p class="truncate ">{{ item.firstname }}, {{ item.lastname }}</p>
-                                <div class="flex items-center text-sm " :class="item.count ? 'text-blue-500' : 'text-gray-400'">
-                                    <div class="min-w-0">
-                                        <p class="truncate">
-                                            {{ item.message }}
-                                        </p>
-                                    </div>
-                                    <p class="ml-2 whitespace-no-wrap">
-                                        {{ item.latest_at }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="w-4 h-4 flex flex-shrink-0 hidden md:block group-hover:block">
-                                <img class="rounded-full w-full h-full object-cover" alt="user2"
-                                    src="https://randomuser.me/api/portraits/women/23.jpg" />
-                            </div>
-                        </div>
-                    </div> -->
                     <div class="contacts p-2 flex-1 overflow-y-scroll space-y-2">
                         <div v-for="item in everyMessage" @click="getMesssage(item.user_id)"
                             class="flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all duration-200 hover:bg-gray-800"
@@ -112,13 +84,14 @@
                                     </span>
                                 </div>
                             </div>
-
                             <!-- Unread Badge -->
                             <div v-if="item.count"
                                 class="flex items-center animate-pulse justify-center w-4 h-4 text-xs font-bold text-white bg-blue-500 rounded-full shadow-md">
-                                <!-- {{ item.count }} -->
+
                             </div>
-                            <div v-else-if="item.count !== null">
+                            <div v-else-if="item.message == 'no message' || item.countUnread == 1">
+                            </div>
+                            <div v-else>
                                 <div class="w-4 h-4 flex flex-shrink-0 hidden md:block group-hover:block">
                                     <img class="rounded-full w-full h-full object-cover" alt="user2"
                                         src="https://randomuser.me/api/portraits/women/23.jpg" />
@@ -168,7 +141,6 @@
                     <!-- Chat Section -->
                     <div class="chat-body p-4 flex-1 overflow-y-scroll" ref="messagesContainer">
                         <div v-for="(item, index) in messages" :key="item.id">
-                            <!-- {{ item }} -->
                             <div class="flex flex-row"
                                 :class="item.sender_id == page.auth.user.id ? 'justify-end' : 'justify-start'">
                                 <div class="w-7 h-7 border-none relative flex flex-shrink-0 mr-1 "
@@ -181,8 +153,9 @@
                                 <div class="messages text-sm text-gray-700 grid grid-flow-row gap-2">
                                     <div class="flex items-end group mb-2"
                                         :class="item.sender_id == page.auth.user.id ? 'flex-row-reverse' : ''">
-                                        <div class="w-3 h-3 flex-shrink-0"
-                                            v-if="item.read === 1 && index === messages.length - 1 && item.sender_id == page.auth.user.id">
+                                        <div class="w-3 h-3 flex-shrink-0" v-if="item.read === 1
+                                            && item.sender_id == page.auth.user.id
+                                            && index === lastReadIndex">
                                             <img v-if="item.sender_id == page.auth.user.id"
                                                 class="rounded-full w-full h-full object-cover" alt="user avatar"
                                                 src="https://randomuser.me/api/portraits/women/23.jpg" />
@@ -302,35 +275,39 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <div v-if="typingIndicator
+                                && index === messages.length - 1
+                                && (index === 0 || messages[index - 1].sender_id === item.sender_id)">
+                                <div class="flex flex-row">
+                                    <div class="w-8 h-8 relative flex flex-shrink-0 mr-4 justify-start">
+                                        <img class="shadow-md rounded-full w-full h-full object-cover"
+                                            src="https://randomuser.me/api/portraits/women/33.jpg" alt="" />
+                                    </div>
 
-                        <div>
-                            <div class="flex flex-row" v-if="typingIndicator">
-                                <!-- Avatar -->
-                                <div class="w-8 h-8 relative flex flex-shrink-0 mr-4 justify-start">
-                                    <img class="shadow-md rounded-full w-full h-full object-cover"
-                                        src="https://randomuser.me/api/portraits/women/33.jpg" alt="" />
-                                </div>
-
-                                <!-- Messages -->
-                                <div class="messages text-sm text-gray-700 grid grid-flow-row gap-2">
-                                    <div class="flex items-center group mb-2">
-                                        <!-- Bubble -->
-                                        <div
-                                            class="px-6 py-3 max-w-xs lg:max-w-md text-gray-200 rounded-b-[2rem] rounded-r-[2rem] bg-gray-800 relative">
-                                            <!-- Typing dots -->
-                                            <div class="flex items-end space-x-1">
-                                                <span
-                                                    class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-0"></span>
-                                                <span
-                                                    class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-200"></span>
-                                                <span
-                                                    class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-400"></span>
+                                    <!-- Messages -->
+                                    <div class="messages text-sm text-gray-700 grid grid-flow-row gap-2">
+                                        <div class="flex items-center group mb-2">
+                                            <!-- Bubble -->
+                                            <div
+                                                class="px-6 py-3 max-w-xs lg:max-w-md text-gray-200 rounded-b-[2rem] rounded-r-[2rem] bg-gray-800 relative">
+                                                <!-- Typing dots -->
+                                                <div class="flex items-end space-x-1">
+                                                    <span
+                                                        class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-0"></span>
+                                                    <span
+                                                        class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-200"></span>
+                                                    <span
+                                                        class="w-2 h-2 rounded-full bg-gray-300 animate-jump delay-400"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div>
+
                         </div>
 
                     </div>
@@ -412,7 +389,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { countBy } from "lodash";
 
-import { ref, onMounted, reactive, nextTick, watch } from "vue";
+import { ref, onMounted, reactive, nextTick, watch, computed } from "vue";
 
 dayjs.extend(relativeTime);
 const page = usePage<{
@@ -435,7 +412,8 @@ interface EveryMessage {
     lastname: string;
     created_at: string;
     latest_at: string;
-    count: number
+    count: number;
+    countUnread: number;
 }
 interface Messages {
     recipient_id: number;
@@ -473,20 +451,38 @@ const scrollToBottom = () => {
 const getEveryMessage = async () => {
     const { data } = await axios.get(route("message.get.every.message"));
     everyMessage.value = data.users;
-    seenMessage();
+    // seenMessage();
 };
 
 const getMesssage = async (id: number) => {
     const { data } = await axios.get(route("message.get.message"), {
         params: { id: id },
     });
+    // alert(1);
     usersName.value = data.name;
     messages.value = data.messages;
     repId.value = data.rep_id;
     scrollToBottom();
     seenMessage();
+    getEveryMessage();
     // getMesssage(repId.value)
 };
+
+const lastReadIndex = computed(() => {
+    return messages.value
+        .map((m, i) => ({ ...m, i }))
+        .filter(m => m.read === 1)
+        .map(m => m.i)
+        .pop(); // last index where read == 1 and sender is the user
+});
+
+const shouldShow = (item, index) => {
+    const prev = messages.value[index - 1]
+    if (!prev) return typingIndicator
+    return typingIndicator || prev.sender_id !== item.sender_id
+}
+
+
 
 const echoMessage = () => {
     window.Echo.private(`message.${page.auth.user.id}`).listen(
@@ -495,13 +491,32 @@ const echoMessage = () => {
             if (repId.value == e.message.sender_id) {
                 messages.value.push(e.message);
                 scrollToBottom();
-                getEveryMessage();
+                seenMessage()
             }
+            getEveryMessage();
         }
     ).listenForWhisper('typings', (e) => {
-        scrollToBottom();
         typingIndicator.value = e.typing;
+        scrollToBottom();
     });
+};
+const echoMessageSeen = () => {
+    window.Echo.private(`message-seen.${page.auth.user.id}`).listen(
+        ".message-seen-event",
+        (e) => {
+            if (repId.value = e.message.recipient_id) {
+                const index = messages.value.findIndex(m => m.id === e.message.id);
+
+                if (index !== -1) {
+                    // Replace the existing message
+                    messages.value[index] = e.message;
+                } else {
+                    // If not found, fallback to push (optional)
+                    messages.value.push(e.message);
+                }
+            }
+        }
+    );
 };
 
 
@@ -529,33 +544,57 @@ const sendMessage = async () => {
         message: form.message
     });
     form.message = '';
+
     messages.value.push(data.message);
 
     scrollToBottom();
     getEveryMessage();
     getMesssage(repId.value)
     sendTyping(false);
+    // seenMessage();
+
 }
 
 const seenMessage = async () => {
+
     const { data } = await axios.put(route('message.seen.message'), {
         id: repId.value
     });
-    getEveryMessage();
-}
+
+    if (data.message[0].recipient_id === page.auth.user.id) {
+        const index = messages.value.findIndex(m => m.id == data.message[0].id);
+
+        if (index !== -1) {
+            // Merge updates instead of replacing the whole object
+            messages.value[index] = data.message[0];
+        } else {
+            // Add new if not found
+            messages.value.push(data.message);
+        }
+        getEveryMessage();
+
+        // ❌ Avoid redundant fetch unless really needed
+    }
+
+
+};
+const getMesssageEcho = async () => {
+
+    window.Echo.private(`get-message.${page.auth.user.id}`).listen(
+        ".get-message-event",
+        (e) => {
+            everyMessage.value = e.message
+        }
+    );
+};
 
 onMounted(() => {
     getUsersMessage();
     getEveryMessage();
     echoMessage();
-    seenMessage();
-    getMesssage(repId.value)
+    getMesssageEcho();
+    echoMessageSeen();
 });
-
-watch(() => messages.value, (newVal, oldVal) => {
-//   console.log(newVal, oldVal)
-// Removed erroneous push to avoid type error
-})
 
 </script>
 
