@@ -1,56 +1,31 @@
 <template>
     <div class="min-h-screen bg-gray-50 flex">
         <!-- Mobile sidebar overlay -->
-        <div
-            v-if="sidebarOpen"
-            class="fixed inset-0 z-40 lg:hidden"
-            @click="sidebarOpen = false"
-        >
+        <div v-if="sidebarOpen" class="fixed inset-0 z-40 lg:hidden" @click="sidebarOpen = false">
             <div class="absolute inset-0 bg-gray-600 opacity-75"></div>
         </div>
 
         <!-- Sidebar -->
-        <div
-            :class="[
-                'fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
-                sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-            ]"
-        >
-            <div
-                class="flex items-center justify-between h-16 px-6 border-b border-gray-200"
-            >
+        <div :class="[
+            'fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+        ]">
+            <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
                 <div class="flex items-center space-x-3">
-                    <div
-                        class="w-10 h-10 bg-gradient-to-r bg-gray-300 rounded-full flex items-center justify-center"
-                    >
+                    <div class="w-10 h-10 bg-gradient-to-r bg-gray-300 rounded-full flex items-center justify-center">
                         <span class="text-white font-bold text-sm">
                             <img src="/images/logocircle.png" alt="" />
                         </span>
                     </div>
                     <h2 class="text-xl font-bold text-gray-800">
-                        <img
-                            class="w-[60px] h-10"
-                            src="/images/nesaLogo.png"
-                            alt=""
-                        />
+                        <img class="w-[60px] h-10" src="/images/nesaLogo.png" alt="" />
                     </h2>
                 </div>
-                <button
-                    @click="sidebarOpen = false"
-                    class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
-                >
-                    <svg
-                        class="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        />
+                <button @click="sidebarOpen = false"
+                    class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -59,44 +34,28 @@
             <nav class="mt-6 px-3">
                 <ul class="space-y-1">
                     <li v-for="item in menuItems" :key="item.id">
-                        <button
-                            @click="handleMenuClick(item)"
-                            :class="[
-                                'w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 group',
-                                isActive(item.routeTo)
-                                    ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-lg'
-                                    : 'text-black bg-gray-200 hover:bg-gray-100 hover:text-gray-900',
-                            ]"
-                        >
+                        <button @click="handleMenuClick(item)" :class="[
+                            'w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 group',
+                            isActive(item.routeTo)
+                                ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-lg'
+                                : 'text-black bg-gray-200 hover:bg-gray-100 hover:text-gray-900',
+                        ]">
                             <span class="mr-3 text-lg">{{ item.icon }}</span>
                             {{ item.name }}
-                            <div
-                                v-if="isActive(item.routeTo)"
-                                class="ml-auto w-2 h-2 bg-white rounded-full"
-                            ></div>
+                            <div v-if="isActive(item.routeTo)" class="ml-auto w-2 h-2 bg-white rounded-full"></div>
                         </button>
                     </li>
                 </ul>
             </nav>
             <!-- User Profile -->
-            <div
-                class="fixed bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-gray-50"
-            >
+            <div class="fixed bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-gray-50">
                 <div class="flex items-center space-x-3">
                     <div
-                        class="w-10 h-10 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center"
-                    >
-                        <span
-                            class="text-white font-semibold text-sm rounded-full"
-                        >
-                            <img
-                                :src="
-                                    'http://172.16.161.34:8080/hrms' +
-                                    userImageData
-                                "
-                                alt="image"
-                                style="border-radius: 100%"
-                            />
+                        class="w-10 h-10 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold text-sm rounded-full">
+                            <img :src="'http://172.16.161.34:8080/hrms' +
+                                userImageData
+                                " alt="image" style="border-radius: 100%" />
                         </span>
                     </div>
                     <div class="flex-1 min-w-0">
@@ -109,21 +68,10 @@
                             {{ page?.auth?.usertype }}
                         </p>
                     </div>
-                    <button
-                        class="p-1.5 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-200"
-                    >
-                        <svg
-                            class="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                            />
+                    <button class="p-1.5 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                         </svg>
                     </button>
                 </div>
@@ -136,22 +84,11 @@
             <header class="bg-white shadow-sm border-b border-gray-200">
                 <div class="flex items-center justify-between h-16 px-6">
                     <div class="flex items-center space-x-4">
-                        <button
-                            @click="sidebarOpen = true"
-                            class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
-                        >
-                            <svg
-                                class="w-6 h-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16"
-                                />
+                        <button @click="sidebarOpen = true"
+                            class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
                         <h2 class="text-xl font-bold text-gray-800">
@@ -162,24 +99,18 @@
                     <div class="flex items-center space-x-4">
                         <!-- Search -->
                         <div>
-                            <a-popconfirm
-                                overlay-class-name="custom-pop"
-                                placement="bottom"
-                                :ok-button-props="{
+                            <a-popconfirm overlay-class-name="custom-pop" placement="bottom" :ok-button-props="{
+                                style: { display: 'none' },
+                            }" :cancel-button-props="{
                                     style: { display: 'none' },
-                                }"
-                                :cancel-button-props="{
-                                    style: { display: 'none' },
-                                }"
-                            >
+                                }">
                                 <template #icon>
-                                  
+
                                 </template>
-                                <template  #description> 
-                                    <MessageIndex/> 
+                                <template #description>
+                                    <MessageIndex  :online-users="getOnlineUsers"/>
                                 </template>
-                                <button
-                                    style="
+                                <button style="
                                         position: relative;
                                         margin-top: 10px;
                                         font-size: 28px;
@@ -187,25 +118,14 @@
                                         background: none;
                                         border: none;
                                         cursor: pointer;
-                                    "
-                                >
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        width="1.2em"
-                                        height="1.2em"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <path
-                                            d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-                                        />
+                                    ">
+                                    <svg viewBox="0 0 24 24" width="1.2em" height="1.2em" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                                     </svg>
 
-                                    <span
-                                        style="
+                                    <span style="
                                             position: absolute;
                                             top: -4px;
                                             right: -6px;
@@ -221,47 +141,26 @@
                                             border-radius: 50%;
                                             box-shadow: 0 2px 4px
                                                 rgba(0, 0, 0, 0.2);
-                                        "
-                                        >5</span
-                                    >
+                                        ">5</span>
                                 </button>
                             </a-popconfirm>
                         </div>
                         <div class="relative">
-                            <input
-                                v-model="searchQuery"
-                                type="text"
-                                placeholder="Search..."
-                                class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            />
-                            <svg
-                                class="absolute left-3 top-2.5 w-5 h-5 text-gray-400"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                />
+                            <input v-model="searchQuery" type="text" placeholder="Search..."
+                                class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                            <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </div>
 
                         <!-- Notifications -->
-                        <button
-                            @click="openLogout"
-                            class="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg relative"
-                        >
-                            <img
-                                class="h-8"
-                                src="/icons/logouticon.svg"
-                                alt=""
-                            />
+                        <button @click="openLogout"
+                            class="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg relative">
+                            <img class="h-8" src="/icons/logouticon.svg" alt="" />
                             <span
-                                class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center"
-                            ></span>
+                                class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center"></span>
                         </button>
                     </div>
                 </div>
@@ -290,13 +189,20 @@ import MessageIndex from "@/Pages/Message/MessageIndex.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import { template } from "lodash";
 import Swal from "sweetalert2";
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, reactive, onMounted, computed, onBeforeUnmount } from "vue";
+import { useOnlineUsersStore } from '@/stores/online-store'
+
 const page = usePage().props;
 
 // Reactive data
 const sidebarOpen = ref(false);
 const activeItem = ref("");
 const searchQuery = ref("");
+
+const getOnlineUsers = computed(() =>
+    onlineUsersStore.onlineUsers
+);
+
 
 const flappy = ref(true);
 
@@ -368,6 +274,10 @@ const stats = reactive([
     },
 ]);
 
+const onlineUsersStore = useOnlineUsersStore();
+
+
+const { setOnlineUsers, addOnlineUser, removeOnlineUser } = onlineUsersStore;
 // Methods
 const handleMenuClick = (item) => {
     activeItem.value = item.routeTo;
@@ -399,6 +309,19 @@ const userImage = async () => {
 
 onMounted(() => {
     userImage();
+    if (page.auth) {
+        window.Echo
+            .join('online.users')
+            .here((users) => setOnlineUsers(users))
+            .joining(async (user) => addOnlineUser(user))
+            .leaving(async (user) => removeOnlineUser(user));
+    }
+});
+
+onBeforeUnmount(() => {
+    if (page.auth) {
+        window.Echo.leaveAllChannels();
+    }
 });
 
 const openMessModal = ref(false);
@@ -413,14 +336,19 @@ const openMessageModal = () => {
 
 .slot-wrapper {
     height: 90vh;
-    overflow-y: auto; /* still scrollable */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    overflow-y: auto;
+    /* still scrollable */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
 }
 
 .slot-wrapper::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
+    /* Chrome, Safari, Opera */
 }
+
 .bgsvg {
     position: relative;
     background-image: url("/images/bgblue.svg");
@@ -430,16 +358,19 @@ const openMessageModal = () => {
     border-radius: 8px;
     padding: 16px;
     /* add a semi-transparent overlay */
-    background-color: rgba(
-        255,
-        255,
-        255,
-        0.945
-    ); /* adjust color + transparency */
-    background-blend-mode: overlay; /* or try multiply, screen, etc. */
+    background-color: rgba(255,
+            255,
+            255,
+            0.945);
+    /* adjust color + transparency */
+    background-blend-mode: overlay;
+    /* or try multiply, screen, etc. */
 }
+
 .custom-pop .ant-popover-inner {
-  background-color: #111824 !important; /* slate-800 */
-  color: #fff; /* text color */
+    background-color: #111824 !important;
+    /* slate-800 */
+    color: #fff;
+    /* text color */
 }
 </style>

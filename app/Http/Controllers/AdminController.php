@@ -190,7 +190,8 @@ class AdminController extends Controller
             'middlename' => 'required',
             'usertype' => 'required',
             'businessUnit' => 'required',
-            'specifiedSupplier' => 'required|array|min:1'
+            'specifiedSupplier' => 'required|array|min:1',
+            'photo' => 'required'
         ]);
         $check = User::where('username',  $request->username)->exists();
         if ($check === true) {
@@ -210,7 +211,8 @@ class AdminController extends Controller
             'usertype' => $request->usertype,
             'bu' => $request->businessUnit,
             'employee_id' => $request->employee_id,
-            'selected_supplier' => $request->specifiedSupplier
+            'selected_supplier' => $request->specifiedSupplier,
+            'photo' => $request->photo
         ]);
         return back()->with(
             'success',
@@ -401,10 +403,11 @@ class AdminController extends Controller
             'bu' => $request->businessUnit,
             'usertype' => $request->usertype,
             'name_extention' => $request->nameExtention,
-            'selected_supplier' => $request->specifiedSupplier
+            'selected_supplier' => $request->specifiedSupplier,
+            'photo' => $request->photo,
         ]);
 
         return back()->with('success', 'User credentials updated successfully.');
     }
-    
+
 }

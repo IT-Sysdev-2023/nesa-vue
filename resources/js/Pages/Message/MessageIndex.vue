@@ -5,9 +5,9 @@
                 <section
                     class="flex flex-col flex-none overflow-auto w-24 hover:w-64 group lg:max-w-sm md:w-2/6 transition-all duration-300 ease-in-out">
                     <div class="header p-4 flex flex-row justify-between items-center flex-none">
-                        <div class="w-16 h-16 relative flex flex-shrink-0" style="filter: invert(100%)">
+                        <div class="w-16 h-16 relative flex flex-shrink-0">
                             <img class="rounded-full w-full h-full object-cover" alt="ravisankarchinnam"
-                                src="https://avatars3.githubusercontent.com/u/22351907?s=60" />
+                                :src="'http://172.16.161.34:8080/hrms' + page.auth.user.photo" />
                         </div>
                         <p class="text-md font-bold hidden md:block group-hover:block">
                             Talk To Nesa
@@ -38,35 +38,42 @@
                         </form>
                     </div>
                     <div class="active-users flex flex-row p-2 overflow-auto w-0 min-w-full">
-                        <!-- <div class="text-sm text-center mr-4">
-                        <button class="flex flex-shrink-0 focus:outline-none block bg-gray-800 text-gray-600 rounded-full w-20 h-20"
+                        <div class="text-sm text-center mr-4">
+                            <button
+                                class="flex flex-shrink-0 focus:outline-none block bg-gray-800 text-gray-600 rounded-full w-20 h-20"
                                 type="button">
-                            <svg class="w-full h-full fill-current" viewBox="0 0 24 24">
-                                <path d="M17 11a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4h4z"/>
-                            </svg>
-                        </button>
-                        <p>Your Story</p>
-                    </div> -->
-                        <div class="text-sm text-center mr-4 cursor-pointer" v-for="item in messageUsers">
+                                <svg class="w-full h-full fill-current" viewBox="0 0 24 24">
+                                    <path
+                                        d="M17 11a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4h4z" />
+                                </svg>
+                            </button>
+                            <p>Chats</p>
+                        </div>
+                        <div class="text-sm text-center mr-4 cursor-pointer" v-for="item in onlineUsers">
                             <div class="p-1 border-4 border-green-400 rounded-full" @click="getMesssage(item.id)">
                                 <div class="w-16 h-16 relative flex flex-shrink-0">
                                     <img class="shadow-md rounded-full w-full h-full object-cover"
-                                        src="https://randomuser.me/api/portraits/women/12.jpg" alt="" />
+                                        :src="'http://172.16.161.34:8080/hrms' + item.photo" alt="" />
                                 </div>
                             </div>
-                            <p>{{ item.firstname }}</p>
+                            <p class="truncate w-[80px]">{{ item.name }}</p>
                         </div>
                     </div>
                     <div class="contacts p-2 flex-1 overflow-y-scroll space-y-2">
-                        <div v-for="item in everyMessage" @click="getMesssage(item.user_id)"
+                        <div v-for="item in everyMessage" :key="item.user_id" @click="getMesssage(item.user_id)"
                             class="flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all duration-200 hover:bg-gray-800"
                             :class="item.count ? 'bg-gray-900 shadow-lg' : ''">
-
-                            <!-- Avatar -->
-                            <div class="w-16 h-16 relative flex justify-center items-center flex-shrink-0  rounded-full"
+                            <div class="w-16 h-16 relative flex justify-center items-center flex-shrink-0 rounded-full"
                                 :class="item.count ? 'bg-blue-300' : ''">
+                                <!-- User Photo -->
                                 <img class="shadow-md rounded-full w-14 h-14"
-                                    src="https://randomuser.me/api/portraits/women/23.jpg" alt="User2" />
+                                    :src="'http://172.16.161.34:8080/hrms' + item.photo" alt="User2" />
+
+                                <!-- Online Badge -->
+                                <span v-if="item.isOnline"
+                                    class="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-gray-900 rounded-full"></span>
+                                <span v-if="!item.isOnline"
+                                    class="absolute bottom-1 right-1 w-4 h-4 bg-gray-400 border-2 border-gray-900 rounded-full"></span>
                             </div>
 
                             <!-- Message Info -->
@@ -84,21 +91,25 @@
                                     </span>
                                 </div>
                             </div>
+
                             <!-- Unread Badge -->
                             <div v-if="item.count"
                                 class="flex items-center animate-pulse justify-center w-4 h-4 text-xs font-bold text-white bg-blue-500 rounded-full shadow-md">
+                            </div>
 
-                            </div>
-                            <div v-else-if="item.message == 'no message' || item.countUnread == 1">
-                            </div>
+                            <!-- No Message or Single Unread -->
+                            <div v-else-if="item.message == 'no message' || item.countUnread == 1"></div>
+
+                            <!-- Seen Photo -->
                             <div v-else>
                                 <div class="w-4 h-4 flex flex-shrink-0 hidden md:block group-hover:block">
                                     <img class="rounded-full w-full h-full object-cover" alt="user2"
-                                        src="https://randomuser.me/api/portraits/women/23.jpg" />
+                                        :src="'http://172.16.161.34:8080/hrms' + item.photoSeen" />
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
                 </section>
 
@@ -109,11 +120,13 @@
                         <div class="flex">
                             <div class="w-12 h-12 mr-4 relative flex flex-shrink-0">
                                 <img class="shadow-md rounded-full w-full h-full object-cover"
-                                    src="https://randomuser.me/api/portraits/women/33.jpg" alt="" />
+                                    :src="'http://172.16.161.34:8080/hrms' + usersPhoto" usersPhoto alt="" />
                             </div>
                             <div class="text-sm">
                                 <p class="font-bold">{{ usersName }}</p>
-                                <p>Active 1h ago</p>
+                                <p>
+                                    {{ isActive[0]?.time ? 'Active Now' : 'Active ' + dayjs(isOffline).toNow(true) + ' ago' }}
+                                </p>
                             </div>
                         </div>
 
@@ -392,10 +405,22 @@ import { countBy } from "lodash";
 import { ref, onMounted, reactive, nextTick, watch, computed } from "vue";
 
 dayjs.extend(relativeTime);
+
+interface UserOnline {
+    id: number;
+    name: string;
+    photo: string;
+}
+
+const props = defineProps<{
+    onlineUsers: any;
+}>();
 const page = usePage<{
+
     auth: {
         user: {
             id: number;
+            photo: string;
         };
     };
 }>().props;
@@ -414,6 +439,10 @@ interface EveryMessage {
     latest_at: string;
     count: number;
     countUnread: number;
+    photo: string;
+    isOnline: boolean;
+    photoSeen: string;
+
 }
 interface Messages {
     recipient_id: number;
@@ -430,15 +459,17 @@ const messages = ref<Messages[]>([]);
 const repId = ref<number>();
 const messagesContainer = ref<HTMLDivElement | null>(null);
 const usersName = ref<string>();
+const usersPhoto = ref<string>();
+const isOffline = ref<string>();
+
+const isActive = computed(() => {
+    const onlineIds = props.onlineUsers.filter((user: any) => user.id == repId.value);
+    return onlineIds;
+});
 
 const form = reactive({
     message: '' as string
 })
-
-const getUsersMessage = async () => {
-    const { data } = await axios.get(route("message.get.users"));
-    messageUsers.value = data.users;
-};
 
 const scrollToBottom = () => {
     nextTick(() => {
@@ -451,7 +482,15 @@ const scrollToBottom = () => {
 const getEveryMessage = async () => {
     const { data } = await axios.get(route("message.get.every.message"));
     everyMessage.value = data.users;
-    // seenMessage();
+
+    const onlineIds = props.onlineUsers.map(user => user.id);
+
+    everyMessage.value = data.users.map((user: any) => {
+        return {
+            ...user,
+            isOnline: onlineIds.includes(user.user_id), // ✅ mark if online
+        };
+    });
 };
 
 const getMesssage = async (id: number) => {
@@ -459,7 +498,9 @@ const getMesssage = async (id: number) => {
         params: { id: id },
     });
     // alert(1);
+    isOffline.value = data.isOffline;
     usersName.value = data.name;
+    usersPhoto.value = data.photo;
     messages.value = data.messages;
     repId.value = data.rep_id;
     scrollToBottom();
@@ -475,12 +516,6 @@ const lastReadIndex = computed(() => {
         .map(m => m.i)
         .pop(); // last index where read == 1 and sender is the user
 });
-
-const shouldShow = (item, index) => {
-    const prev = messages.value[index - 1]
-    if (!prev) return typingIndicator
-    return typingIndicator || prev.sender_id !== item.sender_id
-}
 
 
 
@@ -589,7 +624,6 @@ const getMesssageEcho = async () => {
 };
 
 onMounted(() => {
-    getUsersMessage();
     getEveryMessage();
     echoMessage();
     getMesssageEcho();

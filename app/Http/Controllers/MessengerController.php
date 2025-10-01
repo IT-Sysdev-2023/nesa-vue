@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class MessengerController extends Controller
 {
@@ -32,6 +33,7 @@ class MessengerController extends Controller
         // 🔹 Get users with last message timestamp
         $users = User::select(
             'users.username',
+            'users.photo',
             'users.firstname',
             'users.lastname',
             'users.id as user_id',
@@ -85,14 +87,22 @@ class MessengerController extends Controller
             ->groupBy('recipient_id')
             ->pluck('count', 'recipient_id');
 
-        // dd($unreadCounts);
+        $seenPhoto = Message::join('users', 'users.id', '=', 'messages.sender_id')
+            ->whereIn('recipient_id', $userIds)
+            ->where('sender_id', $currentUser->id)
+            ->select('recipient_id', 'users.photo')
+            ->groupBy('recipient_id', 'users.photo')
+            ->pluck('users.photo', 'recipient_id');
+
 
         $totalUnread = $unreadCounts->sum();
 
         // 🔹 Attach latest message + unread count
-        $users->transform(function ($user) use ($messageMap, $unreadCounts, $currentUser, $unreadCountsRe) {
+        $users->transform(function ($user) use ($messageMap, $unreadCounts, $currentUser, $unreadCountsRe, $seenPhoto) {
+
 
             $messages = $messageMap->get($user->user_id, collect());
+            // dd($messages);
 
             $latestMessage = $messages->first(); // already ordered DESC
 
@@ -108,17 +118,14 @@ class MessengerController extends Controller
             } else {
                 $getMessage = isset($latestMessage->message) ?  $latestMessage?->message : 'no message';
             }
-
             $user->countUnread = $unreadCountsRe->get($user->user_id, 0);
+
+            $user->photoSeen =  $seenPhoto->get($user->user_id, 0);
 
             $user->message =  $getMessage;
 
             return $user;
         });
-
- 
-
-        // dd($users->toArray());
 
         return response()->json([
             'users' => $users,
@@ -140,6 +147,8 @@ class MessengerController extends Controller
             'rep_id' => $request->id,
             'messages' => $messages,
             'name' => User::select('firstname', 'lastname')->where('id', $request->id)->value('fullName'),
+            'photo' => User::where('id', $request->id)->value('photo'),
+            'isOffline' => User::where('id', $request->id)->value('is_online'),
         ]);
     }
     public function sendMessage(Request $request)

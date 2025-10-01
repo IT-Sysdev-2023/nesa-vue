@@ -6,6 +6,7 @@ import { createApp, h } from "vue";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import antdv from "ant-design-vue";
 import ws from "./echo";
+import { createPinia } from "pinia";
 
 const appName = import.meta.env.VITE_APP_NAME || "Nesa";
 
@@ -21,6 +22,7 @@ createInertiaApp({
         app.use(plugin);
         app.use(ZiggyVue);
         app.use(antdv);
+        app.use(createPinia());
         app.config.globalProperties.$ws = ws;
         app.mount(el);
     },

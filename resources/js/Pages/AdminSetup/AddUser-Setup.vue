@@ -144,6 +144,7 @@
                             @update:selected-suppliers="handleSelectedSuppliers" />
                     </div>
                 </div>
+                <!-- {{ selectedName }} -->
                 <div>
                     <div class="flex justify-end mt-10">
                         <button @click="cancelButton" type="button"
@@ -252,6 +253,7 @@ const forms = useForm({
     usertype: '',
     businessUnit: '',
     employee_no: '',
+    photo: '',
     productPermission: []
 });
 const cancelButton = () => {
@@ -261,6 +263,7 @@ const cancelButton = () => {
 const addConfirmationModal = ref<boolean>(false);
 const submitButton = () => {
     router.post(route('admin.submitUser'), {
+        photo: forms.photo,
         firstname: forms.firstname,
         lastname: forms.lastname,
         middlename: forms.middlename,
@@ -305,6 +308,7 @@ interface Employee {
     middlename?: string;
     employee_id?: string;
     employee_no: string;
+    photo: string;
 };
 const options = ref<Employee[]>([]);
 const autoFillData = ref<Employee[]>([]);
@@ -326,6 +330,8 @@ const getUserInfo = async () => {
         });
 
         const employeeList = response.data?.data?.employee;
+
+        forms.photo = employeeList[0].employee_photo;
 
         if (Array.isArray(employeeList) && employeeList.length > 0) {
             options.value = employeeList.map(employee => {
@@ -351,6 +357,7 @@ const getUserInfo = async () => {
             const firstname = nameParts.join(' ');
 
             autoFillData.value = [{
+                photo: employeeList[0],
                 employee_name: firstEmployee.employee_name,
                 username: `${lastname.toLowerCase()}.${firstname.toLowerCase().replace(' ', '')}`,
                 lastname,
