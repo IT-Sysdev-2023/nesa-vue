@@ -88,11 +88,10 @@ class MessengerController extends Controller
             ->pluck('count', 'recipient_id');
 
         $seenPhoto = Message::join('users', 'users.id', '=', 'messages.sender_id')
-            ->whereIn('recipient_id', $userIds)
-            ->where('sender_id', $currentUser->id)
-            ->select('recipient_id', 'users.photo')
-            ->groupBy('recipient_id', 'users.photo')
-            ->pluck('users.photo', 'recipient_id');
+            ->whereIn('sender_id', $userIds)
+            ->select('sender_id', 'users.photo')
+            ->groupBy('sender_id', 'users.photo')
+            ->pluck('users.photo', 'sender_id');
 
 
         $totalUnread = $unreadCounts->sum();
@@ -142,6 +141,10 @@ class MessengerController extends Controller
             $q->where('sender_id', $request->id)
                 ->where('recipient_id', $request->user()->id);
         })->orderBy('id')->get();
+        $messages->transform(function ($item) {
+            $item->toReply = Message::where('id', $item->reply)->value('message');
+            return $item;
+        });
 
         return response()->json([
             'rep_id' => $request->id,
@@ -158,10 +161,14 @@ class MessengerController extends Controller
             'message' => $request->message,
             'recipient_id' => $request->id,
             'attachment' => '',
+            'reply' => isset($request->replyId) ? $request->replyId : 0,
             'read' => 0
         ]);
 
         if ($message) {
+
+            $message->toReply = Message::where('id', $message->reply)->value('message');
+
             broadcast(new MessageEvent($request->id,  $message))->toOthers();
         }
 
@@ -179,14 +186,19 @@ class MessengerController extends Controller
             ['read', 0],
         ])->get(); // get the records first
 
-        foreach ($messages as $msg) {
-            $msg->update(['read' => 1]);
-        }
+        if ($messages->isNotEmpty()) {
 
-        if ($messages) {
-            broadcast(new SeenMessageEvent($request->id,  $messages->last()))->toOthers();
-        }
+            // Attach reply message text to each message
+            foreach ($messages as $msg) {
+                $msg->toReply = Message::where('id', $msg->reply)->value('message');
+            }
 
+            // Mark them all as read in a single query
+            Message::whereIn('id', $messages->pluck('id'))->update(['read' => 1]);
+
+            // Broadcast event with the last updated message
+            broadcast(new SeenMessageEvent($request->id, $messages->last()))->toOthers();
+        }
         return response()->json([
             'message' => $messages
         ]);

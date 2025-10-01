@@ -61,7 +61,7 @@ class NesaController extends Controller
         )
             ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
             ->join('suppliers', 'supplier_code', '=', 'products.vendor_no')
-            ->join('users', 'id', '=', 'created_by')
+            ->join('users', 'users.id', '=', 'created_by')
             ->join('business_units', 'business_units.id', '=', 'users.bu')
             ->when($request->search, function ($query) use ($request) {
                 $query->where('suppliers.name', 'like', '%' . $request->search . '%');
@@ -95,7 +95,7 @@ class NesaController extends Controller
         )
             ->join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
             ->join('suppliers', 'supplier_code', '=', 'products.vendor_no')
-            ->join('users', 'id', '=', 'created_by')
+            ->join('users', 'users.id', '=', 'created_by')
             ->join('business_units', 'business_units.id', '=', 'users.bu')
             ->where('nesa_requests.itemcode', $itemcode)
             ->paginate(10)
@@ -139,7 +139,7 @@ class NesaController extends Controller
 
         $nesa = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
             ->join('suppliers', 'supplier_code', '=', 'products.vendor_no')
-            ->join('users', 'employee_id', '=', 'created_by')
+            ->join('users', 'users.id', '=', 'created_by')
             ->join('business_units', 'business_units.id', '=', 'users.bu')
             ->select(
                 'nesa_requests.id as nesaId',
