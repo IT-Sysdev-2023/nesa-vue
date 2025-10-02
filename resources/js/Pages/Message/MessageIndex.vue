@@ -187,12 +187,14 @@
                                         <div class="mx-2 max-w-xs lg:max-w-md"
                                             :class="item.sender_id == page.auth.user.id ? 'self-end' : 'self-start'">
                                             <!-- Reply Section -->
-                                            <div v-if="item.toReply" class="px-4 py-2 -mb-2 text-sm rounded-[2rem] max-w-fit "
+                                            <div v-if="item.toReply"
+                                                class="px-4 py-2 -mb-2 text-sm max-w-xs md:max-w-sm lg:max-w-md truncate"
                                                 :class="item.sender_id == page.auth.user.id
-                                                    ? 'bg-blue-950 text-gray-400 border-l-4  w-fit ml-auto border-blue-950 mr-2'
-                                                    : 'bg-gray-600 text-gray-400 border-l-4 border-gray-600 ml-2'">
-                                                <p class=" mb-2">{{ item.toReply }}</p>
+                                                    ? 'bg-blue-950 text-gray-400 border-l-4 w-fit ml-auto border-blue-950 mr-2 rounded-l-[2rem] rounded-b-[2rem]'
+                                                    : 'bg-gray-600 text-gray-400 border-l-4 border-gray-600 ml-2 rounded-r-[2rem] rounded-b-[2rem]'">
+                                                <p class="truncate h-6 leading-6">{{ item.toReply }}</p>
                                             </div>
+
                                             <!-- Actual Message -->
                                             <p class="px-6 py-3 text-gray-200" :class="[
                                                 // background
@@ -217,10 +219,6 @@
                                                 {{ item.attachment ? '' : item.message }}
                                             </p>
                                         </div>
-
-
-
-
                                         <!-- Action buttons -->
                                         <div class="hidden group-hover:flex"
                                             :class="item.sender_id == page.auth.user.id ? 'flex-row-reverse ' : ''">
@@ -371,13 +369,22 @@
 
 
                     <div class="chat-footer flex-none">
-                        <div v-if="toReply" class="-mb-3.5 mt-2 ml-12">
-                            <div class="flex justify-start w-[60%] m-auto">
-                                <p class="px-2 rounded-full bg-gray-800 max-w-xs lg:max-w-md">
-                                <p class="truncate w-auto text-left p-2">
+                        <div class="ml-12 flex">
+                            <div v-if="toReply" class="flex items-center gap-2 ml-12 mt-2 -mb-3.5">
+                                <!-- Text bubble -->
+                                <div class="px-3 py-2 rounded-full bg-gray-800 text-left max-w-md break-words truncate">
                                     {{ toReply }}
-                                </p>
-                                </p>
+                                </div>
+
+                                <!-- Button -->
+                                <button type="button" @click="clearToReply"
+                                    class="flex-shrink-0 focus:outline-none text-gray-500 hover:text-red-700 w-6 h-6">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" class="w-full h-full">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" />
+                                    </svg>
+                                </button>
+
                             </div>
                         </div>
                         <div class="flex flex-row items-center p-4">
@@ -451,6 +458,7 @@
 
 <script setup lang="ts">
 import { usePage } from "@inertiajs/vue3";
+import { Item } from "ant-design-vue/es/menu";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -670,6 +678,11 @@ const sendMessage = async () => {
     sendTyping(false);
     // seenMessage();
 
+}
+
+const clearToReply = () => {
+    toReply.value = null;
+    toReplyId.value = null;
 }
 
 const seenMessage = async () => {
