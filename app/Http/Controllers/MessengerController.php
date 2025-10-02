@@ -27,7 +27,6 @@ class MessengerController extends Controller
 
     public function getEveryMessage(Request $request)
     {
-
         $currentUser = $request->user();
 
         // 🔹 Get users with last message timestamp
@@ -40,6 +39,12 @@ class MessengerController extends Controller
             DB::raw('MAX(GREATEST(COALESCE(m1.id, 0), COALESCE(m2.id, 0))) as last_message_id'),
             DB::raw('MAX(GREATEST(COALESCE(m1.created_at, "1970-01-01"), COALESCE(m2.created_at, "1970-01-01"))) as last_message_time')
         )
+            ->when(isset($request->search) && $request->search != '', function ($q) use ($request) {
+                $q->where(function ($query) use ($request) {
+                    $query->where('firstname', 'like', '%' . $request->search . '%')
+                        ->orWhere('lastname', 'like', '%' . $request->search . '%');
+                });
+            })
             ->leftJoin('messages as m1', function ($join) use ($currentUser) {
                 $join->on('m1.sender_id', '=', 'users.id')
                     ->where('m1.recipient_id', '=', $currentUser->id);
@@ -179,28 +184,52 @@ class MessengerController extends Controller
 
     public function seenMessage(Request $request)
     {
-        // dd($request->id);
         $messages = Message::where([
             ['sender_id', $request->id],
             ['recipient_id', $request->user()->id],
             ['read', 0],
-        ])->get(); // get the records first
+        ])->get();
 
         if ($messages->isNotEmpty()) {
+            // Attach reply message text
 
-            // Attach reply message text to each message
-            foreach ($messages as $msg) {
-                $msg->toReply = Message::where('id', $msg->reply)->value('message');
+
+            // Mark them all as read
+            $updated = Message::whereIn('id', $messages->pluck('id'))->update(['read' => 1]);
+
+            if ($updated) {
+                $lastMessage = $messages->sortByDesc('id')->first();
+                $lastMessage->refresh(); // 👈 reloads fresh values from DB
+
+                foreach ($messages as $msg) {
+                    $msg->toReply = Message::where('id', $msg->reply)->value('message');
+                }
+
+                broadcast(new SeenMessageEvent($request->id, $lastMessage))->toOthers();
             }
-
-            // Mark them all as read in a single query
-            Message::whereIn('id', $messages->pluck('id'))->update(['read' => 1]);
-
-            // Broadcast event with the last updated message
-            broadcast(new SeenMessageEvent($request->id, $messages->last()))->toOthers();
         }
+
+
         return response()->json([
             'message' => $messages
         ]);
     }
+    public function reactMessage(Request $request)
+    {
+        $updated = Message::where('id', $request->id)->update(['react' => $request->react]);
+
+        if ($updated) {
+            $message = Message::where('id', $request->id)->first();
+            if ($message->reply != 0) {
+                $message->toReply = Message::where('id', $message->reply)->value('message');
+            }
+            broadcast(new MessageEvent($request->rep,  $message))->toOthers();
+        }
+
+        return response()->json([
+            'message' => $message
+        ]);
+    }
+
+    public function searchMessage() {}
 }

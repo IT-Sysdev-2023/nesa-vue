@@ -21,21 +21,20 @@
                         </a>
                     </div>
                     <div class="search-box p-4 flex-none">
-                        <form onsubmit="">
-                            <div class="relative">
-                                <label>
-                                    <input
-                                        class="rounded-full py-2 pr-6 pl-10 w-full border border-gray-800 focus:border-gray-700 bg-gray-800 focus:bg-gray-900 focus:outline-none text-gray-200 focus:shadow-md transition duration-300 ease-in"
-                                        type="text" value="" placeholder="Search Messenger" />
-                                    <span class="absolute top-0 left-0 mt-2 ml-3 inline-block">
-                                        <svg viewBox="0 0 24 24" class="w-6 h-6">
-                                            <path fill="#bbb"
-                                                d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
-                                        </svg>
-                                    </span>
-                                </label>
-                            </div>
-                        </form>
+
+                        <div class="relative">
+                            <label>
+                                <input v-model="searchUsers"
+                                    class="rounded-full py-2 pr-6 pl-10 w-full border border-gray-800 focus:border-gray-700 bg-gray-800 focus:bg-gray-900 focus:outline-none text-gray-200 focus:shadow-md transition duration-300 ease-in"
+                                    type="text" placeholder="Search Messenger" />
+                                <span class="absolute top-0 left-0 mt-2 ml-3 inline-block">
+                                    <svg viewBox="0 0 24 24" class="w-6 h-6">
+                                        <path fill="#bbb"
+                                            d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
+                                    </svg>
+                                </span>
+                            </label>
+                        </div>
                     </div>
                     <div class="active-users flex flex-row p-2 overflow-auto w-0 min-w-full">
                         <div class="text-sm text-center mr-4">
@@ -120,9 +119,12 @@
                     <!-- Profile Section -->
                     <div class="chat-header px-6 py-4 flex flex-row flex-none justify-between items-center shadow">
                         <div class="flex">
-                            <div class="w-12 h-12 mr-4 relative flex flex-shrink-0">
-                                <img class="shadow-md rounded-full w-full h-full object-cover"
-                                    :src="'http://172.16.161.34:8080/hrms' + usersPhoto" usersPhoto alt="" />
+                            <div>
+                                <div class="w-12 h-12 mr-4 relative flex flex-shrink-0"
+                                    :class="isActive[0] ? 'border rounded-full bg-green-600 p-1' : 'border rounded-full bg-gray-400 p-1'">
+                                    <img class="shadow-md rounded-full w-full h-full object-cover"
+                                        :src="'http://172.16.161.34:8080/hrms' + usersPhoto" usersPhoto alt="" />
+                                </div>
                             </div>
                             <div class="text-sm">
                                 <p class="font-bold">{{ usersName }}</p>
@@ -156,6 +158,63 @@
                     </div>
                     <!-- Chat Section -->
                     <div class="chat-body p-4 flex-1 overflow-y-scroll" ref="messagesContainer">
+                        <div class="mb-20">
+                            <div
+                                class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 rounded-lg text-gray-900">
+                                <div class="rounded-t-lg h-32 overflow-hidden">
+                                    <!-- <img class="object-cover object-top w-full"
+                                        src='https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ'
+                                        alt='Mountain'> -->
+                                </div>
+                                <div class="mx-auto w-32 h-32 relative -mt-16 border-4  rounded-full overflow-hidden"
+                                    :class="isActive[0] ? 'border-green-400' : 'border-gray-300'">
+                                    <img class="object-cover object-center h-32"
+                                        :src="'http://172.16.161.34:8080/hrms' + usersPhoto" alt='Woman looking front'>
+                                </div>
+                                <div class="text-center mt-2">
+                                    <h2 class="font-semibold text-white">{{ usersName }}</h2>
+                                    <p class="text-gray-500">
+                                        {{ isActive[0]?.time ? 'Active Now' : 'Active ' + dayjs(isOffline).toNow(true) +
+                                            'ago' }}
+                                    </p>
+                                </div>
+                                <ul class="py-4 mt-2 text-gray-700 flex items-center justify-around">
+                                    <li class="flex flex-col items-center justify-around">
+                                        <svg class="w-4 fill-current text-white" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20">
+                                            <path
+                                                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                                        </svg>
+                                        <div>2k</div>
+                                    </li>
+                                    <li class="flex flex-col items-center justify-between">
+                                        <svg class="w-4 fill-current text-white" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20">
+                                            <path
+                                                d="M7 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0 1c2.15 0 4.2.4 6.1 1.09L12 16h-1.25L10 20H4l-.75-4H2L.9 10.09A17.93 17.93 0 0 1 7 9zm8.31.17c1.32.18 2.59.48 3.8.92L18 16h-1.25L16 20h-3.96l.37-2h1.25l1.65-8.83zM13 0a4 4 0 1 1-1.33 7.76 5.96 5.96 0 0 0 0-7.52C12.1.1 12.53 0 13 0z" />
+                                        </svg>
+                                        <div>10k</div>
+                                    </li>
+                                    <li class="flex flex-col items-center justify-around">
+                                        <svg class="w-4 fill-current text-white" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20">
+                                            <path
+                                                d="M9 12H1v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6h-8v2H9v-2zm0-1H0V5c0-1.1.9-2 2-2h4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v6h-9V9H9v2zm3-8V2H8v1h4z" />
+                                        </svg>
+                                        <div>15</div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <div class="p-4 mx-8 mt-2">
+                                <div class="flex items-center">
+                                    <div class="flex-grow border-t border-gray-700"></div>
+                                    <span class="mx-3 text-gray-400 font-semibold text-sm uppercase">Start
+                                        Message</span>
+                                    <div class="flex-grow border-t border-gray-700"></div>
+                                </div>
+                            </div>
+                        </div>
                         <div v-for="(item, index) in messages" :key="item.id">
                             <div class="flex flex-row"
                                 :class="item.sender_id == page.auth.user.id ? 'justify-end' : 'justify-start'">
@@ -194,6 +253,7 @@
                                                     : 'bg-gray-600 text-gray-400 border-l-4 border-gray-600 ml-2 rounded-r-[2rem] rounded-b-[2rem]'">
                                                 <p class="truncate h-6 leading-6">{{ item.toReply }}</p>
                                             </div>
+                                            <!-- {{ item }} -->
 
                                             <!-- Actual Message -->
                                             <p class="px-6 py-3 text-gray-200" :class="[
@@ -218,11 +278,26 @@
                                             ]">
                                                 {{ item.attachment ? '' : item.message }}
                                             </p>
+                                            <Transition enter-active-class="transition duration-300 ease-out"
+                                                enter-from-class="opacity-0 scale-50"
+                                                enter-to-class="opacity-100 scale-100"
+                                                leave-active-class="transition duration-200 ease-in"
+                                                leave-from-class="opacity-100 scale-100"
+                                                leave-to-class="opacity-0 scale-50">
+                                                <div v-if="item.react && item.react != '0'" class="flex"
+                                                    :class="item.sender_id == page.auth.user.id ? 'justify-end' : 'justify-start'">
+                                                    <p
+                                                        class="-mt-1.5 mr-3 ml-3 border rounded-full bg-gray-500 px-1 py-1 animate-pop">
+                                                        {{ item.react }}
+                                                    </p>
+                                                </div>
+                                            </Transition>
+
                                         </div>
                                         <!-- Action buttons -->
                                         <div class="hidden group-hover:flex"
                                             :class="item.sender_id == page.auth.user.id ? 'flex-row-reverse ' : ''">
-                                            <button type="button"
+                                            <button type="button" :class="item.react != '0' ? 'mb-7' : ''"
                                                 class="flex mb-1.5 ml-1 flex-shrink-0 focus:outline-none rounded-full text-gray-500 hover:text-red-500 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">
 
                                                 <!-- Trash Icon -->
@@ -240,7 +315,7 @@
                                                         d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z" />
                                                 </svg>
                                             </button>
-                                            <button type="button"
+                                            <button type="button" @click="reactOpen(item)"
                                                 class="flex flex-shrink-0 ml-1 focus:outline-none rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">
                                                 <svg viewBox="0 0 24 24" class="w-full h-full fill-current">
                                                     <path d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-3.54-4.46a1 1 0 0 1 1.42-1.42
@@ -252,7 +327,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <!-- <p class="p-4 text-center text-sm text-gray-500">
                                 FRI 3:04 PM
@@ -331,8 +405,7 @@
                                 </div>
                             </div>
                             <div v-if="typingIndicator
-                                && index === messages.length - 1
-                                && (index === 0 || messages[index - 1].sender_id === item.sender_id)">
+                                && index === messages.length - 1 && (repId == item.recipient_id || repId == item.sender_id)">
                                 <div class="flex flex-row">
                                     <div class="w-8 h-8 relative flex flex-shrink-0 mr-4 justify-start">
                                         <img class="shadow-md rounded-full w-full h-full object-cover"
@@ -367,6 +440,9 @@
 
                     </div>
 
+                    <div v-if="showPickerReact" class="picker-wrapper-react">
+                        <emoji-picker @emoji-click="emojiReact" class="emoji-picker"></emoji-picker>
+                    </div>
 
                     <div class="chat-footer flex-none">
                         <div class="ml-12 flex">
@@ -418,14 +494,14 @@
                             </button>
 
 
-                            <div class="relative flex-grow">
+                            <div class="relative flex-grow" ref="containerRef">
                                 <label>
 
                                     <input @keyup.enter="sendMessage()" @input="sendTyping" id="message-input"
                                         @blur="sendTyping(false)" @mouseleave="sendTyping(false)"
                                         class="rounded-full py-2 pl-3 pr-10 w-full border border-gray-800 focus:border-gray-700 bg-gray-800 focus:bg-gray-900 focus:outline-none text-gray-200 focus:shadow-md transition duration-300 ease-in"
                                         type="text" v-model="form.message" placeholder="Aa.." />
-                                    <button type="button"
+                                    <button type="button" @click="showPicker = !showPicker"
                                         class="absolute top-0 right-0 mt-2 mr-3 flex flex-shrink-0 focus:outline-none block text-blue-600 hover:text-blue-700 w-6 h-6">
                                         <svg viewBox="0 0 20 20" class="w-full h-full fill-current">
                                             <path
@@ -433,8 +509,12 @@
                                         </svg>
                                     </button>
                                 </label>
+
+                                <div v-if="showPicker" class="picker-wrapper">
+                                    <emoji-picker @emoji-click="onEmojiClick" class="emoji-picker"></emoji-picker>
+                                </div>
                             </div>
-                            <button type="button"
+                            <button type="button" @click="sendLike"
                                 class="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-600 hover:text-blue-700 w-6 h-6">
                                 <svg viewBox="0 0 20 20" class="w-full h-full fill-current">
                                     <path
@@ -458,13 +538,13 @@
 
 <script setup lang="ts">
 import { usePage } from "@inertiajs/vue3";
-import { Item } from "ant-design-vue/es/menu";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { countBy } from "lodash";
+import 'emoji-picker-element';
+import { values } from "lodash";
 
-import { ref, onMounted, reactive, nextTick, watch, computed } from "vue";
+import { ref, onMounted, reactive, nextTick, watch, computed, onUnmounted, watchEffect } from "vue";
 
 dayjs.extend(relativeTime);
 
@@ -477,6 +557,8 @@ interface UserOnline {
 const props = defineProps<{
     onlineUsers: any;
 }>();
+
+
 const page = usePage<{
 
     auth: {
@@ -506,6 +588,7 @@ interface EveryMessage {
     photoSeen: string;
 
 }
+
 interface Messages {
     recipient_id: number;
     sender_id: number;
@@ -514,6 +597,7 @@ interface Messages {
     id: number;
     read: number;
     toReply: string;
+    react: string;
 }
 
 const messageUsers = ref<User[]>([]);
@@ -531,8 +615,62 @@ const isActive = computed(() => {
 });
 
 const form = reactive({
-    message: '' as string
-})
+    message: '' as string,
+    react: '' as string,
+});
+
+const showPickerReact = ref(false);
+const showPicker = ref(false);
+const containerRef = ref(null);
+const idMessage = ref(null);
+
+const togglePicker = () => {
+    showPicker.value = !showPicker.value;
+};
+
+const onEmojiClick = (event) => {
+    form.message += event.detail.unicode;
+    showPicker.value = false;
+};
+const sendLike = () => {
+    form.message = '👍';
+
+    sendMessage();
+}
+const emojiReact = async (event) => {
+    form.react += event.detail.unicode;
+    showPickerReact.value = false;
+
+    const { data } = await axios.put(route('message.react.message'), {
+        id: idMessage.value,
+        react: form.react,
+        rep: repId.value
+
+    });
+    const index = messages.value.findIndex(m => m.id == data.message?.id);
+
+    if (index !== -1) {
+        // Merge updates instead of replacing the whole object
+        messages.value[index] = data?.message;
+
+    } else {
+        // Add new if not found
+        messages.value.push(data.message);
+    }
+
+    form.react = '';
+};
+
+const reactOpen = (index) => {
+    showPickerReact.value = !showPickerReact.value;
+    idMessage.value = index.id;
+}
+
+const handleClickOutside = (event) => {
+    if (containerRef.value && !containerRef.value.contains(event.target)) {
+        showPicker.value = false;
+    }
+};
 
 const scrollToBottom = () => {
     nextTick(() => {
@@ -584,13 +722,22 @@ const lastReadIndex = computed(() => {
         .pop(); // last index where read == 1 and sender is the user
 });
 
-const echoMessage = () => {
-    window.Echo.private(`message.${page.auth.user.id}`).listen(
+const echoMessage = async () => {
+    await window.Echo.private(`message.${page.auth.user.id}`).listen(
         ".message-event",
         (e) => {
-            if (repId.value == e.message.sender_id) {
-                messages.value.push(e.message);
-                scrollToBottom();
+            if (repId.value == e.message.sender_id || repId.value == e.message.recipient_id) {
+                const index = messages.value.findIndex(m => m.id == e.message?.id);
+
+                if (index !== -1) {
+                    messages.value[index] = e?.message;
+                } else {
+                    scrollToBottom();
+                    // Add new if not found
+                    messages.value.push(e.message);
+                }
+                // messages.value.push(e.message);
+
                 seenMessage()
             }
             getEveryMessage();
@@ -600,18 +747,18 @@ const echoMessage = () => {
         scrollToBottom();
     });
 };
-const echoMessageSeen = () => {
-    window.Echo.private(`message-seen.${page.auth.user.id}`).listen(
+const echoMessageSeen = async () => {
+    await window.Echo.private(`message-seen.${page.auth.user.id}`).listen(
         ".message-seen-event",
         (e) => {
-            if (repId.value = e.message.recipient_id) {
-                const index = messages.value.findIndex(m => m.id === e.message.id);
+            if (repId.value == e.message?.recipient_id) {
+                const index = messages.value.findIndex(m => m.id === e.message?.id);
 
                 if (index !== -1) {
-                    // Replace the existing message
-                    messages.value[index] = e.message;
+                    // Replace reactively
+                    messages.value.splice(index, 1, e.message);
                 } else {
-                    // If not found, fallback to push (optional)
+                    // If not found, add it
                     messages.value.push(e.message);
                 }
             }
@@ -691,12 +838,12 @@ const seenMessage = async () => {
         id: repId.value
     });
 
-    if (data.message[0].recipient_id === page.auth.user.id) {
-        const index = messages.value.findIndex(m => m.id == data.message[0].id);
+    if (data.message[0]?.recipient_id === page.auth.user.id) {
+        const index = messages.value.findIndex(m => m.id == data.message[0]?.id);
 
         if (index !== -1) {
             // Merge updates instead of replacing the whole object
-            messages.value[index] = data.message[0];
+            messages.value[index] = data?.message[0];
         } else {
             // Add new if not found
             messages.value.push(data.message);
@@ -710,20 +857,49 @@ const seenMessage = async () => {
 };
 const getMesssageEcho = async () => {
 
-    window.Echo.private(`get-message.${page.auth.user.id}`).listen(
+    await window.Echo.private(`get-message.${page.auth.user.id}`).listen(
         ".get-message-event",
         (e) => {
             everyMessage.value = e.message
         }
     );
 };
+const searchUsers = ref();
 
 onMounted(() => {
+    document.addEventListener('click', handleClickOutside);
     getEveryMessage();
     echoMessage();
     getMesssageEcho();
     echoMessageSeen();
 });
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside);
+});
+
+
+watch(
+    searchUsers,
+    async (newVal) => {
+        if (newVal) {
+            try {
+                const { data } = await axios.get(route('message.get.every.message'), {
+                    params: {
+                        search: newVal
+                    }
+                })
+                everyMessage.value = data.users // make sure backend response key is correct
+            } catch (error) {
+                console.error('Error fetching messages:', error)
+            }
+        }
+    },
+    { deep: true }
+)
+
+
+
 
 </script>
 
@@ -811,5 +987,90 @@ onMounted(() => {
 /* slight stagger */
 .delay-400 {
     animation-delay: 0.24s;
+}
+
+.emoji-picker-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 500px;
+    margin: 20px;
+}
+
+.emoji-button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s ease;
+}
+
+.emoji-button:hover {
+    background: #f5f5f5;
+    transform: scale(1.05);
+}
+
+.picker-wrapper {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    z-index: 1000;
+    margin-bottom: 10px;
+}
+
+.picker-wrapper-react {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    z-index: 1000;
+    margin-bottom: 10px;
+}
+
+.emoji-picker {
+    --num-columns: 8;
+    --emoji-size: 1.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.message-input {
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+}
+
+.message-input:focus {
+    outline: none;
+    border-color: #4285f4;
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.animate-pop {
+    animation: pop 0.3s ease-out;
 }
 </style>

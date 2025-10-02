@@ -26,6 +26,9 @@ importers:
       dayjs:
         specifier: ^1.11.18
         version: 1.11.18
+      emoji-picker-element:
+        specifier: ^1.27.0
+        version: 1.27.0
       figlet:
         specifier: ^1.8.2
         version: 1.8.2
@@ -853,6 +856,9 @@ packages:
 
   electron-to-chromium@1.5.211:
     resolution: {integrity: sha512-IGBvimJkotaLzFnwIVgW9/UD/AOJ2tByUmeOrtqBfACSbAw5b1G0XpvdaieKyc7ULmbwXVx+4e4Be8pOPBrYkw==}
+
+  emoji-picker-element@1.27.0:
+    resolution: {integrity: sha512-CeN9g5/kq41+BfYPDpAbE2ejZRHbs1faFDmU9+E9wGA4JWLkok9zo1hwcAFnUhV4lPR3ZuLHiJxNG1mpjoF4TQ==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -2421,6 +2427,8 @@ snapshots:
   eastasianwidth@0.2.0: {}
 
   electron-to-chromium@1.5.211: {}
+
+  emoji-picker-element@1.27.0: {}
 
   emoji-regex@8.0.0: {}
 

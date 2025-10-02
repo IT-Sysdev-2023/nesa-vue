@@ -25,4 +25,10 @@ class DashboardController extends Controller
             'nesaThisMonth' => $this->dashboardService->nesaThisMonth(),
         ]);
     }
+
+    public function dashboard()
+    {
+
+        return inertia('Dashboard');
+    }
 }

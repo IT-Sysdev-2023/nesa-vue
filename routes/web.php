@@ -16,9 +16,7 @@ Route::get('/', function () {
     return Inertia::render('Auth/Login');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -102,6 +100,7 @@ Route::middleware('auth')->group(function () {
             Route::get('get-message', [MessengerController::class, 'getMessage'])->name('get.message');
             Route::post('send-message', [MessengerController::class, 'sendMessage'])->name('send.message');
             Route::put('seen-message', [MessengerController::class, 'seenMessage'])->name('seen.message');
+            Route::put('react-message', [MessengerController::class, 'reactMessage'])->name('react.message');
         });
     });
 });
