@@ -536,9 +536,7 @@
                                                 ]"
                                             >
                                                 {{
-                                                    item.attachment
-                                                        ? ""
-                                                        : item.message
+                                                   item.message
                                                 }}
                                             </p>
                                             <Transition
@@ -641,138 +639,7 @@
                             <!-- <p class="p-4 text-center text-sm text-gray-500">
                                 FRI 3:04 PM
                             </p> -->
-                            <div class="flex flex-row justify-end">
-                                <div
-                                    class="messages text-sm text-white grid grid-flow-row gap-2"
-                                >
-                                    <div
-                                        class="flex items-center flex-row-reverse group"
-                                        v-if="
-                                            item.attachment != '' &&
-                                            item.sender_id == page.auth.user.id
-                                        "
-                                    >
-                                        <a
-                                            class="block w-64 h-64 relative flex flex-shrink-0 max-w-xs lg:max-w-md"
-                                            href="#"
-                                        >
-                                            <img
-                                                class="absolute shadow-md w-full h-full rounded-l-xl object-cover"
-                                                src="https://unsplash.com/photos/8--kuxbxuKU/download?force=true&w=640"
-                                                alt="hiking"
-                                            />
-                                        </a>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 20 20"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M10.001,7.8C8.786,7.8,7.8,8.785,7.8,10s0.986,2.2,2.201,2.2S12.2,11.215,12.2,10S11.216,7.8,10.001,7.8z
-	 M3.001,7.8C1.786,7.8,0.8,8.785,0.8,10s0.986,2.2,2.201,2.2S5.2,11.214,5.2,10S4.216,7.8,3.001,7.8z M17.001,7.8
-	C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.8,17.001,7.8z"
-                                                />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 20 20"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"
-                                                />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 24 24"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-3.54-4.46a1 1 0 0 1 1.42-1.42 3 3 0 0 0 4.24 0 1 1 0 0 1 1.42 1.42 5 5 0 0 1-7.08 0zM9 11a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm6 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
-                                                />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex flex-row justify-start">
-                                <div
-                                    class="messages text-sm text-white grid grid-flow-row gap-2"
-                                >
-                                    <div
-                                        class="flex items-center group"
-                                        v-if="
-                                            item.attachment != '' &&
-                                            item.recipient_id ==
-                                                page.auth.user.id
-                                        "
-                                    >
-                                        <a
-                                            class="block w-64 h-64 relative flex flex-shrink-0 max-w-xs lg:max-w-md"
-                                            href="#"
-                                        >
-                                            <img
-                                                class="absolute shadow-md w-full h-full rounded-r-xl object-cover"
-                                                src="https://unsplash.com/photos/8--kuxbxuKU/download?force=true&w=640"
-                                                alt="hiking"
-                                            />
-                                        </a>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 20 20"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M10.001,7.8C8.786,7.8,7.8,8.785,7.8,10s0.986,2.2,2.201,2.2S12.2,11.215,12.2,10S11.216,7.8,10.001,7.8z
-	 M3.001,7.8C1.786,7.8,0.8,8.785,0.8,10s0.986,2.2,2.201,2.2S5.2,11.214,5.2,10S4.216,7.8,3.001,7.8z M17.001,7.8
-	C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.8,17.001,7.8z"
-                                                />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 20 20"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"
-                                                />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 24 24"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-3.54-4.46a1 1 0 0 1 1.42-1.42 3 3 0 0 0 4.24 0 1 1 0 0 1 1.42 1.42 5 5 0 0 1-7.08 0zM9 11a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm6 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
-                                                />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                           
                             <div
                                 v-if="
                                     typingIndicator &&
@@ -871,20 +738,19 @@
                             </div>
                         </div>
                         <div class="flex flex-row items-center p-4">
-                            <button
-                                type="button"
-                                class="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-600 hover:text-blue-700 w-6 h-6"
+                           <p @click="expandMessage"
+                            class="block rounded-full hover:bg-gray-700 bg-gray-800 w-10 h-10 p-2 hidden md:block group-hover:block"
+                        >
+                            <svg
+                                viewBox="0 0 24 24"
+                                class="w-full h-full fill-current"
                             >
-                                <svg
-                                    viewBox="0 0 20 20"
-                                    class="w-full h-full fill-current"
-                                >
-                                    <path
-                                        d="M10,1.6c-4.639,0-8.4,3.761-8.4,8.4s3.761,8.4,8.4,8.4s8.4-3.761,8.4-8.4S14.639,1.6,10,1.6z M15,11h-4v4H9  v-4H5V9h4V5h2v4h4V11z"
-                                    />
-                                </svg>
-                            </button>
-                            <button
+                                <path
+                                    d="M4 14v6h6v-2H6v-4H4zm0-4h2V6h4V4H4v6zm10 10h6v-6h-2v4h-4v2zm4-14h-4V4h6v6h-2V6z"
+                                />
+                            </svg>
+                        </p>
+                            <!-- <button
                                 type="button"
                                 class="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-600 hover:text-blue-700 w-6 h-6"
                             >
@@ -922,7 +788,7 @@
                                         d="M9,18 L9,16.9379599 C5.05368842,16.4447356 2,13.0713165 2,9 L4,9 L4,9.00181488 C4,12.3172241 6.6862915,15 10,15 C13.3069658,15 16,12.314521 16,9.00181488 L16,9 L18,9 C18,13.0790094 14.9395595,16.4450043 11,16.9378859 L11,18 L14,18 L14,20 L6,20 L6,18 L9,18 L9,18 Z M6,4.00650452 C6,1.79377317 7.79535615,0 10,0 C12.209139,0 14,1.79394555 14,4.00650452 L14,8.99349548 C14,11.2062268 12.2046438,13 10,13 C7.790861,13 6,11.2060545 6,8.99349548 L6,4.00650452 L6,4.00650452 Z"
                                     />
                                 </svg>
-                            </button>
+                            </button> -->
 
                             <div class="relative flex-grow" ref="containerRef">
                                 <label>
