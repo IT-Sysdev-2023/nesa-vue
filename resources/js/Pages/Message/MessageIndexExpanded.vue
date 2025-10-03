@@ -1,6 +1,6 @@
 <template>
     <div
-        class="h-[85vh] w-[1000px] flex antialiased text-gray-200 bg-gray-900 overflow-hidden"
+        class="h-screen w-[100%] flex antialiased text-gray-200 bg-gray-900 overflow-hidden"
     >
         <div class="flex-1 flex flex-col">
             <main class="flex-grow flex flex-row min-h-0">
@@ -25,7 +25,8 @@
                         >
                             Talk To Nesa
                         </p>
-                        <p @click="expandMessage"
+                        <p
+                            @click="unexpandMessage"
                             class="block rounded-full hover:bg-gray-700 bg-gray-800 w-10 h-10 p-2 hidden md:block group-hover:block"
                         >
                             <svg
@@ -33,7 +34,7 @@
                                 class="w-full h-full fill-current"
                             >
                                 <path
-                                    d="M4 14v6h6v-2H6v-4H4zm0-4h2V6h4V4H4v6zm10 10h6v-6h-2v4h-4v2zm4-14h-4V4h6v6h-2V6z"
+                                    d="M14 10V4h6v2h-4v4h-2zm-4 0H4V8h4V4h2v6zm4 4h2v4h4v2h-6v-6zm-4 0v6H4v-2h4v-4h2z"
                                 />
                             </svg>
                         </p>
@@ -81,7 +82,7 @@
                         </div>
                         <div
                             class="text-sm text-center mr-4 cursor-pointer"
-                            v-for="item in onlineUsers"
+                            v-for="item in getOnlineUsers"
                         >
                             <div
                                 class="p-1 border-4 border-green-400 rounded-full"
@@ -504,6 +505,7 @@
 
                                             <!-- Actual Message -->
                                             <p
+                                                v-if="!item.attachment"
                                                 class="px-6 py-3 text-gray-200"
                                                 :class="[
                                                     // background
@@ -535,11 +537,24 @@
                                                         : '',
                                                 ]"
                                             >
-                                                {{
-                                                    item.attachment
-                                                        ? ""
-                                                        : item.message
-                                                }}
+                                                {{ item.message }}
+                                            </p>
+                                            <p v-else>
+                                                <!-- kanindg -->
+
+                                                <div
+                                                    class="px-6 py-3 block w-64 h-64 relative flex flex-shrink-0 max-w-xs lg:max-w-md mt-2"
+                                                >
+                                              
+                                                    <a-image
+                                                    class="w-64 h-64"
+                                                style="height: 100%;"
+                                                        :class="item.sender_id ==
+                                                    page.auth.user.id ? 'rounded-l-[2rem]' : 'rounded-r-[2rem]'"
+                                                        :src="'/storage/uploads/' + item.attachment"
+                                                        alt="hiking"
+                                                    />
+                                            </div>
                                             </p>
                                             <Transition
                                                 enter-active-class="transition duration-300 ease-out"
@@ -554,7 +569,7 @@
                                                         item.react &&
                                                         item.react != '0'
                                                     "
-                                                    class="flex"
+                                                    class="flex relative z-[99]"
                                                     :class="
                                                         item.sender_id ==
                                                         page.auth.user.id
@@ -641,138 +656,7 @@
                             <!-- <p class="p-4 text-center text-sm text-gray-500">
                                 FRI 3:04 PM
                             </p> -->
-                            <div class="flex flex-row justify-end">
-                                <div
-                                    class="messages text-sm text-white grid grid-flow-row gap-2"
-                                >
-                                    <div
-                                        class="flex items-center flex-row-reverse group"
-                                        v-if="
-                                            item.attachment != '' &&
-                                            item.sender_id == page.auth.user.id
-                                        "
-                                    >
-                                        <a
-                                            class="block w-64 h-64 relative flex flex-shrink-0 max-w-xs lg:max-w-md"
-                                            href="#"
-                                        >
-                                            <img
-                                                class="absolute shadow-md w-full h-full rounded-l-xl object-cover"
-                                                src="https://unsplash.com/photos/8--kuxbxuKU/download?force=true&w=640"
-                                                alt="hiking"
-                                            />
-                                        </a>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 20 20"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M10.001,7.8C8.786,7.8,7.8,8.785,7.8,10s0.986,2.2,2.201,2.2S12.2,11.215,12.2,10S11.216,7.8,10.001,7.8z
-	 M3.001,7.8C1.786,7.8,0.8,8.785,0.8,10s0.986,2.2,2.201,2.2S5.2,11.214,5.2,10S4.216,7.8,3.001,7.8z M17.001,7.8
-	C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.8,17.001,7.8z"
-                                                />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 20 20"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"
-                                                />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 24 24"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-3.54-4.46a1 1 0 0 1 1.42-1.42 3 3 0 0 0 4.24 0 1 1 0 0 1 1.42 1.42 5 5 0 0 1-7.08 0zM9 11a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm6 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
-                                                />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="flex flex-row justify-start">
-                                <div
-                                    class="messages text-sm text-white grid grid-flow-row gap-2"
-                                >
-                                    <div
-                                        class="flex items-center group"
-                                        v-if="
-                                            item.attachment != '' &&
-                                            item.recipient_id ==
-                                                page.auth.user.id
-                                        "
-                                    >
-                                        <a
-                                            class="block w-64 h-64 relative flex flex-shrink-0 max-w-xs lg:max-w-md"
-                                            href="#"
-                                        >
-                                            <img
-                                                class="absolute shadow-md w-full h-full rounded-r-xl object-cover"
-                                                src="https://unsplash.com/photos/8--kuxbxuKU/download?force=true&w=640"
-                                                alt="hiking"
-                                            />
-                                        </a>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 20 20"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M10.001,7.8C8.786,7.8,7.8,8.785,7.8,10s0.986,2.2,2.201,2.2S12.2,11.215,12.2,10S11.216,7.8,10.001,7.8z
-	 M3.001,7.8C1.786,7.8,0.8,8.785,0.8,10s0.986,2.2,2.201,2.2S5.2,11.214,5.2,10S4.216,7.8,3.001,7.8z M17.001,7.8
-	C15.786,7.8,14.8,8.785,14.8,10s0.986,2.2,2.201,2.2S19.2,11.215,19.2,10S18.216,7.8,17.001,7.8z"
-                                                />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 20 20"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"
-                                                />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2"
-                                        >
-                                            <svg
-                                                viewBox="0 0 24 24"
-                                                class="w-full h-full fill-current"
-                                            >
-                                                <path
-                                                    d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-3.54-4.46a1 1 0 0 1 1.42-1.42 3 3 0 0 0 4.24 0 1 1 0 0 1 1.42 1.42 5 5 0 0 1-7.08 0zM9 11a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm6 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
-                                                />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                             <div
                                 v-if="
                                     typingIndicator &&
@@ -871,9 +755,18 @@
                             </div>
                         </div>
                         <div class="flex flex-row items-center p-4">
-                            <button
+                           
+                             <a-upload
+      v-model:file-list="fileList"
+      :show-preview-icon="false"
+       :show-upload-list="false"
+       :multiple="false"
+       :before-upload="handleBeforeUpload"
+        accept="image/png,image/jpeg,image/jpg"
+    >
+       <button
                                 type="button"
-                                class="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-600 hover:text-blue-700 w-6 h-6"
+                                class="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-600 hover:text-blue-700 w-8 h-8"
                             >
                                 <svg
                                     viewBox="0 0 20 20"
@@ -884,7 +777,8 @@
                                     />
                                 </svg>
                             </button>
-                            <button
+    </a-upload>
+                            <!-- <button
                                 type="button"
                                 class="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-600 hover:text-blue-700 w-6 h-6"
                             >
@@ -896,8 +790,8 @@
                                         d="M11,13 L8,10 L2,16 L11,16 L18,16 L13,11 L11,13 Z M0,3.99406028 C0,2.8927712 0.898212381,2 1.99079514,2 L18.0092049,2 C19.1086907,2 20,2.89451376 20,3.99406028 L20,16.0059397 C20,17.1072288 19.1017876,18 18.0092049,18 L1.99079514,18 C0.891309342,18 0,17.1054862 0,16.0059397 L0,3.99406028 Z M15,9 C16.1045695,9 17,8.1045695 17,7 C17,5.8954305 16.1045695,5 15,5 C13.8954305,5 13,5.8954305 13,7 C13,8.1045695 13.8954305,9 15,9 Z"
                                     />
                                 </svg>
-                            </button>
-                            <button
+                            </button> -->
+                            <!-- <button
                                 type="button"
                                 class="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-600 hover:text-blue-700 w-6 h-6"
                             >
@@ -909,8 +803,8 @@
                                         d="M0,6.00585866 C0,4.89805351 0.893899798,4 2.0048815,4 L5,4 L7,2 L13,2 L15,4 L17.9951185,4 C19.102384,4 20,4.89706013 20,6.00585866 L20,15.9941413 C20,17.1019465 19.1017876,18 18.0092049,18 L1.99079514,18 C0.891309342,18 0,17.1029399 0,15.9941413 L0,6.00585866 Z M10,16 C12.7614237,16 15,13.7614237 15,11 C15,8.23857625 12.7614237,6 10,6 C7.23857625,6 5,8.23857625 5,11 C5,13.7614237 7.23857625,16 10,16 Z M10,14 C11.6568542,14 13,12.6568542 13,11 C13,9.34314575 11.6568542,8 10,8 C8.34314575,8 7,9.34314575 7,11 C7,12.6568542 8.34314575,14 10,14 Z"
                                     />
                                 </svg>
-                            </button>
-                            <button
+                            </button> -->
+                            <!-- <button
                                 type="button"
                                 class="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-600 hover:text-blue-700 w-6 h-6"
                             >
@@ -922,7 +816,7 @@
                                         d="M9,18 L9,16.9379599 C5.05368842,16.4447356 2,13.0713165 2,9 L4,9 L4,9.00181488 C4,12.3172241 6.6862915,15 10,15 C13.3069658,15 16,12.314521 16,9.00181488 L16,9 L18,9 C18,13.0790094 14.9395595,16.4450043 11,16.9378859 L11,18 L14,18 L14,20 L6,20 L6,18 L9,18 L9,18 Z M6,4.00650452 C6,1.79377317 7.79535615,0 10,0 C12.209139,0 14,1.79394555 14,4.00650452 L14,8.99349548 C14,11.2062268 12.2046438,13 10,13 C7.790861,13 6,11.2060545 6,8.99349548 L6,4.00650452 L6,4.00650452 Z"
                                     />
                                 </svg>
-                            </button>
+                            </button> -->
 
                             <div class="relative flex-grow" ref="containerRef">
                                 <label>
@@ -983,13 +877,74 @@
                     v-else
                 >
                     <div class="flex justify-center h-[100%] items-center">
-                        <img
-                            style="height: 400px"
-                            src="/images/emptymessage.svg"
-                            alt=""
-                        />
+                        <div
+                            class="max-w-xl w-full text-center bg-gradient-to-b p-8 md:p-12 backdrop-blur-sm"
+                        >
+                            <!-- Illustration -->
+                            <img
+                                style="height: 400px"
+                                src="/images/emptymessage.svg"
+                                alt=""
+                            />
+                            <div
+                                class="mx-auto mb-6 w-28 h-28 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-500/90 flex items-center justify-center shadow-lg transform-gpu"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-14 h-14 text-white"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M21 12.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
+                                        opacity="0.12"
+                                    />
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M8 10h.01M12 10h.01M16 10h.01M8 14h8"
+                                    />
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M7 8v6a5 5 0 0010 0V8"
+                                    />
+                                </svg>
+                            </div>
+
+                            <!-- Title + Description -->
+                            <h3
+                                class="text-2xl md:text-3xl font-semibold text-white mb-2"
+                            >
+                                No messages yet
+                            </h3>
+                            <p
+                                class="text-sm md:text-base text-gray-300 max-w-[38ch] mx-auto mb-6"
+                            >
+                                Looks like your inbox is clear — enjoy the calm.
+                                When someone sends you a message it’ll show up
+                                here instantly.
+                            </p>
+
+                            <!-- Actions -->
+                            <div
+                                class="flex flex-col sm:flex-row items-center justify-center gap-3"
+                            >
+                               
+                            </div>
+
+                            <!-- Subtle hint -->
+                            <p class="mt-4 text-xs text-gray-500">
+                                Tip: Try composing a message or invite a friend
+                                to start a conversation.
+                            </p>
+                        </div>
                     </div>
-                    <p class="text-center">💬 No Message Yet</p>
                 </div>
             </main>
         </div>
@@ -997,12 +952,16 @@
 </template>
 
 <script setup lang="ts">
+import { useOnlineUsersStore } from "@/stores/online-store";
 import { router } from "@inertiajs/vue3";
 import { usePage } from "@inertiajs/vue3";
+import { UploadProps } from "ant-design-vue";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "emoji-picker-element";
+
+const fileList = ref([]);
 
 import {
     ref,
@@ -1023,9 +982,9 @@ interface UserOnline {
     photo: string;
 }
 
-const props = defineProps<{
-    onlineUsers: any;
-}>();
+// const props = defineProps<{
+//     onlineUsers: any;
+// }>();
 
 const page = usePage<{
     auth: {
@@ -1076,7 +1035,7 @@ const usersPhoto = ref<string>();
 const isOffline = ref<string>();
 
 const isActive = computed(() => {
-    const onlineIds = props.onlineUsers.filter(
+    const onlineIds = getOnlineUsers.value.filter(
         (user: any) => user.id == repId.value
     );
     return onlineIds;
@@ -1085,6 +1044,7 @@ const isActive = computed(() => {
 const form = reactive({
     message: "" as string,
     react: "" as string,
+    attachment: fileList.value
 });
 
 const showPickerReact = ref(false);
@@ -1151,7 +1111,7 @@ const getEveryMessage = async () => {
     const { data } = await axios.get(route("message.get.every.message"));
     everyMessage.value = data.users;
 
-    const onlineIds = props.onlineUsers.map((user) => user.id);
+    const onlineIds = getOnlineUsers.value.map((user) => user.id);
 
     everyMessage.value = data.users.map((user: any) => {
         return {
@@ -1305,8 +1265,8 @@ const clearToReply = () => {
     toReplyId.value = null;
 };
 
-const expandMessage = async () => {
-    await router.get(route("message.expand.message"), {
+const unexpandMessage = async () => {
+    await router.get(route("dashboard"), {
         preserveState: true,
         replace: true,
     });
@@ -1342,9 +1302,77 @@ const getMesssageEcho = async () => {
         }
     );
 };
+
+const onlineUsersStore = useOnlineUsersStore();
+
+const { setOnlineUsers, addOnlineUser, removeOnlineUser } = onlineUsersStore;
+
 const searchUsers = ref();
+const MAX_SIZE_MB = 2;
+
+const getOnlineUsers = computed(() => onlineUsersStore.onlineUsers);
+const handleBeforeUpload = async (file: File) => {
+    // Check type
+  const isImage = file.type.startsWith("image/");
+  const isSvg = file.type === "image/svg+xml";
+  if (!isImage || isSvg) {
+    alert("Only PNG, JPG, and GIF images are allowed. SVG is not allowed.");
+    return false;
+  }
+
+  // Check size
+  const isTooLarge = file.size / 1024 / 1024 > MAX_SIZE_MB;
+  if (isTooLarge) {
+    alert(`File must be smaller than ${MAX_SIZE_MB}MB.`);
+    return false;
+  }
+
+  await uploadAttachment(file);
+  return false;
+};
+
+const uploadAttachment = async (file: File | any) => {
+  const formData = new FormData();
+
+  formData.append("id", String(repId.value));
+  formData.append("message", form.message ?? "");
+  formData.append("replyId", toReplyId.value ?? "");
+
+  // normalize file (support both direct File and AntD file object)
+  const realFile = file.originFileObj ?? file;
+  formData.append("attachment", realFile);
+
+  try {
+    const { data } = await axios.post(route("message.send.message"), formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    // reset
+    form.message = "";
+    toReply.value = null;
+    toReplyId.value = null;
+    form.attachment = [];
+
+    messages.value.push(data.message);
+
+    scrollToBottom();
+    getEveryMessage();
+    getMesssage(repId.value);
+    sendTyping(false);
+  } catch (error) {
+    console.error("Upload failed:", error);
+  }
+
+  return false; // important when using beforeUpload
+};
 
 onMounted(() => {
+    if (page.auth) {
+        window.Echo.join("online.users")
+            .here((users) => setOnlineUsers(users))
+            .joining(async (user) => addOnlineUser(user))
+            .leaving(async (user) => removeOnlineUser(user));
+    }
     document.addEventListener("click", handleClickOutside);
     getEveryMessage();
     echoMessage();
@@ -1353,6 +1381,9 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+    if (page.auth) {
+        window.Echo.leaveAllChannels();
+    }
     document.removeEventListener("click", handleClickOutside);
 });
 

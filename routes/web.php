@@ -101,6 +101,7 @@ Route::middleware('auth')->group(function () {
             Route::post('send-message', [MessengerController::class, 'sendMessage'])->name('send.message');
             Route::put('seen-message', [MessengerController::class, 'seenMessage'])->name('seen.message');
             Route::put('react-message', [MessengerController::class, 'reactMessage'])->name('react.message');
+            Route::get('expand-message', [MessengerController::class, 'expandeMessage'])->name('expand.message');
         });
     });
 });

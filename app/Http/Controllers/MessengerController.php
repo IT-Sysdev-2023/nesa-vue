@@ -161,14 +161,25 @@ class MessengerController extends Controller
     }
     public function sendMessage(Request $request)
     {
+        $filename = '';
+
+        if ($request->hasFile('attachment')) {
+  
+            $file = $request->file('attachment'); // single
+
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('uploads', $filename, 'public');
+        }
+
         $message = Message::create([
             'sender_id' => $request->user()->id,
-            'message' => $request->message,
+            'message' => ($request->message )? $request->message : 'sent a photo',
             'recipient_id' => $request->id,
-            'attachment' => '',
+            'attachment' => $filename,
             'reply' => isset($request->replyId) ? $request->replyId : 0,
             'read' => 0
         ]);
+
 
         if ($message) {
 
@@ -184,6 +195,7 @@ class MessengerController extends Controller
 
     public function seenMessage(Request $request)
     {
+
         $messages = Message::where([
             ['sender_id', $request->id],
             ['recipient_id', $request->user()->id],
@@ -231,5 +243,8 @@ class MessengerController extends Controller
         ]);
     }
 
-    public function searchMessage() {}
+    public function expandeMessage()
+    {
+        return inertia('Message/MessageIndexExpanded', []);
+    }
 }
