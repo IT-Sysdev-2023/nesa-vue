@@ -53,9 +53,11 @@ class MessengerController extends Controller
                 $join->on('m2.recipient_id', '=', 'users.id')
                     ->where('m2.sender_id', '=', $currentUser->id);
             })
-            ->groupBy('users.username', 'users.firstname', 'users.lastname', 'users.id')
+            ->groupBy('users.username', 'users.firstname', 'users.lastname', 'users.id', 'users.photo')
+            ->having('last_message_id', '>', 0) // Add this line to filter users with messages
             ->orderBy('last_message_time', 'desc')
             ->get();
+
 
         $userIds = $users->pluck('user_id')->all();
 
@@ -182,7 +184,7 @@ class MessengerController extends Controller
 
         $message = Message::create([
             'sender_id' => $request->user()->id,
-            'message' => isset($request->message)? $request->message : 'sent a photo',
+            'message' => isset($request->message) ? $request->message : 'sent a photo',
             'recipient_id' => $request->id,
             'attachment' => $filename,
             'reply' => isset($request->replyId) ? $request->replyId : 0,
