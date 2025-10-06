@@ -182,9 +182,15 @@ class MessengerController extends Controller
             $path = $file->storeAs('uploads', $filename, 'public');
         }
 
+        $content = match (true) {
+            isset($request->message) => $request->message,
+            $request->hasFile('attachment') => 'sent a photo',
+            default => null
+        };
+
         $message = Message::create([
             'sender_id' => $request->user()->id,
-            'message' => isset($request->message) ? $request->message : 'sent a photo',
+            'message' => $content,
             'recipient_id' => $request->id,
             'attachment' => $filename,
             'reply' => isset($request->replyId) ? $request->replyId : 0,

@@ -83,6 +83,8 @@
                             class="text-sm text-center mr-4 cursor-pointer"
                             v-for="item in onlineUsers"
                         >
+                        <div  v-if="item.id != page.auth.user.id">
+
                             <div
                                 class="p-1 border-4 border-green-400 rounded-full"
                                 @click="getMesssage(item.id)"
@@ -101,6 +103,7 @@
                                 </div>
                             </div>
                             <p class="truncate w-[80px]">{{ item.name }}</p>
+                        </div>
                         </div>
                     </div>
                     <div
@@ -639,7 +642,7 @@
                             <!-- <p class="p-4 text-center text-sm text-gray-500">
                                 FRI 3:04 PM
                             </p> -->
-                           
+
                             <div
                                 v-if="
                                     typingIndicator &&

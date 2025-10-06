@@ -48,14 +48,17 @@
                             </button>
                             <p>Chats</p>
                         </div>
-                        <div class="text-sm text-center mr-4 cursor-pointer" v-for="item in onlineUsers">
-                            <div class="p-1 border-4 border-green-400 rounded-full" @click="getMesssage(item.id)">
-                                <div class="w-16 h-16 relative flex flex-shrink-0">
-                                    <img class="shadow-md rounded-full w-full h-full object-cover"
-                                        :src="'http://172.16.161.34:8080/hrms' + item.photo" alt="" />
+                        <div class="text-sm text-center mr-4 cursor-pointer" v-for="item in onlineUsers" >
+                            <!-- {{ item.id != page.auth.user.id }} -->
+                            <div v-if="item.id != page.auth.user.id">
+                                <div class="p-1 border-4 border-green-400 rounded-full" @click="getMesssage(item.id)">
+                                    <div class="w-16 h-16 relative flex flex-shrink-0">
+                                        <img class="shadow-md rounded-full w-full h-full object-cover"
+                                            :src="'http://172.16.161.34:8080/hrms' + item.photo" alt="" />
+                                    </div>
                                 </div>
+                                <p class="truncate w-[80px]">{{ item.name }}</p>
                             </div>
-                            <p class="truncate w-[80px]">{{ item.name }}</p>
                         </div>
                     </div>
                     <div class="contacts p-2 flex-1 overflow-y-scroll space-y-2">
