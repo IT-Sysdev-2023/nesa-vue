@@ -246,6 +246,13 @@ const openLogout = () => {
     });
 };
 
+const getMessageCount = async() => {
+    await window.Echo.private(`message-count.${page.auth.user.id}`)
+        .listen(".message-count-event", (e) => {
+           console.log(e);
+        })
+}
+
 // Stats data
 const stats = reactive([
     {
