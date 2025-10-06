@@ -503,7 +503,7 @@
                                             <!-- {{ item }} -->
 
                                             <!-- Actual Message -->
-                                            <p
+                                            <p v-if="!item.attachment"
                                                 class="px-6 py-3 text-gray-200"
                                                 :class="[
                                                     // background

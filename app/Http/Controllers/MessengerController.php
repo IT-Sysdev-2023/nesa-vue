@@ -159,12 +159,21 @@ class MessengerController extends Controller
             'isOffline' => User::where('id', $request->id)->value('is_online'),
         ]);
     }
+    private function executionPhpIni()
+    {
+        ini_set('upload_max_filesize', '50M');
+        ini_set('post_max_size', '50M');
+
+        return $this;
+    }
     public function sendMessage(Request $request)
     {
+
+
         $filename = '';
 
         if ($request->hasFile('attachment')) {
-  
+
             $file = $request->file('attachment'); // single
 
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -173,7 +182,7 @@ class MessengerController extends Controller
 
         $message = Message::create([
             'sender_id' => $request->user()->id,
-            'message' => ($request->message )? $request->message : 'sent a photo',
+            'message' => isset($request->message)? $request->message : 'sent a photo',
             'recipient_id' => $request->id,
             'attachment' => $filename,
             'reply' => isset($request->replyId) ? $request->replyId : 0,

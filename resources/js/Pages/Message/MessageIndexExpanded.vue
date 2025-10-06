@@ -1321,11 +1321,6 @@ const handleBeforeUpload = async (file: File) => {
   }
 
   // Check size
-  const isTooLarge = file.size / 1024 / 1024 > MAX_SIZE_MB;
-  if (isTooLarge) {
-    alert(`File must be smaller than ${MAX_SIZE_MB}MB.`);
-    return false;
-  }
 
   await uploadAttachment(file);
   return false;
