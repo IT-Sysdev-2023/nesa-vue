@@ -213,7 +213,9 @@ class NesaController extends Controller
         $nesa->flatten(2)->each(function ($item) {
 
             DB::transaction(callback: function () use (&$item): mixed {
+
                 NesaRequest::where('id', $item->nesaId)->update([
+                    'nesa_no' => self::getNesaNumberSequence(),
                     'is_consolidated' => 1
                 ]);
 
@@ -222,6 +224,14 @@ class NesaController extends Controller
         });
 
         return redirect()->back();
+    }
+    private function getNesaNumberSequence()
+    {
+        $getNesaNo = NesaRequest::max('nesa_no');
+
+        $nextNesaNo = $getNesaNo ? $getNesaNo + 1 : 1;
+
+        return $nextNesaNo;
     }
 
     public function consolidatedList()

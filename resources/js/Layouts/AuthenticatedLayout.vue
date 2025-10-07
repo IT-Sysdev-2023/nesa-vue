@@ -12,14 +12,15 @@
         ]">
             <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-r bg-gray-300 rounded-full flex items-center justify-center">
+                    <div class="w-16 h-10 bg-gradient-to-r bg-gray-00 rounded-full flex items-center justify-center">
                         <span class="text-white font-bold text-sm">
-                            <img src="/images/logocircle.png" alt="" />
+                            <!-- <img src="/images/logocircle.png" alt="" /> -->
+                              <img class="w-[60px] h-10" src="/images/nesaLogo.png" alt="" />
                         </span>
                     </div>
-                    <h2 class="text-xl font-bold text-gray-800">
-                        <img class="w-[60px] h-10" src="/images/nesaLogo.png" alt="" />
-                    </h2>
+                    <!-- <h2 class="text-xl font-bold text-gray-800">
+                        Bad Order
+                    </h2> -->
                 </div>
                 <button @click="sidebarOpen = false"
                     class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
