@@ -240,7 +240,7 @@ class MessengerController extends Controller
 
 
         return response()->json([
-            'message' => $messages
+            'message' => $lastMessage
         ]);
     }
     public function reactMessage(Request $request)

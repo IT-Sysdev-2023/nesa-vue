@@ -954,8 +954,6 @@ const seenMessage = async () => {
             messages.value.push(data.message);
         }
         getEveryMessage();
-
-        // ❌ Avoid redundant fetch unless really needed
     }
 };
 const getMesssageEcho = async () => {
