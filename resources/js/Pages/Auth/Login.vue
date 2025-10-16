@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-        <div class="max-w-screen-lg  m-0 sm:m-10 bg-white shadow sm:rounded-[2rem] flex justify-center flex-1">
+        <div class="max-w-screen-lg  m-0 sm:m-10 sm:rounded-[2rem] flex justify-center flex-1">
             <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12 ">
                 <div>
                     <img src="/images/nesaLogo.png" class="w-[150px] mx-auto" />
@@ -10,14 +10,14 @@
                     <div class="w-full flex-1 mt-8">
                         <div class="mx-auto max-w-xs">
                             <input @keyup.enter="submit"
-                                class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                                class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-300 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                                 v-model="form.username" @change="form.errors.username = null" type="text"
                                 placeholder="Username" />
                             <InputError class="mt-1 ml-3 text-sm text-red-600" :message="form.errors.username" />
 
                             <div class="relative mt-5">
                                 <input @keyup.enter="submit" @change="form.errors.password = null"
-                                    class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                                    class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-300 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                                     v-model="form.password" :type="showPassword ? 'text' : 'password'"
                                     placeholder="Password" aria-label="Password" />
 
@@ -79,7 +79,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex-1 bg-indigo-100 text-center  hidden lg:flex  rounded-r-[2rem]">
+            <div class="flex-1  text-center  hidden lg:flex  rounded-r-[2rem]">
                 <img src="/images/loginside.svg" class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat" />
                 <!-- </img> -->
             </div>
