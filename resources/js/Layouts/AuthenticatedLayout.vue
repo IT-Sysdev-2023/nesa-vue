@@ -1,7 +1,7 @@
 <template>
     <div :class="[
         'min-h-screen flex transition-colors duration-300',
-        isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'
+        isDarkMode ? 'dark bg-gray-950' : 'bg-gray-100'
     ]">
         <!-- Mobile sidebar overlay -->
         <div v-if="sidebarOpen" class="fixed inset-0 z-40 lg:hidden" @click="sidebarOpen = false">
@@ -38,25 +38,36 @@
             </div>
 
             <!-- Navigation -->
-            <nav class="mt-6 px-3">
-                <ul class="space-y-1">
+             <nav class="mt-6 px-3">
+                <ul class="space-y-3">
                     <li v-for="item in menuItems" :key="item.id">
                         <button @click="handleMenuClick(item)" :class="[
-                            'w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 group',
+                            'menu-item w-full flex items-center px-4 py-3.5 text-base font-medium rounded-xl transition-all duration-300 group relative',
                             isActive(item.routeTo)
-                                ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-lg'
+                                ? 'bg-gradient-to-r from-blue-500 to-blue-950 text-white shadow-lg'
                                 : isDarkMode
-                                    ? 'text-gray-300 bg-gray-700 hover:bg-gray-600 hover:text-white'
-                                    : 'text-black bg-gray-200 hover:bg-gray-100 hover:text-gray-900',
+                                    ? 'text-gray-300 bg-gray-700/50 hover:bg-gray-600/70 hover:text-white backdrop-blur-sm'
+                                    : 'text-gray-700 bg-gray-100/70 hover:bg-white hover:text-gray-900 backdrop-blur-sm',
                         ]">
-                            <span class="mr-3 text-lg">{{ item.icon }}</span>
-                            {{ item.name }}
-                            <div v-if="isActive(item.routeTo)" class="ml-auto w-2 h-2 bg-white rounded-full"></div>
+                            <span class="mr-4 text-xl transition-transform duration-300 group-hover:scale-110">
+                                <span>
+                                    {{ item.icon }}
+                                </span>
+
+                            </span>
+                            <span class="font-medium">{{ item.name }}</span>
+
+                            <div v-if="isActive(item.routeTo)" class="ml-auto flex items-center">
+                                <div class="active-indicator w-2.5 h-2.5 bg-white rounded-full mr-2"></div>
+                                <div class="w-1 h-6 bg-white/40 rounded-full"></div>
+                            </div>
+                            <div v-else class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <i class="fas fa-chevron-right text-xs"></i>
+                            </div>
                         </button>
                     </li>
                 </ul>
             </nav>
-
             <!-- User Profile -->
             <div :class="[
                 'fixed bottom-0 left-0 right-0 p-4 border-t',
@@ -407,7 +418,7 @@ const openMessageModal = () => {
 };
 </script>
 
-<style scoped>
+<style>
 .slot-wrapper {
     height: 90vh;
     overflow-y: auto;
@@ -438,8 +449,8 @@ const openMessageModal = () => {
 }
 
 .custom-pop .ant-popover-inner {
-    background-color: #111824 !important;
-    color: #fff;
+    background-color: #111824;
+    /* color: #fff; */
 }
 
 /* Smooth transitions */

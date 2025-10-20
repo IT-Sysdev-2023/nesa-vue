@@ -264,4 +264,12 @@ class MessengerController extends Controller
     {
         return inertia('Message/MessageIndexExpanded', []);
     }
+    public function addChat()
+    {
+        $data = User::select('users.id as user_id', 'users.*', 'user_types.*')->join('user_types', 'user_types.id' ,'=', 'users.usertype')->paginate(10);
+
+        return response()->json([
+            'users' => $data,
+        ]);
+    }
 }
