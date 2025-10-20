@@ -7,6 +7,9 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import antdv from "ant-design-vue";
 import ws from "./echo";
 import { createPinia } from "pinia";
+import PrimeVue from 'primevue/config';
+import Aura from '@primeuix/themes/aura';
+// import PrimeVue from 'primevue/config';
 
 const appName = import.meta.env.VITE_APP_NAME || "Nesa";
 
@@ -21,6 +24,7 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) });
         app.use(plugin);
         app.use(ZiggyVue);
+        // app.use(PrimeVue);
         app.use(antdv);
         app.use(createPinia());
         app.config.globalProperties.$ws = ws;
