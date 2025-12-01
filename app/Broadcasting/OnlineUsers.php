@@ -3,6 +3,7 @@
 namespace App\Broadcasting;
 
 use App\Models\User;
+use App\Models\UserType;
 use Illuminate\Support\Facades\Http;
 
 class OnlineUsers
@@ -24,11 +25,14 @@ class OnlineUsers
             'is_online' => now()
         ]);
 
+        $role = UserType::where('id', $user->usertype)->first();
+
         return [
             'id' => $user->id,
             'name' => $user->full_name,
             'aname' => strtolower($user->lastname . ', ' . $user->firstname),
             'photo' => $user->photo,
+            'role' => $role->name,
             'time' => now(),
         ];
     }

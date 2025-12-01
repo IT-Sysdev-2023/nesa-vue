@@ -14,7 +14,7 @@
                     <div class="relative">
                         <a-tooltip color="#108ee9">
                             <template #title>
-                                Hello {{ page.auth.user.firstname }}, I'm bot chokoy.
+                                Hello {{ page.auth.user.firstname }}, I'm Bot BONES.
                             </template>
                             <img src="/storage/images/robot.webp"
                                 class="w-16 h-16 md:w-20 md:h-20 object-contain hover:scale-105 transition-transform robot-wave"
@@ -102,18 +102,59 @@
             <!-- Charts Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <!-- Main Chart -->
-                <div class="bg-white p-4 w-full rounded-xl shadow-sm border border-gray-100">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-lg font-medium text-gray-900">Revenue Overview</h2>
-                        <select
-                            class="text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
-                            <option>Last 7 days</option>
-                            <option>Last 30 days</option>
-                            <option selected>Last 12 months</option>
-                        </select>
-                    </div>
-                    <div class="h-80 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
-                        [Revenue Chart Placeholder]
+                <div class="bg-white p-4 w-full rounded-xl ">
+                    <div class="max-w-2xl p-6 bg-white rounded-2xl">
+                        <h4 class="mb-4 text-lg font-semibold text-gray-800">
+                            Online Users -
+                            <span class="text-green-600">{{ getOnlineUsers.length }}</span>/
+                            <span class="text-gray-600">{{ usersCount }}</span>
+                        </h4>
+
+                        <ul v-if="getOnlineUsers.length > 0" role="list" class="space-y-3">
+                            <li v-for="(online, key) in getOnlineUsers" :key="key"
+                                class="flex justify-between items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-xl shadow-sm transition cursor-pointer">
+                                <div class="flex items-center gap-4 min-w-0">
+                                    <img class="w-12 h-12 rounded-full object-cover border border-gray-200"
+                                        :src="'http://172.16.161.34:8080/hrms' + online.photo" alt="" />
+
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-semibold text-gray-900">
+                                            {{ online.name }}
+                                        </p>
+                                        <p class="text-xs text-gray-500 truncate">
+                                            {{ online.role }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-1.5">
+                                    <span class="flex rounded-full bg-green-500/20 p-1">
+                                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                    </span>
+                                    <p class="text-xs text-gray-500">Online</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div v-else class="flex flex-col justify-center items-center h-96 text-center space-y-4">
+                            <!-- Icon -->
+                            <svg class="w-16 h-16 text-gray-400 animate-bounce" fill="none" stroke="currentColor"
+                                stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M17 20h5v-2a3 3 0 00-3-3h-2m-4 5h5m-6-4H9a3 3 0 00-3 3v2h5m0 0v-2a3 3 0 013-3h2a3 3 0 013 3v2m-6 0H9" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+
+                            <!-- Text -->
+                            <p class="text-gray-500 text-lg font-medium animate-pulse">
+                                No users online currently
+                            </p>
+
+                            <!-- Optional small tip or secondary text -->
+                            <p class="text-sm text-gray-400">
+                                Check back later — maybe everyone’s taking a break ☕
+                            </p>
+                        </div>
+
                     </div>
                 </div>
 
@@ -206,6 +247,10 @@ import { Head, usePage } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 import { ref, computed } from 'vue';
 import axios from 'axios';
+import { useOnlineUsersStore } from '@/stores/online-store';
+
+
+defineProps<{ usersCount: number }>();
 
 
 const info = ref<[] | null>(null);
@@ -225,6 +270,13 @@ const fetchingInfo = async () => {
         console.log(error);
     }
 };
+
+const onlineUsersStore = useOnlineUsersStore();
+
+const { setOnlineUsers, addOnlineUser, removeOnlineUser } = onlineUsersStore;
+
+const getOnlineUsers = computed<any>(() => onlineUsersStore.onlineUsers);
+
 onMounted(() => {
     fetchingInfo();
 });
@@ -260,25 +312,29 @@ onMounted(() => {
 <style>
 /* Robot waving animation */
 @keyframes wave {
-  0%, 100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(20deg);
-  }
-  75% {
-    transform: rotate(-20deg);
-  }
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(20deg);
+    }
+
+    75% {
+        transform: rotate(-20deg);
+    }
 }
 
 .robot-wave {
-  transition: all 0.3s ease;
-  transform-origin: bottom center;
-  will-change: transform;
+    transition: all 0.3s ease;
+    transform-origin: bottom center;
+    will-change: transform;
 }
 
 .robot-wave:hover {
-  animation: wave 0.8s ease-in-out 2;
-  transform: scale(1.05);
+    animation: wave 0.8s ease-in-out 2;
+    transform: scale(1.05);
 }
 </style>

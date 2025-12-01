@@ -28,7 +28,10 @@ class DashboardController extends Controller
 
     public function dashboard()
     {
+        $users = User::count();
 
-        return inertia('Dashboard');
+        return inertia('Dashboard', [
+            'usersCount' => $users,
+        ]);
     }
 }

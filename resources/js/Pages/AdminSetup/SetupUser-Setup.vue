@@ -8,11 +8,17 @@
                 </div>
                 <div class="mt-5">
                     <a-card>
-                        <div class="flex justify-end">
+                        <div class="flex items-center justify-between mb-3">
+                            <button @click="() => router.visit(route('admin.addUser'))" title="Add User"
+                                class="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors">
+                                Add User
+                            </button>
+
                             <input type="text" v-model="search"
-                                class="w-[300px] border border-gray-300 rounded-md mb-2 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="w-[300px] border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="Search User" />
                         </div>
+
                         <a-table :data-source="filterDisplay" :columns="props.columns" :pagination="false" size="small">
                             <template #bodyCell="{ record, column }">
                                 <template v-if="column.dataIndex === 'action'">

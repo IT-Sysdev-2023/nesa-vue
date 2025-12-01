@@ -956,6 +956,7 @@ const seenMessage = async () => {
         getEveryMessage();
     }
 };
+
 const getMesssageEcho = async () => {
     await window.Echo.private(`get-message.${page.auth.user.id}`).listen(
         ".get-message-event",
@@ -964,6 +965,7 @@ const getMesssageEcho = async () => {
         }
     );
 };
+
 
 const onlineUsersStore = useOnlineUsersStore();
 

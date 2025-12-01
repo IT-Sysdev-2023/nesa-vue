@@ -1,6 +1,6 @@
 <template>
     <div :class="[
-        'min-h-screen flex transition-colors duration-300',
+        'min-h-screen flex transition-colors duration-300 body',
         isDarkMode ? 'dark bg-gray-950' : 'bg-gray-100'
     ]">
         <!-- Mobile sidebar overlay -->
@@ -25,11 +25,10 @@
                         </span>
                     </div>
                 </div>
-                <button @click="sidebarOpen = false"
-                    :class="[
-                        'lg:hidden p-2 rounded-md hover:bg-opacity-10',
-                        isDarkMode ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-500 hover:bg-gray-100'
-                    ]">
+                <button @click="sidebarOpen = false" :class="[
+                    'lg:hidden p-2 rounded-md hover:bg-opacity-10',
+                    isDarkMode ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-500 hover:bg-gray-100'
+                ]">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12" />
@@ -38,7 +37,7 @@
             </div>
 
             <!-- Navigation -->
-             <nav class="mt-6 px-3">
+            <nav class="mt-6 px-3">
                 <ul class="space-y-3">
                     <li v-for="item in menuItems" :key="item.id">
                         <button @click="handleMenuClick(item)" :class="[
@@ -61,7 +60,8 @@
                                 <div class="active-indicator w-2.5 h-2.5 bg-white rounded-full mr-2"></div>
                                 <div class="w-1 h-6 bg-white/40 rounded-full"></div>
                             </div>
-                            <div v-else class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div v-else
+                                class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <i class="fas fa-chevron-right text-xs"></i>
                             </div>
                         </button>
@@ -77,8 +77,8 @@
                     <div
                         class="w-10 h-10 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold text-sm rounded-full">
-                            <img :src="'http://172.16.161.34:8080/hrms' + userImageData"
-                                alt="image" style="border-radius: 100%" />
+                            <img :src="'http://172.16.161.34:8080/hrms' + userImageData" alt="image"
+                                style="border-radius: 100%" />
                         </span>
                     </div>
                     <div class="flex-1 min-w-0">
@@ -119,11 +119,10 @@
             ]">
                 <div class="flex items-center justify-between h-16 px-6">
                     <div class="flex items-center space-x-4">
-                        <button @click="sidebarOpen = true"
-                            :class="[
-                                'lg:hidden p-2 rounded-md',
-                                isDarkMode ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-500 hover:bg-gray-100'
-                            ]">
+                        <button @click="sidebarOpen = true" :class="[
+                            'lg:hidden p-2 rounded-md',
+                            isDarkMode ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-500 hover:bg-gray-100'
+                        ]">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 6h16M4 12h16M4 18h16" />
@@ -139,7 +138,7 @@
 
                     <div class="flex items-center space-x-4">
                         <!-- Dark Mode Toggle -->
-                        <button
+                        <!-- <button
                             @click="toggleDarkMode"
                             :class="[
                                 'p-2 rounded-lg transition-colors duration-200',
@@ -147,28 +146,26 @@
                             ]"
                             :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
                         >
-                            <!-- Sun icon for light mode -->
                             <svg v-if="isDarkMode" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
-                            <!-- Moon icon for dark mode -->
                             <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                             </svg>
-                        </button>
+                        </button> -->
 
                         <!-- Messages -->
                         <div>
                             <a-popconfirm overlay-class-name="custom-pop" placement="bottom" :ok-button-props="{
                                 style: { display: 'none' },
                             }" :cancel-button-props="{
-                                    style: { display: 'none' },
-                                }">
+                                style: { display: 'none' },
+                            }">
                                 <template #icon></template>
                                 <template #description>
-                                    <MessageIndex :online-users="getOnlineUsers"/>
+                                    <MessageIndex :online-users="getOnlineUsers" />
                                 </template>
                                 <button :class="[
                                     'relative mt-2.5 text-[28px] bg-transparent border-none cursor-pointer',
@@ -180,7 +177,8 @@
                                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                                     </svg>
 
-                                    <span class="absolute -top-1 -right-1.5 flex items-center justify-center w-[18px] h-[18px] text-xs font-semibold text-white bg-red-500 rounded-full shadow-md">
+                                    <span
+                                        class="absolute -top-1 -right-1.5 flex items-center justify-center w-[18px] h-[18px] text-xs font-semibold text-white bg-red-500 rounded-full shadow-md">
                                         5
                                     </span>
                                 </button>
@@ -189,13 +187,12 @@
 
                         <!-- Search -->
                         <div class="relative">
-                            <input v-model="searchQuery" type="text" placeholder="Search..."
-                                :class="[
-                                    'w-64 pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200',
-                                    isDarkMode
-                                        ? 'bg-gray-700 border-gray-600 text-gray-200 placeholder-gray-400'
-                                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                                ]" />
+                            <input v-model="searchQuery" type="text" placeholder="Search..." :class="[
+                                'w-64 pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200',
+                                isDarkMode
+                                    ? 'bg-gray-700 border-gray-600 text-gray-200 placeholder-gray-400'
+                                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                            ]" />
                             <svg :class="[
                                 'absolute left-3 top-2.5 w-5 h-5',
                                 isDarkMode ? 'text-gray-400' : 'text-gray-400'
@@ -206,11 +203,10 @@
                         </div>
 
                         <!-- Logout -->
-                        <button @click="openLogout"
-                            :class="[
-                                'p-2 rounded-lg relative transition-colors duration-200',
-                                isDarkMode ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-500 hover:bg-gray-100'
-                            ]">
+                        <button @click="openLogout" :class="[
+                            'p-2 rounded-lg relative transition-colors duration-200',
+                            isDarkMode ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-500 hover:bg-gray-100'
+                        ]">
                             <img class="h-8" src="/icons/logouticon.svg" alt="" />
                             <span
                                 class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center"></span>
@@ -337,10 +333,10 @@ const openLogout = () => {
     });
 };
 
-const getMessageCount = async() => {
+const getMessageCount = async () => {
     await window.Echo.private(`message-count.${page.auth.user.id}`)
         .listen(".message-count-event", (e) => {
-           console.log(e);
+            console.log(e);
         })
 }
 
@@ -419,6 +415,7 @@ const openMessageModal = () => {
 </script>
 
 <style>
+
 .slot-wrapper {
     height: 90vh;
     overflow-y: auto;
