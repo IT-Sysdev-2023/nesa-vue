@@ -4,8 +4,19 @@ use App\Http\Controllers\AndroidController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return true;
+    $routes = collect(Route::getRoutes())->map(function ($route) {
+        return response()->json(
+            [
+                'uri' => $route->uri(),
+                'methods' => $route->methods()
+            ]
+        );
+    });
+
+    return response()->json($routes->values());
 });
+
+
 Route::get('/users', [AndroidController::class, 'user']);
 
 
