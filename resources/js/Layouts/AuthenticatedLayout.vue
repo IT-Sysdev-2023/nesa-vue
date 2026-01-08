@@ -52,7 +52,6 @@
                                 <span>
                                     {{ item.icon }}
                                 </span>
-
                             </span>
                             <span class="font-medium">{{ item.name }}</span>
 
@@ -68,9 +67,10 @@
                     </li>
                 </ul>
             </nav>
+
             <!-- User Profile -->
             <div :class="[
-                'fixed bottom-0 left-0 right-0 p-4 border-t',
+                'fixed bottom-0 left-0 w-64 p-4 border-t',
                 isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'
             ]">
                 <div class="flex items-center space-x-3">
@@ -97,7 +97,7 @@
                             {{ page?.auth?.usertype }}
                         </p>
                     </div>
-                    <button :class="[
+                    <button  :class="[
                         'p-1.5 rounded-md',
                         isDarkMode ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-500 hover:bg-gray-200'
                     ]">
@@ -138,23 +138,25 @@
 
                     <div class="flex items-center space-x-4">
                         <!-- Dark Mode Toggle -->
-                        <!-- <button
+                        <button
                             @click="toggleDarkMode"
                             :class="[
-                                'p-2 rounded-lg transition-colors duration-200',
-                                isDarkMode ? 'text-yellow-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'
+                                'p-2.5 rounded-xl transition-all duration-300 transform hover:scale-110',
+                                isDarkMode
+                                    ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600 shadow-lg'
+                                    : 'bg-gray-100 text-indigo-600 hover:bg-gray-200 shadow-md'
                             ]"
                             :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
                         >
-                            <svg v-if="isDarkMode" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg v-if="isDarkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
-                            <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                             </svg>
-                        </button> -->
+                        </button>
 
                         <!-- Messages -->
                         <div>
@@ -168,17 +170,19 @@
                                     <MessageIndex :online-users="getOnlineUsers" />
                                 </template>
                                 <button :class="[
-                                    'relative mt-2.5 text-[28px] bg-transparent border-none cursor-pointer',
-                                    isDarkMode ? 'text-gray-300' : 'text-gray-800'
+                                    'relative p-2 rounded-xl transition-all duration-300 hover:scale-105',
+                                    isDarkMode
+                                        ? 'text-gray-300 hover:bg-gray-700'
+                                        : 'text-gray-700 hover:bg-gray-100'
                                 ]">
-                                    <svg viewBox="0 0 24 24" width="1.2em" height="1.2em" fill="none"
+                                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round">
                                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                                     </svg>
 
                                     <span
-                                        class="absolute -top-1 -right-1.5 flex items-center justify-center w-[18px] h-[18px] text-xs font-semibold text-white bg-red-500 rounded-full shadow-md">
+                                        class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full shadow-lg animate-pulse">
                                         5
                                     </span>
                                 </button>
@@ -188,14 +192,14 @@
                         <!-- Search -->
                         <div class="relative">
                             <input v-model="searchQuery" type="text" placeholder="Search..." :class="[
-                                'w-64 pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200',
+                                'w-64 pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300',
                                 isDarkMode
-                                    ? 'bg-gray-700 border-gray-600 text-gray-200 placeholder-gray-400'
-                                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                                    ? 'bg-gray-700 border-gray-600 text-gray-200 placeholder-gray-400 focus:bg-gray-600'
+                                    : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500 focus:bg-white'
                             ]" />
                             <svg :class="[
-                                'absolute left-3 top-2.5 w-5 h-5',
-                                isDarkMode ? 'text-gray-400' : 'text-gray-400'
+                                'absolute left-3 top-3 w-5 h-5 pointer-events-none',
+                                isDarkMode ? 'text-gray-400' : 'text-gray-500'
                             ]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -204,12 +208,13 @@
 
                         <!-- Logout -->
                         <button @click="openLogout" :class="[
-                            'p-2 rounded-lg relative transition-colors duration-200',
-                            isDarkMode ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-500 hover:bg-gray-100'
+                            'p-2 rounded-xl relative transition-all duration-300 hover:scale-105',
+                            isDarkMode
+                                ? 'text-gray-400 hover:text-red-400 hover:bg-gray-700'
+                                : 'text-gray-500 hover:text-red-500 hover:bg-gray-100'
                         ]">
-                            <img class="h-8" src="/icons/logouticon.svg" alt="" />
-                            <span
-                                class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center"></span>
+                            <img class="h-7 w-7" src="/icons/logouticon.svg" alt=""
+                                :style="isDarkMode ? 'filter: brightness(0.8)' : ''" />
                         </button>
                     </div>
                 </div>
@@ -278,6 +283,8 @@ watch(isDarkMode, (newValue) => {
 // Toggle dark mode
 const toggleDarkMode = () => {
     isDarkMode.value = !isDarkMode.value;
+
+    window.location.reload();
 };
 
 // Reactive data
@@ -412,19 +419,33 @@ const openMessModal = ref(false);
 const openMessageModal = () => {
     openMessModal.value = true;
 };
+
+
 </script>
 
-<style>
-
+<style scoped>
 .slot-wrapper {
     height: 90vh;
     overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
 }
 
 .slot-wrapper::-webkit-scrollbar {
-    display: none;
+    width: 8px;
+}
+
+.slot-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.slot-wrapper::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 20px;
+}
+
+.slot-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
 }
 
 .bgsvg {
@@ -433,27 +454,63 @@ const openMessageModal = () => {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 8px;
-    padding: 16px;
-    background-color: rgba(255, 255, 255, 0.945);
+    border-radius: 12px;
+    padding: 24px;
+    background-color: rgba(255, 255, 255, 0.95);
     background-blend-mode: overlay;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .bgsvg.dark-mode {
     background-color: rgba(17, 24, 39, 0.95);
     background-blend-mode: multiply;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
 }
 
 .custom-pop .ant-popover-inner {
     background-color: #111824;
-    /* color: #fff; */
 }
 
-/* Smooth transitions */
+/* Smooth transitions for theme switching */
 * {
-    transition-property: background-color, border-color, color;
-    transition-duration: 200ms;
+    transition-property: background-color, border-color, color, box-shadow;
+    transition-duration: 300ms;
     transition-timing-function: ease-in-out;
+}
+
+/* Animation for notification badge */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Menu item hover effects */
+.menu-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.menu-item:hover::before {
+    left: 100%;
 }
 </style>
