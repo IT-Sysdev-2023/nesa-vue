@@ -1,24 +1,24 @@
 <template>
-    <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 p-8 max-w-md w-full">
+    <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border p-8 max-w-md w-full">
         <div class="space-y-4">
-            <h3 class="text-xl font-bold text-gray-900 mb-6 text-center">{{ title }}</h3>
+            <h3 class="text-xl font-bold mb-6 text-center">{{ title }}</h3>
 
-            <a-button type="primary" ghost @click="() => router.get(route('nesa.get.list'))"
-                class="group w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-between hover:shadow-lg hover:scale-105 border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-50">
+            <a-button @click="() => router.get(route('nesa.get.list'))"
+                class="group w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-between">
                 <div class="flex items-center">
-                    <div class=" p-2 mr-3 group-hover:bg-blue-200 transition-colors">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class=" p-2 mr-3  transition-colors">
+                        <svg class="w-5 h-5 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <span class="text-blue-700">Nesa</span>
+                    <span class="">Nesa</span>
                 </div>
                 <a-badge :count="count?.nesaCount"></a-badge>
 
             </a-button>
 
-            <a-button type="primary" ghost @click="() => router.get(route('nesa.get.consolidated'))"
+            <a-button   @click="() => router.get(route('nesa.get.consolidated'))"
                 class="group w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-between hover:shadow-lg hover:scale-105 border-2 border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50">
                 <div class="flex items-center">
                     <div class=" p-2 mr-3 group-hover:bg-emerald-200 transition-colors">
@@ -28,12 +28,12 @@
                             </path>
                         </svg>
                     </div>
-                    <span class="text-emerald-700">Consolidated List</span>
+                    <span >Consolidated List</span>
                 </div>
                 <a-badge :count="count.conCount"></a-badge>
             </a-button>
 
-            <a-button type="primary" ghost @click="() => router.get(route('nesa.get.history'))"
+            <a-button  @click="() => router.get(route('nesa.get.history'))"
                 class="group w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-between hover:shadow-lg hover:scale-105 border-2 border-purple-200 hover:border-purple-400 hover:bg-purple-50">
                 <div class="flex items-center">
                     <div class=" p-2 mr-3 group-hover:bg-purple-200 transition-colors">
@@ -43,12 +43,12 @@
                             </path>
                         </svg>
                     </div>
-                    <span class="text-purple-700">Summary Of Nesa</span>
+                    <span class="">Summary Of Nesa</span>
                 </div>
                 <a-badge :count="count.sonCount"></a-badge>
             </a-button>
 
-            <a-button type="primary" ghost @click="() => router.get(route('nesa.get.approved.nesa'))"
+            <a-button  @click="() => router.get(route('nesa.get.approved.nesa'))"
                 class="group w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-between hover:shadow-lg hover:scale-105 border-2 border-green-200 hover:border-green-400 hover:bg-green-50">
                 <div class="flex items-center">
                     <div class="p-2 mr-3 group-hover:bg-green-200 transition-colors">
@@ -57,7 +57,7 @@
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <span class="text-green-700">Approved Nesa</span>
+                    <span class="">Approved Nesa</span>
                 </div>
                 <a-badge :count="count.approvedCount"></a-badge>
             </a-button>

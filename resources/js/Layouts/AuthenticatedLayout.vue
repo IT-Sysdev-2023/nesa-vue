@@ -450,7 +450,7 @@ const openMessageModal = () => {
 
 .bgsvg {
     position: relative;
-    background-image: url("/images/bgblue.svg");
+    /* background-image: url("/images/bgblue.svg"); */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
