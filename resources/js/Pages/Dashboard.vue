@@ -22,7 +22,7 @@
                         </a-tooltip>
                     </div>
                     <div>
-                        <p class="text-md italic text-gray-900 font-bold">Hello</p>
+                        <p class="text-md italic text-gray-900 font-bold animate-bounce">Hello</p>
                         <p class="text-sm md:text-base font-medium text-gray-700">{{ user.employee_name }}</p>
                     </div>
                 </div>
