@@ -3,13 +3,14 @@
     @click="() => router.get(route(routeTo))"
     class="relative group flex flex-col items-center justify-center w-full h-full"
   >
-    <!-- count badge -->
-    <span
-      v-if="count && count > 0"
-      class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"
-    >
-      {{ count }}
-    </span>
+  <!-- count badge -->
+
+  <span
+    v-if="count && count > 0"
+  class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"
+  >
+  {{ count }}
+</span>
 
     <div
       class="file relative w-60 h-40 cursor-pointer origin-bottom [perspective:1500px] z-50"
@@ -31,16 +32,34 @@
       ></div>
     </div>
 
-    <p class="text-2xl pt-4 opacity-70">{{ title }}</p>
+    <p :class="!isDarkMode ? '-2xl pt-4 opacity-70': 'text-white'">{{ title }}</p>
   </section>
 </template>
 
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
+import { onMounted, ref } from "vue";
 
 defineProps<{
   title?: string;
   routeTo?: string;
   count?: number;
 }>();
+
+// Dark mode state - synced with layout
+const isDarkMode = ref(false);
+
+onMounted(() => {
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode !== null) {
+        isDarkMode.value = savedMode === 'true';
+    }
+
+    // Watch for changes in localStorage
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'darkMode') {
+            isDarkMode.value = e.newValue === 'true';
+        }
+    });
+});
 </script>
