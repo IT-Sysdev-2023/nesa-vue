@@ -1,5 +1,5 @@
 <template>
-    <div class="flex antialiased text-gray-200 bg-gray-900 overflow-hidden">
+    <div class="flex h-[80vh] antialiased text-gray-200 bg-gray-900 overflow-hidden">
         <div class="flex-1 flex flex-col">
             <main class="flex-grow flex flex-row min-h-0">
                 <section
