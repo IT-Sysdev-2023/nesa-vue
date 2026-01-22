@@ -1,5 +1,5 @@
 <template>
-    <div class="h-[80vh] w-[1200px] flex antialiased text-gray-200 bg-gray-900 overflow-hidden">
+    <div class="flex antialiased text-gray-200 bg-gray-900 overflow-hidden">
         <div class="flex-1 flex flex-col">
             <main class="flex-grow flex flex-row min-h-0">
                 <section
@@ -208,7 +208,7 @@
                                         }}
                                     </p>
                                 </div>
-                                <ul class="py-4 mt-2 text-gray-700 flex items-center justify-around">
+                                <!-- <ul class="py-4 mt-2 text-gray-700 flex items-center justify-around">
                                     <li class="flex flex-col items-center justify-around">
                                         <svg class="w-4 fill-current text-white" xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 20 20">
@@ -233,7 +233,7 @@
                                         </svg>
                                         <div>15</div>
                                     </li>
-                                </ul>
+                                </ul> -->
                             </div>
                             <div class="p-4 mx-8 mt-2">
                                 <div class="flex items-center">

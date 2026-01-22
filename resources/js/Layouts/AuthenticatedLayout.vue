@@ -1,37 +1,67 @@
 <template>
-    <div :class="[
-        'min-h-screen flex transition-colors duration-300 body',
-        isDarkMode ? 'dark bg-gray-950' : 'bg-gray-100'
-    ]">
+    <div
+        :class="[
+            'min-h-screen flex transition-colors duration-300 body',
+            isDarkMode ? 'dark bg-gray-950' : 'bg-gray-100',
+        ]"
+    >
         <!-- Mobile sidebar overlay -->
-        <div v-if="sidebarOpen" class="fixed inset-0 z-40 lg:hidden" @click="sidebarOpen = false">
+        <div
+            v-if="sidebarOpen"
+            class="fixed inset-0 z-40 lg:hidden"
+            @click="sidebarOpen = false"
+        >
             <div class="absolute inset-0 bg-gray-600 opacity-75"></div>
         </div>
 
         <!-- Sidebar -->
-        <div :class="[
-            'fixed inset-y-0 left-0 z-50 w-64 shadow-xl transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-            isDarkMode ? 'bg-gray-800' : 'bg-white'
-        ]">
-            <div :class="[
-                'flex items-center justify-between h-16 px-6 border-b',
-                isDarkMode ? 'border-gray-700' : 'border-gray-200'
-            ]">
+        <div
+            :class="[
+                'fixed inset-y-0 left-0 z-50 w-64 shadow-xl transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
+                sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+                isDarkMode ? 'bg-gray-800' : 'bg-white',
+            ]"
+        >
+            <div
+                :class="[
+                    'flex items-center justify-between h-16 px-6 border-b',
+                    isDarkMode ? 'border-gray-700' : 'border-gray-200',
+                ]"
+            >
                 <div class="flex items-center space-x-3">
-                    <div class="w-16 h-10 bg-gradient-to-r bg-gray-00 rounded-full flex items-center justify-center">
+                    <div
+                        class="w-16 h-10 bg-gradient-to-r bg-gray-00 rounded-full flex items-center justify-center"
+                    >
                         <span class="text-white font-bold text-sm">
-                            <img class="w-[60px] h-10" src="/images/nesaLogo.png" alt="" />
+                            <img
+                                class="w-[60px] h-10"
+                                src="/images/nesaLogo.png"
+                                alt=""
+                            />
                         </span>
                     </div>
                 </div>
-                <button @click="sidebarOpen = false" :class="[
-                    'lg:hidden p-2 rounded-md hover:bg-opacity-10',
-                    isDarkMode ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-500 hover:bg-gray-100'
-                ]">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
+                <button
+                    @click="sidebarOpen = false"
+                    :class="[
+                        'lg:hidden p-2 rounded-md hover:bg-opacity-10',
+                        isDarkMode
+                            ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700'
+                            : 'text-gray-400 hover:text-gray-500 hover:bg-gray-100',
+                    ]"
+                >
+                    <svg
+                        class="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
                     </svg>
                 </button>
             </div>
@@ -40,27 +70,41 @@
             <nav class="mt-6 px-3">
                 <ul class="space-y-3">
                     <li v-for="item in menuItems" :key="item.id">
-                        <button @click="handleMenuClick(item)" :class="[
-                            'menu-item w-full flex items-center px-4 py-3.5 text-base font-medium rounded-xl transition-all duration-300 group relative',
-                            isActive(item.routeTo)
-                                ? 'bg-gradient-to-r from-blue-500 to-blue-950 text-white shadow-lg'
-                                : isDarkMode
-                                    ? 'text-gray-300 bg-gray-700/50 hover:bg-gray-600/70 hover:text-white backdrop-blur-sm'
-                                    : 'text-gray-700 bg-gray-100/70 hover:bg-white hover:text-gray-900 backdrop-blur-sm',
-                        ]">
-                            <span class="mr-4 text-xl transition-transform duration-300 group-hover:scale-110">
+                        <button
+                            @click="handleMenuClick(item)"
+                            :class="[
+                                'menu-item w-full flex items-center px-4 py-3.5 text-base font-medium rounded-xl transition-all duration-300 group relative',
+                                isActive(item.routeTo)
+                                    ? 'bg-gradient-to-r from-blue-500 to-blue-950 text-white shadow-lg'
+                                    : isDarkMode
+                                      ? 'text-gray-300 bg-gray-700/50 hover:bg-gray-600/70 hover:text-white backdrop-blur-sm'
+                                      : 'text-gray-700 bg-gray-100/70 hover:bg-white hover:text-gray-900 backdrop-blur-sm',
+                            ]"
+                        >
+                            <span
+                                class="mr-4 text-xl transition-transform duration-300 group-hover:scale-110"
+                            >
                                 <span>
                                     {{ item.icon }}
                                 </span>
                             </span>
                             <span class="font-medium">{{ item.name }}</span>
 
-                            <div v-if="isActive(item.routeTo)" class="ml-auto flex items-center">
-                                <div class="active-indicator w-2.5 h-2.5 bg-white rounded-full mr-2"></div>
-                                <div class="w-1 h-6 bg-white/40 rounded-full"></div>
+                            <div
+                                v-if="isActive(item.routeTo)"
+                                class="ml-auto flex items-center"
+                            >
+                                <div
+                                    class="active-indicator w-2.5 h-2.5 bg-white rounded-full mr-2"
+                                ></div>
+                                <div
+                                    class="w-1 h-6 bg-white/40 rounded-full"
+                                ></div>
                             </div>
-                            <div v-else
-                                class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div
+                                v-else
+                                class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            >
                                 <i class="fas fa-chevron-right text-xs"></i>
                             </div>
                         </button>
@@ -69,41 +113,71 @@
             </nav>
 
             <!-- User Profile -->
-            <div :class="[
-                'fixed bottom-0 left-0 w-64 p-4 border-t',
-                isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'
-            ]">
+            <div
+                :class="[
+                    'fixed bottom-0 left-0 w-64 p-4 border-t',
+                    isDarkMode
+                        ? 'border-gray-700 bg-gray-800'
+                        : 'border-gray-200 bg-gray-50',
+                ]"
+            >
                 <div class="flex items-center space-x-3">
                     <div
-                        class="w-10 h-10 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-                        <span class="text-white font-semibold text-sm rounded-full">
-                            <img :src="'http://172.16.161.34:8080/hrms' + userImageData" alt="image"
-                                style="border-radius: 100%" />
+                        class="w-10 h-10 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center"
+                    >
+                        <span
+                            class="text-white font-semibold text-sm rounded-full"
+                        >
+                            <img
+                                :src="
+                                    'http://172.16.161.34:8080/hrms' +
+                                    userImageData
+                                "
+                                alt="image"
+                                style="border-radius: 100%"
+                            />
                         </span>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p :class="[
-                            'text-sm font-medium truncate',
-                            isDarkMode ? 'text-gray-200' : 'text-gray-900'
-                        ]">
+                        <p
+                            :class="[
+                                'text-sm font-medium truncate',
+                                isDarkMode ? 'text-gray-200' : 'text-gray-900',
+                            ]"
+                        >
                             {{ page.auth.user.firstname }},
                             {{ page.auth.user.lastname }}
                         </p>
 
-                        <p :class="[
-                            'text-xs truncate',
-                            isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                        ]">
+                        <p
+                            :class="[
+                                'text-xs truncate',
+                                isDarkMode ? 'text-gray-400' : 'text-gray-500',
+                            ]"
+                        >
                             {{ page?.auth?.usertype }}
                         </p>
                     </div>
-                    <button  :class="[
-                        'p-1.5 rounded-md',
-                        isDarkMode ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-500 hover:bg-gray-200'
-                    ]">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                    <button
+                        :class="[
+                            'p-1.5 rounded-md',
+                            isDarkMode
+                                ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700'
+                                : 'text-gray-400 hover:text-gray-500 hover:bg-gray-200',
+                        ]"
+                    >
+                        <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                            />
                         </svg>
                     </button>
                 </div>
@@ -113,25 +187,45 @@
         <!-- Main content -->
         <div class="flex-1 lg:ml-0">
             <!-- Top header -->
-            <header :class="[
-                'shadow-sm border-b transition-colors duration-300',
-                isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-            ]">
+            <header
+                :class="[
+                    'shadow-sm border-b transition-colors duration-300',
+                    isDarkMode
+                        ? 'bg-gray-800 border-gray-700'
+                        : 'bg-white border-gray-200',
+                ]"
+            >
                 <div class="flex items-center justify-between h-16 px-6">
                     <div class="flex items-center space-x-4">
-                        <button @click="sidebarOpen = true" :class="[
-                            'lg:hidden p-2 rounded-md',
-                            isDarkMode ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-500 hover:bg-gray-100'
-                        ]">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16" />
+                        <button
+                            @click="sidebarOpen = true"
+                            :class="[
+                                'lg:hidden p-2 rounded-md',
+                                isDarkMode
+                                    ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700'
+                                    : 'text-gray-400 hover:text-gray-500 hover:bg-gray-100',
+                            ]"
+                        >
+                            <svg
+                                class="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"
+                                />
                             </svg>
                         </button>
-                        <h2 :class="[
-                            'text-xl font-bold',
-                            isDarkMode ? 'text-gray-200' : 'text-gray-800'
-                        ]">
+                        <h2
+                            :class="[
+                                'text-xl font-bold',
+                                isDarkMode ? 'text-gray-200' : 'text-gray-800',
+                            ]"
+                        >
                             <!-- //for another purposes slot -->
                         </h2>
                     </div>
@@ -144,23 +238,107 @@
                                 'p-2.5 rounded-xl transition-all duration-300 transform hover:scale-110',
                                 isDarkMode
                                     ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600 shadow-lg'
-                                    : 'bg-gray-100 text-indigo-600 hover:bg-gray-200 shadow-md'
+                                    : 'bg-gray-100 text-indigo-600 hover:bg-gray-200 shadow-md',
                             ]"
-                            :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+                            :title="
+                                isDarkMode
+                                    ? 'Switch to Light Mode'
+                                    : 'Switch to Dark Mode'
+                            "
                         >
-                            <svg v-if="isDarkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                            <svg
+                                v-if="isDarkMode"
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                                />
                             </svg>
-                            <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            <svg
+                                v-else
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                                />
                             </svg>
                         </button>
 
                         <!-- Messages -->
+                        <button
+                            @click="modalOpen"
+                            :class="[
+                                'relative p-2 rounded-xl transition-all duration-300 hover:scale-105',
+                                isDarkMode
+                                    ? 'text-gray-300 hover:bg-gray-700'
+                                    : 'text-gray-700 hover:bg-gray-100',
+                            ]"
+                        >
+                            <svg
+                                class="w-6 h-6"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                                />
+                            </svg>
+
+                            <!-- <span
+                                        class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full shadow-lg animate-pulse">
+                                        
+                                    </span> -->
+                        </button>
                         <div>
-                            <a-popconfirm overlay-class-name="custom-pop" placement="bottom" :ok-button-props="{
+                            <!-- Overlay -->
+                            <div
+                                :class="isChatModal"
+                                class="fixed   inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm duration-200 animate-[fadeIn_0.2s_ease-out_forwards]"
+                            >
+                                <div
+                                    class="w-[80%] mx-auto bg-slate-900 rounded-2xl bg-white p-6 shadow-xl"
+                                >
+                                    <!-- Header -->
+                                    <div
+                                        class="flex items-center justify-between"
+                                    >
+                                        <h2
+                                            class="text-lg font-semibold text-gray-900 text-white"
+                                        >
+                                            BNS Customer Service
+                                        </h2>
+                                        <button @click="modalClose"
+                                            class="rounded-lg p-1 text-white hover:bg-gray-100 hover:text-gray-600"
+                                        >
+                                            Close
+                                        </button>
+                                    </div>
+
+                                    <div class="mt-4 text-sm text-gray-600">
+                                       <MessageIndex :online-users="getOnlineUsers" />
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+
+                            <!-- <a-popconfirm overlay-class-name="custom-pop" placement="bottom" :ok-button-props="{
                                 style: { display: 'none' },
                             }" :cancel-button-props="{
                                 style: { display: 'none' },
@@ -186,35 +364,60 @@
                                         5
                                     </span>
                                 </button>
-                            </a-popconfirm>
+                            </a-popconfirm> -->
                         </div>
 
                         <!-- Search -->
                         <div class="relative">
-                            <input v-model="searchQuery" type="text" placeholder="Search..." :class="[
-                                'w-64 pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300',
-                                isDarkMode
-                                    ? 'bg-gray-700 border-gray-600 text-gray-200 placeholder-gray-400 focus:bg-gray-600'
-                                    : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500 focus:bg-white'
-                            ]" />
-                            <svg :class="[
-                                'absolute left-3 top-3 w-5 h-5 pointer-events-none',
-                                isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                            ]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            <input
+                                v-model="searchQuery"
+                                type="text"
+                                placeholder="Search..."
+                                :class="[
+                                    'w-64 pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300',
+                                    isDarkMode
+                                        ? 'bg-gray-700 border-gray-600 text-gray-200 placeholder-gray-400 focus:bg-gray-600'
+                                        : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500 focus:bg-white',
+                                ]"
+                            />
+                            <svg
+                                :class="[
+                                    'absolute left-3 top-3 w-5 h-5 pointer-events-none',
+                                    isDarkMode
+                                        ? 'text-gray-400'
+                                        : 'text-gray-500',
+                                ]"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                />
                             </svg>
                         </div>
 
                         <!-- Logout -->
-                        <button @click="openLogout" :class="[
-                            'p-2 rounded-xl relative transition-all duration-300 hover:scale-105',
-                            isDarkMode
-                                ? 'text-gray-400 hover:text-red-400 hover:bg-gray-700'
-                                : 'text-gray-500 hover:text-red-500 hover:bg-gray-100'
-                        ]">
-                            <img class="h-7 w-7" src="/icons/logouticon.svg" alt=""
-                                :style="isDarkMode ? 'filter: brightness(0.8)' : ''" />
+                        <button
+                            @click="openLogout"
+                            :class="[
+                                'p-2 rounded-xl relative transition-all duration-300 hover:scale-105',
+                                isDarkMode
+                                    ? 'text-gray-400 hover:text-red-400 hover:bg-gray-700'
+                                    : 'text-gray-500 hover:text-red-500 hover:bg-gray-100',
+                            ]"
+                        >
+                            <img
+                                class="h-7 w-7"
+                                src="/icons/logouticon.svg"
+                                alt=""
+                                :style="
+                                    isDarkMode ? 'filter: brightness(0.8)' : ''
+                                "
+                            />
                         </button>
                     </div>
                 </div>
@@ -227,10 +430,12 @@
             <!-- Page content -->
             <main class="flex-1">
                 <div class="max-w-8xl mx-auto">
-                    <div :class="[
-                        'bgsvg transition-colors duration-300',
-                        isDarkMode ? 'dark-mode' : ''
-                    ]">
+                    <div
+                        :class="[
+                            'bgsvg transition-colors duration-300',
+                            isDarkMode ? 'dark-mode' : '',
+                        ]"
+                    >
                         <div class="slot-wrapper">
                             <slot />
                         </div>
@@ -247,8 +452,15 @@ import MessageIndex from "@/Pages/Message/MessageIndex.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import { template } from "lodash";
 import Swal from "sweetalert2";
-import { ref, reactive, onMounted, computed, onBeforeUnmount, watch } from "vue";
-import { useOnlineUsersStore } from '@/stores/online-store'
+import {
+    ref,
+    reactive,
+    onMounted,
+    computed,
+    onBeforeUnmount,
+    watch,
+} from "vue";
+import { useOnlineUsersStore } from "@/stores/online-store";
 
 const page = usePage().props;
 
@@ -257,18 +469,19 @@ const isDarkMode = ref(false);
 
 // Load dark mode preference from localStorage
 onMounted(() => {
-    const savedMode = localStorage.getItem('darkMode');
+    const savedMode = localStorage.getItem("darkMode");
     if (savedMode !== null) {
-        isDarkMode.value = savedMode === 'true';
+        isDarkMode.value = savedMode === "true";
     } else {
         // Check system preference
-        isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        isDarkMode.value = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+        ).matches;
     }
     userImage();
 
     if (page.auth) {
-        window.Echo
-            .join('online.users')
+        window.Echo.join("online.users")
             .here((users) => setOnlineUsers(users))
             .joining(async (user) => addOnlineUser(user))
             .leaving(async (user) => removeOnlineUser(user));
@@ -277,7 +490,7 @@ onMounted(() => {
 
 // Watch for dark mode changes and save to localStorage
 watch(isDarkMode, (newValue) => {
-    localStorage.setItem('darkMode', newValue.toString());
+    localStorage.setItem("darkMode", newValue.toString());
 });
 
 // Toggle dark mode
@@ -292,9 +505,7 @@ const sidebarOpen = ref(false);
 const activeItem = ref("");
 const searchQuery = ref("");
 
-const getOnlineUsers = computed(() =>
-    onlineUsersStore.onlineUsers
-);
+const getOnlineUsers = computed(() => onlineUsersStore.onlineUsers);
 
 const flappy = ref(true);
 
@@ -331,8 +542,8 @@ const openLogout = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Confirm",
-        background: isDarkMode.value ? '#1f2937' : '#fff',
-        color: isDarkMode.value ? '#f3f4f6' : '#111827',
+        background: isDarkMode.value ? "#1f2937" : "#fff",
+        color: isDarkMode.value ? "#f3f4f6" : "#111827",
     }).then((result) => {
         if (result.isConfirmed) {
             router.post(route("logout"));
@@ -341,11 +552,13 @@ const openLogout = () => {
 };
 
 const getMessageCount = async () => {
-    await window.Echo.private(`message-count.${page.auth.user.id}`)
-        .listen(".message-count-event", (e) => {
+    await window.Echo.private(`message-count.${page.auth.user.id}`).listen(
+        ".message-count-event",
+        (e) => {
             console.log(e);
-        })
-}
+        },
+    );
+};
 
 // Stats data
 const stats = reactive([
@@ -403,7 +616,7 @@ const userImage = async () => {
             params: {
                 q: value.value,
             },
-        }
+        },
     );
     userImageData.value = response.data.data.employee[0].employee_photo;
 };
@@ -419,8 +632,15 @@ const openMessModal = ref(false);
 const openMessageModal = () => {
     openMessModal.value = true;
 };
+const isChatModal = ref("hidden");
 
+const modalOpen = () => {
+    isChatModal.value = "";
+};
 
+const modalClose = () => {
+    isChatModal.value = "hidden";
+};
 </script>
 
 <style scoped>
@@ -481,7 +701,8 @@ const openMessageModal = () => {
 
 /* Animation for notification badge */
 @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
     }
     50% {
@@ -500,13 +721,18 @@ const openMessageModal = () => {
 }
 
 .menu-item::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
     transition: left 0.5s;
 }
 
