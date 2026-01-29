@@ -70,29 +70,49 @@ class AndroidController extends Controller
 
     public function countItemCodes(Request $request)
     {
-        // Validate immediately
-        $validated = $request->validate([
-            'userId' => 'required|integer|exists:users,id'
-        ]);
+        $userId = (int) $request->input('userId');
 
-        $cacheKey = "product_count:user:{$validated['userId']}";
+        if ($userId <= 0) {
+            return response()->json(['total' => 0]);
+        }
 
-        // Cache for 10 minutes, invalidate when products change
-        $count = Cache::remember($cacheKey, 600, function () use ($validated) {
-            // Get only what we need
-            $user = User::select('selected_supplier')
-                ->findOrFail($validated['userId']);
+        $cacheKey = "product_count:user:$userId";
 
-            $suppliers = $user->selected_supplier ?? [];
+        $count = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($userId) {
 
-            if (empty($suppliers)) {
+            $suppliersJson = DB::table('users')
+                ->where('id', $userId)
+                ->value('selected_supplier');
+
+            if (empty($suppliersJson)) {
                 return 0;
             }
 
-            // Use raw query for maximum speed
+            $suppliers = json_decode($suppliersJson, true);
+
+            if (!is_array($suppliers) || empty($suppliers)) {
+                return 0;
+            }
+
+            // ✅ Normalize suppliers
+            $supplierIds = collect($suppliers)
+                ->map(function ($item) {
+                    if (is_array($item) && isset($item['vendor_no'])) {
+                        return $item['vendor_no'];
+                    }
+                    return $item;
+                })
+                ->filter()
+                ->values()
+                ->toArray();
+
+            if (empty($supplierIds)) {
+                return 0;
+            }
+
             return DB::table('products')
-                ->whereIn('vendor_no', $suppliers)
-                ->count('id'); // Count on primary key is fastest
+                ->whereIn('vendor_no', $supplierIds)
+                ->count();
         });
 
         return response()->json(['total' => $count]);
@@ -336,6 +356,33 @@ class AndroidController extends Controller
 
         return response()->json($query->get());
     }
+
+    public function getConfirmedNesaRequestSummed(Request $request)
+    {
+        $query = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->join('users', 'users.id', '=', 'nesa_requests.created_by')
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
+            ->where('nesa_requests.is_consolidated', 0)
+            ->whereNull('nesa_requests.coa')
+            ->where('nesa_requests.status', 'approved')
+            ->selectRaw('
+            nesa_requests.itemcode,
+            nesa_requests.status,
+            SUM(nesa_requests.quantity) AS quantity,
+            products.description,
+            products.vendor_no,
+            suppliers.name AS vendor_name
+        ')
+            ->groupBy(
+                'nesa_requests.itemcode',
+                'products.description',
+                'products.vendor_no',
+                'suppliers.name'
+            );
+
+        return response()->json($query->get());
+    }
+
     public function getCancelledNesaRequest(Request $request)
     {
         $usertype = User::where('id', $request->id)->value('usertype');
@@ -396,6 +443,16 @@ class AndroidController extends Controller
         return response()->json($data);
     }
 
+    public function getConfirmedRequestPerItemcode(Request $request)
+    {
+        $query = NesaRequest::where('itemcode', $request->itemcode)
+            ->where('status', 'approved')
+            ->get();
+
+        return response()->json($query);
+    }
+
+
     public function ViewRequestDetails(Request $request)
     {
         $nesa = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
@@ -408,6 +465,7 @@ class AndroidController extends Controller
                 'nesa_requests.itemcode',
                 'nesa_requests.quantity',
                 'nesa_requests.expiry',
+                'nesa_requests.created_at',
                 'products.description',
                 'products.uom',
                 'users.firstname',
@@ -642,6 +700,19 @@ class AndroidController extends Controller
         return response()->download($filePath, 'products.json')->deleteFileAfterSend(true);
     }
 
+    public function addReview(Request $request)
+    {
+        $review = Review::create([
+            'user_id' => $request->user_id,
+            'score' => $request->score,
+            'reviews' => $request->reviews,
+        ]);
+
+        return response()->json([
+            'message' => 'Review added successfully'
+        ]);
+    }
+
     public function getTodayNoti(Request $request)
     {
         $userId = $request->id;
@@ -662,6 +733,7 @@ class AndroidController extends Controller
                     'message' => $noti->message,
                     'created_at' => $noti->created_at->format('Y-m-d'), // date only
                     'type' => $noti->type,
+                    'is_read' => $noti->is_read
                 ];
             });
 
@@ -688,6 +760,7 @@ class AndroidController extends Controller
                     'title' => $noti->title,
                     'message' => $noti->message,
                     'type' => $noti->type,
+                    'is_read' => $noti->is_read,
                     'created_at' => $noti->created_at->format('Y-m-d') // date only
                 ];
             });
@@ -696,17 +769,22 @@ class AndroidController extends Controller
     }
 
     // Last week notifications
-    public function getLastWeekNoti(Request $request)
+    public function getPastNoti(Request $request)
     {
         $userId = $request->id;
-        $lastWeekStart = now()->subDays(7)->startOfDay();
-        $lastWeekEnd = now()->subDay()->endOfDay();
 
-        $notifications = Notifications::whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
+        // Start date: as far back as you want (e.g., 2026-01-01)
+        $startDate = '2026-01-01';
+
+        // End date: last week (exclude today and yesterday)
+        $endDate = now()->subDays(2)->endOfDay();
+
+        $notifications = Notifications::whereBetween('created_at', [$startDate, $endDate])
             ->where(function ($query) use ($userId) {
                 $query->where('type', 'all')
                     ->orWhere('type', $userId);
             })
+            ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($noti) {
                 return [
@@ -714,11 +792,20 @@ class AndroidController extends Controller
                     'title' => $noti->title,
                     'message' => $noti->message,
                     'type' => $noti->type,
-                    'created_at' => $noti->created_at->format('Y-m-d') // date only
+                    'is_read' => $noti->is_read,
+                    'created_at' => $noti->created_at->format('Y-m-d')
                 ];
             });
 
         return response()->json($notifications);
+    }
+
+    public function updateNotification(Request $request)
+    {
+        Notifications::where('id', $request->id)
+            ->update(['is_read' => 1]);
+
+        return response()->json(['message' => 'Success']);
     }
 
     public function addNotification(Request $request)
@@ -912,31 +999,80 @@ class AndroidController extends Controller
 
     public function getInbox(Request $request)
     {
-        $userId = $request->input('user_id'); // Current user
+        $userId = $request->input('id'); // Current user
 
-        $inbox = DB::table('messages as m1')
+        // Subquery: latest message per conversation
+        $latestMessageIds = DB::table('messages')
+            ->select(DB::raw('MAX(id) as id'))
+            ->where('sender_id', $userId)
+            ->orWhere('recipient_id', $userId)
+            ->groupByRaw('LEAST(sender_id, recipient_id), GREATEST(sender_id, recipient_id)');
+
+        // Main query: join with users
+        $inbox = DB::table('messages as m')
             ->join('users as u', function ($join) use ($userId) {
-                $join->on('u.id', '=', DB::raw('CASE WHEN m1.sender_id = ' . $userId . ' THEN m1.recipient_id ELSE m1.sender_id END'));
+                $join->on('u.id', '=', DB::raw('CASE WHEN m.sender_id = ' . $userId . ' THEN m.recipient_id ELSE m.sender_id END'));
             })
-            ->where('m1.sender_id', $userId)
-            ->orWhere('m1.recipient_id', $userId)
+            ->whereIn('m.id', $latestMessageIds)
             ->select(
                 'u.id as user_id',
                 'u.firstname',
                 'u.lastname',
-                'm1.message',
-                'm1.read',
-                'm1.created_at'
+                'm.message',
+                'm.read',
+                'm.created_at'
             )
-            ->whereRaw('m1.created_at = (
-        select max(m2.created_at)
-        from messages m2
-        where (m2.sender_id = m1.sender_id and m2.recipient_id = m1.recipient_id)
-           or (m2.sender_id = m1.recipient_id and m2.recipient_id = m1.sender_id)
-    )')
-            ->orderBy('m1.created_at', 'desc')
+            ->orderBy('m.created_at', 'desc')
             ->get();
 
         return response()->json($inbox);
     }
+
+
+
+    public function messages(Request $request)
+    {
+        return DB::table('messages')
+            ->where(function ($q) use ($request) {
+                $q->where('sender_id', $request->user_id)
+                    ->where('recipient_id', $request->recipient_id);
+            })
+            ->orWhere(function ($q) use ($request) {
+                $q->where('sender_id', $request->recipient_id)
+                    ->where('recipient_id', $request->user_id);
+            })
+            ->orderBy('created_at')
+            ->get();
+    }
+
+    public function send(Request $request)
+    {
+        DB::table('messages')->insert([
+            'sender_id' => $request->sender_id,
+            'recipient_id' => $request->recipient_id,
+            'message' => $request->message,
+            'created_at' => now()
+        ]);
+
+        return response()->json(['status' => 'sent']);
+    }
+
+    public function getLatestNesaRequest()
+    {
+        $data = NesaRequest::where('is_consolidated', 0)
+            ->where('created_at', '>=', Carbon::now()->subDays(5))
+            ->get();
+
+        return response()->json($data);
+    }
+
+
+    public function updateCourseAction(Request $request)
+    {
+        NesaRequest::where('id', $request->id)
+            ->update(['is_done' => 1]);
+
+        return response()->json(['message' => 'Success']);
+    }
+
 }

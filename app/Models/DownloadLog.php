@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class DownloadLog extends Model
 {
     //
+    
     protected $table = 'download_logs';
-    protected $guarded = [];
+    protected $fillable = ['userId', 'date', 'type', 'status'];
+
 }

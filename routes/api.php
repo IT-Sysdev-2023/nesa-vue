@@ -61,7 +61,11 @@ Route::get('find-item-code', [AndroidController::class, 'findItemCode']);
 
 Route::get('get-confirmed-nesa-request', [AndroidController::class, 'getConfirmedNesaRequest']);
 
+Route::get('get-confirmed-nesa-request-sum', [AndroidController::class, 'getConfirmedNesaRequestSummed']);
+
 Route::get('get-confirmed-request-by-itemcode', [AndroidController::class, 'getConfirmedRequestbyItemcode']);
+
+Route::get('get-confirmed-request-per-itemcode', [AndroidController::class, 'getConfirmedRequestPerItemcode']);
 
 Route::get('get-cancelled-nesa-request', [AndroidController::class, 'getCancelledNesaRequest']);
 
@@ -102,7 +106,9 @@ Route::post('get-today-noti', [AndroidController::class, 'getTodayNoti']);
 
 Route::post('get-yesterday-noti', [AndroidController::class, 'getYesterdayNoti']);
 
-Route::post('get-lastweek-noti', [AndroidController::class, 'getLastWeekNoti']);
+Route::post('get-lastweek-noti', [AndroidController::class, 'getPastNoti']);
+
+Route::post('updateNotification', [AndroidController::class, 'updateNotification']);
 
 Route::post('add-notification', [AndroidController::class, 'addNotification']);
 
@@ -121,5 +127,13 @@ Route::post('get-all-nesa-with-course-action', [AndroidController::class, 'getCo
 Route::post('get-all-nesa-with-course-action-is-done', [AndroidController::class, 'getConfirmedNesaRequestWithCOAIsDone']);
 
 Route::post('get-inbox', [AndroidController::class, 'getInbox']);
+
+Route::get('chat/messages', [AndroidController::class, 'messages']);
+
+Route::post('chat/send', [AndroidController::class, 'send']);
+
+Route::get('getLatestNesaRequest', [AndroidController::class, 'getLatestNesaRequest']);
+
+Route::post('updateCourseAction', [AndroidController::class, 'updateCourseAction']);
 
 
