@@ -8,10 +8,5 @@ class Notifications extends Model
 {
     //
     protected $table = 'notifications';
-
-    protected $fillable = [
-        'title',
-        'message',
-        'type'
-    ];
+    protected $guarded = [];
 }
