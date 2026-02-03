@@ -115,6 +115,8 @@ class NesaController extends Controller
     public function sendEmailFunction(Request $request)
     {
         $getEmail = Supplier::where('supplier_code', $request->sup)->value('email');
+
+        // dd($getEmail);
         if ($getEmail != '0') {
             $sent =  Mail::to($getEmail)
                 ->send(new SupplierEmail($request->all()));
