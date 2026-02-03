@@ -68,44 +68,74 @@
 
             <!-- Navigation -->
             <nav class="mt-6 px-3">
-                <ul class="space-y-3">
-                    <li v-for="item in menuItems" :key="item.id">
+                <ul class="space-y-2">
+                    <li
+                        v-for="item in menuItems"
+                        :key="item.id"
+                        class="border-b rounded-xl"
+                    >
                         <button
                             @click="handleMenuClick(item)"
                             :class="[
-                                'menu-item w-full flex items-center px-4 py-3.5 text-base font-medium rounded-xl transition-all duration-300 group relative',
+                                'menu-item w-full flex items-center rounded-xl gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 group relative overflow-hidden',
                                 isActive(item.routeTo)
-                                    ? 'bg-gradient-to-r from-blue-500 to-blue-950 text-white shadow-lg'
+                                    ? 'bg-gradient-to-br from-slate-950 via-blue-900 text-white to-slate-600 shadow-md shadow-blue-500/20'
                                     : isDarkMode
-                                      ? 'text-gray-300 bg-gray-700/50 hover:bg-gray-600/70 hover:text-white backdrop-blur-sm'
-                                      : 'text-gray-700 bg-gray-100/70 hover:bg-white hover:text-gray-900 backdrop-blur-sm',
+                                      ? 'text-gray-300 hover:bg-gray-700/60 hover:text-white'
+                                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
                             ]"
                         >
-                            <span
-                                class="mr-4 text-xl transition-transform duration-300 group-hover:scale-110"
-                            >
-                                <span>
-                                    {{ item.icon }}
-                                </span>
-                            </span>
-                            <span class="font-medium">{{ item.name }}</span>
-
+                            <!-- Active background glow effect -->
                             <div
                                 v-if="isActive(item.routeTo)"
-                                class="ml-auto flex items-center"
+                                class="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-blue-600/20 animate-pulse"
+                            ></div>
+
+                            <!-- Icon -->
+                            <span
+                                :class="[
+                                    'relative z-10 text-lg transition-transform duration-200',
+                                    isActive(item.routeTo)
+                                        ? 'scale-110'
+                                        : 'group-hover:scale-105',
+                                ]"
+                            >
+                                {{ item.icon }}
+                            </span>
+
+                            <!-- Label -->
+                            <span class="relative z-10 flex-1 text-left">
+                                {{ item.name }}
+                            </span>
+
+                            <!-- Active indicator (modern dot) -->
+                            <div
+                                v-if="isActive(item.routeTo)"
+                                class="relative z-10 flex items-center gap-2"
                             >
                                 <div
-                                    class="active-indicator w-2.5 h-2.5 bg-white rounded-full mr-2"
-                                ></div>
-                                <div
-                                    class="w-1 h-6 bg-white/40 rounded-full"
+                                    class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"
                                 ></div>
                             </div>
+
+                            <!-- Hover arrow -->
                             <div
                                 v-else
-                                class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                class="relative z-10 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-2 transition-all duration-200"
                             >
-                                <i class="fas fa-chevron-right text-xs"></i>
+                                <svg
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 5l7 7-7 7"
+                                    />
+                                </svg>
                             </div>
                         </button>
                     </li>
@@ -309,7 +339,7 @@
                             <!-- Overlay -->
                             <div
                                 :class="isChatModal"
-                                class="fixed   inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm duration-200 animate-[fadeIn_0.2s_ease-out_forwards]"
+                                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm duration-200 animate-[fadeIn_0.2s_ease-out_forwards]"
                             >
                                 <div
                                     class="w-[80%] mx-auto bg-slate-900 rounded-2xl bg-white p-6 shadow-xl"
@@ -323,7 +353,8 @@
                                         >
                                             BNS Customer Service
                                         </h2>
-                                        <button @click="modalClose"
+                                        <button
+                                            @click="modalClose"
                                             class="rounded-lg p-1 text-white hover:bg-gray-100 hover:text-gray-600"
                                         >
                                             Close
@@ -331,10 +362,10 @@
                                     </div>
 
                                     <div class="mt-4 text-sm text-gray-600">
-                                       <MessageIndex :online-users="getOnlineUsers" />
+                                        <MessageIndex
+                                            :online-users="getOnlineUsers"
+                                        />
                                     </div>
-
-                                    
                                 </div>
                             </div>
 

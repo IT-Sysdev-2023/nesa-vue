@@ -5,7 +5,7 @@
     <AuthenticatedLayout>
         <div :class="[
             'py-6 px-4 sm:px-6 lg:px-10 min-h-screen transition-colors duration-300',
-            isDarkMode ? 'bg-gray-900' : 'bg-gray-50'
+            isDarkMode ? 'bg-gray-900' : ''
         ]">
             <!-- Header Section -->
             <div class="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
