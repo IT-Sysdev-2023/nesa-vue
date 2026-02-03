@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BORequest;
 use App\Models\NesaRequest;
 use App\Models\Product;
 use App\Models\Supplier;
@@ -371,6 +372,7 @@ class AndroidController extends Controller
             SUM(nesa_requests.quantity) AS quantity,
             products.description,
             products.vendor_no,
+            products.uom,
             suppliers.name AS vendor_name
         ')
             ->groupBy(
@@ -445,12 +447,28 @@ class AndroidController extends Controller
 
     public function getConfirmedRequestPerItemcode(Request $request)
     {
-        $query = NesaRequest::where('itemcode', $request->itemcode)
-            ->where('status', 'approved')
+        $itemcode = $request->input('itemcode'); // fetch POST field
+
+        $query = NesaRequest::leftJoin('users', 'users.id', '=', 'nesa_requests.created_by')
+            ->leftJoin('business_units', 'business_units.id', '=', 'users.bu')
+            ->where('nesa_requests.itemcode', $itemcode)
+            ->where('nesa_requests.status', 'approved')
+            ->where(function ($q) {
+                $q->where('nesa_requests.is_consolidated', 0)
+                    ->orWhereNull('nesa_requests.is_consolidated');
+            })
+            ->select(
+                'nesa_requests.*',
+                'users.firstname',
+                'users.lastname',
+                'business_units.name as business_unit_name'
+            )
             ->get();
 
         return response()->json($query);
     }
+
+
 
 
     public function ViewRequestDetails(Request $request)
@@ -811,7 +829,7 @@ class AndroidController extends Controller
     public function addNotification(Request $request)
     {
 
-       $notification = Notifications::create([
+        $notification = Notifications::create([
             'title' => $request->title,
             'message' => $request->message,
             'type' => $request->type,
@@ -879,8 +897,8 @@ class AndroidController extends Controller
 
         $results = NesaRequest::where('itemcode', $itemcode)
             ->where('created_by', $createdBy)
-            ->where('status', "approved")
-            ->whereDate('expiry', '<=', Carbon::today())
+            ->where('status', 'approved')
+            ->whereDate('expiry', '>=', $today) // Only fetch items not yet expired
             ->get();
 
         return response()->json($results);
@@ -999,26 +1017,37 @@ class AndroidController extends Controller
 
     public function getInbox(Request $request)
     {
-        $userId = $request->input('id'); // Current user
+        $userId = $request->input('id');
 
-        // Subquery: latest message per conversation
         $latestMessageIds = DB::table('messages')
             ->select(DB::raw('MAX(id) as id'))
-            ->where('sender_id', $userId)
-            ->orWhere('recipient_id', $userId)
+            ->where(function ($q) use ($userId) {
+                $q->where('sender_id', $userId)
+                    ->orWhere('recipient_id', $userId);
+            })
             ->groupByRaw('LEAST(sender_id, recipient_id), GREATEST(sender_id, recipient_id)');
 
-        // Main query: join with users
         $inbox = DB::table('messages as m')
             ->join('users as u', function ($join) use ($userId) {
-                $join->on('u.id', '=', DB::raw('CASE WHEN m.sender_id = ' . $userId . ' THEN m.recipient_id ELSE m.sender_id END'));
+                $join->on('u.id', '=', DB::raw(
+                    "CASE 
+                    WHEN m.sender_id = {$userId} THEN m.recipient_id 
+                    ELSE m.sender_id 
+                 END"
+                ));
             })
             ->whereIn('m.id', $latestMessageIds)
             ->select(
                 'u.id as user_id',
                 'u.firstname',
                 'u.lastname',
-                'm.message',
+                DB::raw("
+                CASE 
+                    WHEN m.sender_id = {$userId} 
+                    THEN CONCAT('me: ', m.message)
+                    ELSE m.message
+                END AS message
+            "),
                 'm.read',
                 'm.created_at'
             )
@@ -1027,6 +1056,7 @@ class AndroidController extends Controller
 
         return response()->json($inbox);
     }
+
 
 
 
@@ -1061,11 +1091,11 @@ class AndroidController extends Controller
     {
         $data = NesaRequest::where('is_consolidated', 0)
             ->where('created_at', '>=', Carbon::now()->subDays(5))
+            ->orderBy('created_at', 'desc') // latest first
             ->get();
 
         return response()->json($data);
     }
-
 
     public function updateCourseAction(Request $request)
     {
@@ -1074,5 +1104,193 @@ class AndroidController extends Controller
 
         return response()->json(['message' => 'Success']);
     }
+
+    // #############################
+    // #######  BAD ORDER  #########
+    // #############################
+
+    public function uploadBORequest(Request $request)
+    {
+        try {
+            $nesa_id = $request->nesa_id;
+            $itemcode = $request->itemcode;
+            $quantity = $request->quantity;
+            $created_by = $request->created_by;
+            $reason = $request->reason;
+            $bo_policy = $request->bo_policy;
+
+            // ================= SIGNATURE =================
+            $signature = $request->file('signature');
+            $signatureName = Str::random(10) . '.' . $signature->getClientOriginalExtension();
+
+            $signaturePath = storage_path('app/public/signatures');
+            if (!is_dir($signaturePath)) {
+                mkdir($signaturePath, 0755, true);
+            }
+            $signature->move($signaturePath, $signatureName);
+
+            // ================= MULTIPLE IMAGES =================
+            $imageNames = [];
+            $imagePath = storage_path('app/public/bo/images');
+
+            if (!is_dir($imagePath)) {
+                mkdir($imagePath, 0755, true);
+            }
+
+            if ($request->hasFile('image')) {
+                foreach ($request->file('image') as $img) {
+                    $name = Str::random(10) . '.' . $img->getClientOriginalExtension();
+                    $img->move($imagePath, $name);
+                    $imageNames[] = $name;
+                }
+            }
+
+            // ✅ STORE AS JSON (not comma string)
+            $imagesJson = json_encode($imageNames);
+
+            // ================= SAVE TO DB =================
+            BORequest::create([
+                'nesa_id' => $nesa_id,
+                'itemcode' => $itemcode,
+                'quantity' => $quantity,
+                'created_by' => $created_by,
+                'reason' => $reason,
+                'bo_policy' => $bo_policy,
+                'signature' => $signatureName,
+                'images' => $imagesJson, // ✅ JSON
+                'created_at' => now(),
+            ]);
+
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            \Log::error('Upload failed: ' . $e->getMessage());
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function getBORequestsByCreatedBy(Request $request)
+    {
+        try {
+            $created_by = $request->created_by;
+
+            $data = BORequest::where('created_by', $created_by)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json([$data]);
+
+        } catch (\Exception $e) {
+            \Log::error('Fetch failed: ' . $e->getMessage());
+
+            return response()->json([
+             $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function countRequestsByStatus(Request $request)
+    {
+        // Use user_id from request
+        $userId = $request->input('user_id');
+
+        if (!$userId) {
+            return response()->json([
+                'error' => 'user_id is required'
+            ], 400);
+        }
+
+        // Count requests by status
+        $pendingCount = BORequest::where('created_by', $userId)
+            ->where('status', 'pending')
+            ->count();
+
+        $approvedCount = BORequest::where('created_by', $userId)
+            ->where('status', 'approved')
+            ->count();
+
+        $cancelledCount = BORequest::where('created_by', $userId)
+            ->where('status', 'cancelled')
+            ->count();
+
+        return response()->json([
+            'user_id' => $userId,
+            'pending' => $pendingCount,
+            'approved' => $approvedCount,
+            'cancelled' => $cancelledCount
+        ]);
+    }
+
+    public function getAllBORequestByCreatedBy(Request $request)
+    {
+        try {
+            $createdBy = $request->created_by;
+
+            if (!$createdBy) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'created_by is required'
+                ], 400);
+            }
+
+            // Join BORequest -> Products -> Suppliers
+            $data = BORequest::select(
+                'bo_requests.id',
+                'bo_requests.nesa_id',
+                'bo_requests.itemcode',
+                'products.description as product_description',
+                'products.vendor_no',
+                'suppliers.name as supplier_name',
+                'bo_requests.quantity',
+                'bo_requests.reason',
+                'bo_requests.bo_policy',
+                'bo_requests.signature',
+                'bo_requests.images',
+                'bo_requests.created_by',
+                'bo_requests.created_at'
+            )
+                ->join('products', 'products.itemcode', '=', 'bo_requests.itemcode')
+                ->leftJoin('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
+                ->where('bo_requests.created_by', $createdBy)
+                ->where('bo_requests.status', 'pending')
+                ->orderBy('bo_requests.created_at', 'desc')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'nesa_id' => $item->nesa_id,
+                        'itemcode' => $item->itemcode,
+                        'product_name' => $item->product_description,
+                        'supplier_name' => $item->supplier_name ?? 'N/A',
+                        'quantity' => $item->quantity,
+                        'reason' => $item->reason,
+                        'bo_policy' => $item->bo_policy,
+                        'signature' => $item->signature,
+                        'images' => json_decode($item->images, true),
+                        'created_by' => $item->created_by,
+                        'created_at' => $item->created_at->format('Y-m-d H:i:s'),
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'count' => $data->count(),
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Get BO Request failed: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch BO requests',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
 }

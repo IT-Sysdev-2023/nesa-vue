@@ -65,7 +65,7 @@ Route::get('get-confirmed-nesa-request-sum', [AndroidController::class, 'getConf
 
 Route::get('get-confirmed-request-by-itemcode', [AndroidController::class, 'getConfirmedRequestbyItemcode']);
 
-Route::get('get-confirmed-request-per-itemcode', [AndroidController::class, 'getConfirmedRequestPerItemcode']);
+Route::post('get-confirmed-request-per-itemcode', [AndroidController::class, 'getConfirmedRequestPerItemcode']);
 
 Route::get('get-cancelled-nesa-request', [AndroidController::class, 'getCancelledNesaRequest']);
 
@@ -135,5 +135,17 @@ Route::post('chat/send', [AndroidController::class, 'send']);
 Route::get('getLatestNesaRequest', [AndroidController::class, 'getLatestNesaRequest']);
 
 Route::post('updateCourseAction', [AndroidController::class, 'updateCourseAction']);
+
+// #############################
+// #######  BAD ORDER  #########
+// #############################
+
+Route::get('getBORequestsByCreatedBy', [AndroidController::class, 'getBORequestsByCreatedBy']);
+
+Route::post('uploadBORequest', [AndroidController::class, 'uploadBORequest']);
+
+Route::get('countRequestsByStatus', [AndroidController::class, 'countRequestsByStatus']);
+
+Route::get('getAllBORequestByCreatedBy', [AndroidController::class, 'getAllBORequestByCreatedBy']);
 
 
