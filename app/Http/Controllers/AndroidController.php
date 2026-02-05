@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache; // Add this import
 use Illuminate\Support\Facades\Validator; // Add this if using validator
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Crypt;
 
 class AndroidController extends Controller
 {
@@ -1054,15 +1055,33 @@ class AndroidController extends Controller
             ->orderBy('m.created_at', 'desc')
             ->get();
 
+        // Decrypt each message
+        $inbox = $inbox->map(function ($msg) {
+            try {
+                // Check if the message starts with "me: " and decrypt the rest
+                if (str_starts_with($msg->message, 'me: ')) {
+                    $encryptedPart = substr($msg->message, 4); // remove "me: "
+                    $msg->message = 'me: ' . Crypt::decryptString($encryptedPart);
+                } else {
+                    $msg->message = Crypt::decryptString($msg->message);
+                }
+            } catch (\Exception $e) {
+                // If decryption fails, keep the raw message
+                $msg->message = '[Cannot decrypt]';
+            }
+            return $msg;
+        });
+
         return response()->json($inbox);
     }
 
 
 
 
+
     public function messages(Request $request)
     {
-        return DB::table('messages')
+        $messages = DB::table('messages')
             ->where(function ($q) use ($request) {
                 $q->where('sender_id', $request->user_id)
                     ->where('recipient_id', $request->recipient_id);
@@ -1073,14 +1092,25 @@ class AndroidController extends Controller
             })
             ->orderBy('created_at')
             ->get();
+
+        // Decrypt each message
+        $messages = $messages->map(function ($msg) {
+            $msg->message = Crypt::decryptString($msg->message);
+            return $msg;
+        });
+
+        return $messages;
     }
 
     public function send(Request $request)
     {
+        // Encrypt the message
+        $encryptedMessage = Crypt::encryptString($request->message);
+
         DB::table('messages')->insert([
             'sender_id' => $request->sender_id,
             'recipient_id' => $request->recipient_id,
-            'message' => $request->message,
+            'message' => $encryptedMessage,
             'created_at' => now()
         ]);
 
@@ -1091,6 +1121,7 @@ class AndroidController extends Controller
     {
         $data = NesaRequest::where('is_consolidated', 0)
             ->where('created_at', '>=', Carbon::now()->subDays(5))
+            ->where('status', 'pending')
             ->orderBy('created_at', 'desc') // latest first
             ->get();
 
@@ -1105,12 +1136,97 @@ class AndroidController extends Controller
         return response()->json(['message' => 'Success']);
     }
 
+    public function countRequestsByStatusNESA(Request $request)
+    {
+        // Use user_id from request
+        $userId = $request->input('user_id');
+
+        if (!$userId) {
+            return response()->json([
+                'error' => 'user_id is required'
+            ], 400);
+        }
+
+        // Count requests by status
+        $pendingCount = NesaRequest::where('created_by', $userId)
+            ->where('status', 'pending')
+            ->count();
+
+        $approvedCount = NesaRequest::where('created_by', $userId)
+            ->where('status', 'approved')
+            ->count();
+
+        $cancelledCount = NesaRequest::where('created_by', $userId)
+            ->where('status', 'cancelled')
+            ->count();
+
+        return response()->json([
+            'user_id' => $userId,
+            'pending' => $pendingCount,
+            'approved' => $approvedCount,
+            'cancelled' => $cancelledCount
+        ]);
+    }
+
+    public function check(Request $request)
+    {
+        // Validate the incoming app version
+        $request->validate([
+            'version' => 'required|integer' // your app's current version code
+        ]);
+
+        $currentVersion = $request->version;
+
+        // Get the latest version from DB
+        $latest = DB::table('app_update')
+            ->orderByDesc('version') // highest version first
+            ->first();
+
+        if (!$latest) {
+            // No updates found
+            return response()->json([
+                'updateAvailable' => false
+            ]);
+        }
+
+        // Compare current version with latest
+        if ($currentVersion < $latest->version) {
+            // There is an update
+            return response()->json([
+                'updateAvailable' => true,
+                'version' => $latest->version,
+                'versionName' => $latest->versionName,
+                'updateMessage' => $latest->updateMessage,
+                'downloadUrl' => $latest->downloadUrl,
+                'forceUpdate' => (bool) $latest->forceUpdate
+            ]);
+        }
+
+        // Current version is up-to-date
+        return response()->json([
+            'updateAvailable' => false
+        ]);
+    }
+
+    public function getUserTypeName(Request $request)
+    {
+        // Fetch name by id using Query Builder
+        $name = DB::table('user_types')
+            ->where('id', $request->id)
+            ->value('name'); // get single column value
+
+        return response()->json([
+            'name' => $name
+        ]);
+    }
+
     // #############################
     // #######  BAD ORDER  #########
     // #############################
 
     public function uploadBORequest(Request $request)
     {
+
         try {
             $nesa_id = $request->nesa_id;
             $itemcode = $request->itemcode;
@@ -1292,5 +1408,41 @@ class AndroidController extends Controller
         }
     }
 
+    public function countAllRequestsByStatus(Request $request)
+    {
+        // Use user_id from request
+        $userId = $request->input('user_id');
+
+        if (!$userId) {
+            return response()->json([
+                'error' => 'user_id is required'
+            ], 400);
+        }
+
+        // Count requests by status
+        $pendingNESACount = NesaRequest::where('created_by', $userId)
+            ->where('status', 'pending')
+            ->count();  
+
+        $pendingBOCount = BORequest::where('created_by', $userId)
+            ->where('status', 'pending')
+            ->count();
+
+        $approvedNESACount = NesaRequest::where('created_by', $userId)
+            ->where('status', 'approved')
+            ->count();
+
+        $approvedBOCount = BORequest::where('created_by', $userId)
+            ->where('status', 'approved')
+            ->count();
+
+        return response()->json([
+            'user_id' => $userId,
+            'pendingNESA' => $pendingNESACount,
+            'pendingBO' => $pendingBOCount,
+            'approvedNESA' => $approvedNESACount,
+            'approvedBO' => $approvedBOCount
+        ]);
+    }
 
 }

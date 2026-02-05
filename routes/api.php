@@ -136,6 +136,13 @@ Route::get('getLatestNesaRequest', [AndroidController::class, 'getLatestNesaRequ
 
 Route::post('updateCourseAction', [AndroidController::class, 'updateCourseAction']);
 
+Route::get('countRequestsByStatusNESA', [AndroidController::class, 'countRequestsByStatusNESA']);
+
+Route::get('app-update', [AndroidController::class, 'check']);
+
+Route::get('getUserTypeName', [AndroidController::class, 'getUserTypeName']);
+
+
 // #############################
 // #######  BAD ORDER  #########
 // #############################
@@ -147,5 +154,7 @@ Route::post('uploadBORequest', [AndroidController::class, 'uploadBORequest']);
 Route::get('countRequestsByStatus', [AndroidController::class, 'countRequestsByStatus']);
 
 Route::get('getAllBORequestByCreatedBy', [AndroidController::class, 'getAllBORequestByCreatedBy']);
+
+Route::get('countAllRequestsByStatus', [AndroidController::class, 'countAllRequestsByStatus']);
 
 
