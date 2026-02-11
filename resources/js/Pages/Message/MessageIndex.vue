@@ -1,7 +1,7 @@
 <template>
-    <div class="flex h-[80vh] antialiased text-gray-200 bg-gray-900 overflow-hidden">
-        <div class="flex-1 flex flex-col">
-            <main class="flex-grow flex flex-row min-h-0">
+    <div class="flex h-[80vh] antialiased  text-gray-200 bg-black overflow-hidden rounded-[2rem]">
+        <div class="flex-1 flex flex-col ">
+            <main class="flex-grow flex flex-row min-h-0 rounded-lg">
                 <section
                     class="flex flex-col flex-none overflow-auto w-24 hover:w-64 group lg:max-w-sm md:w-2/6 transition-all duration-300 ease-in-out">
                     <div class="header p-4 flex flex-row justify-between items-center flex-none">
@@ -11,7 +11,7 @@
                                 " />
                         </div>
                         <p class="text-md font-bold hidden md:block group-hover:block">
-                            Talk To Nesa
+                            Talk To Nesa 
                         </p>
                         <p @click="unexpandMessage"
                             class="block rounded-full hover:bg-gray-700 bg-gray-800 w-10 h-10 p-2 hidden md:block group-hover:block">

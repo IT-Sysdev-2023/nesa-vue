@@ -410,4 +410,8 @@ class AdminController extends Controller
         return back()->with('success', 'User credentials updated successfully.');
     }
 
+    public function reports(){
+        return inertia('AdminSetup/Reports');
+    }
+
 }

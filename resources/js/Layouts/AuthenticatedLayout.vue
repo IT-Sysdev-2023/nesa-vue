@@ -32,13 +32,73 @@
                     <div
                         class="w-16 h-10 bg-gradient-to-r bg-gray-00 rounded-full flex items-center justify-center"
                     >
-                        <span class="text-white font-bold text-sm">
+                      <div
+                :class="[
+                    'fixed top-0 left-0 w-64 p-4 border-t',
+                    isDarkMode
+                        ? 'border-gray-700 bg-gray-800'
+                        : 'border-gray-200 bg-gray-50',
+                ]"
+            >
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center"
+                    >
+                        <span
+                            class="text-white font-semibold text-sm rounded-full"
+                        >
                             <img
-                                class="w-[60px] h-10"
-                                src="/images/nesaLogo.png"
-                                alt=""
+                                :src="
+                                    'http://172.16.161.34:8080/hrms' +
+                                    userImageData
+                                "
+                                alt="image"
+                                style="border-radius: 100%"
                             />
                         </span>
+                    </div>
+                    <div class="flex-1 min-w-0"><p
+                            :class="[
+                                'text-sm first-letter:uppercase font-medium truncate',
+                                isDarkMode ? 'text-gray-200' : 'text-gray-900',
+                            ]"
+                        >
+                         {{ page.auth.user.username }}
+                        </p>
+
+                        <p
+                            :class="[
+                                'text-xs truncate',
+                                isDarkMode ? 'text-gray-400' : 'text-gray-500',
+                            ]"
+                        >
+                            {{ page?.auth?.usertype }}
+                        </p>
+                    </div>
+                    <button
+                        :class="[
+                            'p-1.5 rounded-md',
+                            isDarkMode
+                                ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700'
+                                : 'text-gray-400 hover:text-gray-500 hover:bg-gray-200',
+                        ]"
+                    >
+                        <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
                     </div>
                 </div>
                 <button
@@ -74,7 +134,94 @@
                         :key="item.id"
                         class="border-b rounded-xl"
                     >
+                        <!-- Menu item with dropdown -->
+                        <div v-if="item.children">
+                            <button
+                                @click="toggleDropdown(item.id)"
+                                :class="[
+                                    'menu-item w-full flex items-center rounded-xl gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 group relative overflow-hidden',
+                                    isActiveParent(item)
+                                        ? 'bg-gradient-to-br from-slate-950 via-blue-900 text-white to-slate-600 shadow-md shadow-blue-500/20'
+                                        : isDarkMode
+                                          ? 'text-gray-300 hover:bg-gray-700/60 hover:text-white'
+                                          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                                ]"
+                            >
+                                <!-- Active background glow effect -->
+                                <div
+                                    v-if="isActiveParent(item)"
+                                    class="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-blue-600/20 animate-pulse"
+                                ></div>
+
+                                <!-- Icon -->
+                                <span
+                                    :class="[
+                                        'relative z-10 text-lg transition-transform duration-200',
+                                        isActiveParent(item)
+                                            ? 'scale-110'
+                                            : 'group-hover:scale-105',
+                                    ]"
+                                >
+                                    {{ item.icon }}
+                                </span>
+
+                                <!-- Label -->
+                                <span class="relative z-10 flex-1 text-left">
+                                    {{ item.name }}
+                                </span>
+
+                                <!-- Dropdown arrow -->
+                                <svg
+                                    :class="[
+                                        'relative z-10 w-4 h-4 transition-transform duration-200',
+                                        openDropdowns[item.id]
+                                            ? 'rotate-180'
+                                            : '',
+                                    ]"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </button>
+
+                            <!-- Dropdown items -->
+                            <div
+                                v-show="openDropdowns[item.id]"
+                                class="mt-1 ml-4 space-y-1"
+                            >
+                                <button
+                                    v-for="child in item.children"
+                                    :key="child.id"
+                                    @click="handleMenuClick(child)"
+                                    :class="[
+                                        'w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200',
+                                        isActive(child.routeTo)
+                                            ? isDarkMode
+                                                ? 'bg-gray-700 text-white'
+                                                : 'bg-gray-100 text-gray-900'
+                                            : isDarkMode
+                                              ? 'text-gray-400 hover:bg-gray-700/60 hover:text-white'
+                                              : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900',
+                                    ]"
+                                >
+                                    <span class="text-base">{{
+                                        child.icon
+                                    }}</span>
+                                    <span>{{ child.name }}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Regular menu item without dropdown -->
                         <button
+                            v-else
                             @click="handleMenuClick(item)"
                             :class="[
                                 'menu-item w-full flex items-center rounded-xl gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 group relative overflow-hidden',
@@ -143,75 +290,7 @@
             </nav>
 
             <!-- User Profile -->
-            <div
-                :class="[
-                    'fixed bottom-0 left-0 w-64 p-4 border-t',
-                    isDarkMode
-                        ? 'border-gray-700 bg-gray-800'
-                        : 'border-gray-200 bg-gray-50',
-                ]"
-            >
-                <div class="flex items-center space-x-3">
-                    <div
-                        class="w-10 h-10 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center"
-                    >
-                        <span
-                            class="text-white font-semibold text-sm rounded-full"
-                        >
-                            <img
-                                :src="
-                                    'http://172.16.161.34:8080/hrms' +
-                                    userImageData
-                                "
-                                alt="image"
-                                style="border-radius: 100%"
-                            />
-                        </span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p
-                            :class="[
-                                'text-sm font-medium truncate',
-                                isDarkMode ? 'text-gray-200' : 'text-gray-900',
-                            ]"
-                        >
-                            {{ page.auth.user.firstname }},
-                            {{ page.auth.user.lastname }}
-                        </p>
-
-                        <p
-                            :class="[
-                                'text-xs truncate',
-                                isDarkMode ? 'text-gray-400' : 'text-gray-500',
-                            ]"
-                        >
-                            {{ page?.auth?.usertype }}
-                        </p>
-                    </div>
-                    <button
-                        :class="[
-                            'p-1.5 rounded-md',
-                            isDarkMode
-                                ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-700'
-                                : 'text-gray-400 hover:text-gray-500 hover:bg-gray-200',
-                        ]"
-                    >
-                        <svg
-                            class="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                            />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+           
         </div>
 
         <!-- Main content -->
@@ -226,6 +305,9 @@
                 ]"
             >
                 <div class="flex items-center justify-between h-16 px-6">
+                    <p>
+                      Welcome Back, {{ page.auth.user.firstname }}, {{ page.auth.user.lastname }}
+                    </p>
                     <div class="flex items-center space-x-4">
                         <button
                             @click="sidebarOpen = true"
@@ -329,73 +411,16 @@
                                     d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
                                 />
                             </svg>
-
-                            <!-- <span
-                                        class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full shadow-lg animate-pulse">
-                                        
-                                    </span> -->
                         </button>
                         <div>
                             <!-- Overlay -->
-                            <div
-                                :class="isChatModal"
-                                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm duration-200 animate-[fadeIn_0.2s_ease-out_forwards]"
+                            <ModalComponent
+                                :modelValue="isChatModal"
+                                title="BONESA MESSAGES"
+                                @closeModal="modalClose"
                             >
-                                <div
-                                    class="w-[80%] mx-auto bg-slate-900 rounded-2xl bg-white p-6 shadow-xl"
-                                >
-                                    <!-- Header -->
-                                    <div
-                                        class="flex items-center justify-between"
-                                    >
-                                        <h2
-                                            class="text-lg font-semibold text-gray-900 text-white"
-                                        >
-                                            BNS Customer Service
-                                        </h2>
-                                        <button
-                                            @click="modalClose"
-                                            class="rounded-lg p-1 text-white hover:bg-gray-100 hover:text-gray-600"
-                                        >
-                                            Close
-                                        </button>
-                                    </div>
-
-                                    <div class="mt-4 text-sm text-gray-600">
-                                        <MessageIndex
-                                            :online-users="getOnlineUsers"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- <a-popconfirm overlay-class-name="custom-pop" placement="bottom" :ok-button-props="{
-                                style: { display: 'none' },
-                            }" :cancel-button-props="{
-                                style: { display: 'none' },
-                            }">
-                                <template #icon></template>
-                                <template #description>
-                                    <MessageIndex :online-users="getOnlineUsers" />
-                                </template>
-                                <button :class="[
-                                    'relative p-2 rounded-xl transition-all duration-300 hover:scale-105',
-                                    isDarkMode
-                                        ? 'text-gray-300 hover:bg-gray-700'
-                                        : 'text-gray-700 hover:bg-gray-100'
-                                ]">
-                                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                                    </svg>
-
-                                    <span
-                                        class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full shadow-lg animate-pulse">
-                                        5
-                                    </span>
-                                </button>
-                            </a-popconfirm> -->
+                                <MessageIndex :online-users="getOnlineUsers" />
+                            </ModalComponent>
                         </div>
 
                         <!-- Search -->
@@ -483,6 +508,7 @@ import MessageIndex from "@/Pages/Message/MessageIndex.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import { template } from "lodash";
 import Swal from "sweetalert2";
+import {getMenuItems} from '@/Layouts/nav/nav.js';
 import {
     ref,
     reactive,
@@ -492,11 +518,19 @@ import {
     watch,
 } from "vue";
 import { useOnlineUsersStore } from "@/stores/online-store";
+import ModalComponent from "@/Pages/Modal/ModalComponent.vue";
+
+
 
 const page = usePage().props;
 
+const menuItems = getMenuItems(page);
+
 // Dark mode state
 const isDarkMode = ref(false);
+
+// Dropdown state
+const openDropdowns = ref({});
 
 // Load dark mode preference from localStorage
 onMounted(() => {
@@ -527,8 +561,12 @@ watch(isDarkMode, (newValue) => {
 // Toggle dark mode
 const toggleDarkMode = () => {
     isDarkMode.value = !isDarkMode.value;
-
     window.location.reload();
+};
+
+// Toggle dropdown
+const toggleDropdown = (itemId) => {
+    openDropdowns.value[itemId] = !openDropdowns.value[itemId];
 };
 
 // Reactive data
@@ -540,29 +578,8 @@ const getOnlineUsers = computed(() => onlineUsersStore.onlineUsers);
 
 const flappy = ref(true);
 
-// Menu items
-const menuItems = reactive([
-    { id: "dashboard", name: "Dashboard", icon: "📊", routeTo: "dashboard" },
-    { id: "nesa", name: "Nesa", icon: "📈", routeTo: "nesa.get.dashboard" },
-    {
-        id: "bad-order",
-        name: "Bad Order",
-        icon: "🚚",
-        routeTo: "nesa.get.badorder",
-    },
-    {
-        id: "masterfile",
-        name: "MasterFile",
-        icon: "⚙️",
-        routeTo: "admin.masterfile.index",
-    },
-    {
-        id: "profile",
-        name: "Profile",
-        icon: "💂‍♂️",
-        routeTo: "admin.viewProfile",
-    },
-]);
+// Menu items with children for dropdowns
+
 
 const openLogout = () => {
     Swal.fire({
@@ -634,12 +651,23 @@ const isActive = (routeName) => {
     return route().current(routeName);
 };
 
+const isActiveParent = (item) => {
+    if (item.routeTo && isActive(item.routeTo)) {
+        return true;
+    }
+    if (item.children) {
+        return item.children.some((child) => isActive(child.routeTo));
+    }
+    return false;
+};
+
 const userNameFormat = computed(() => {
     return `${page.auth.user.lastname.toLowerCase()}, ${page.auth.user.firstname.toLowerCase()}`;
 });
 const value = ref(userNameFormat.value);
 
 const userImageData = ref("");
+
 const userImage = async () => {
     const response = await axios.get(
         "http://172.16.161.34/api/gc/filter/employee/name",
@@ -663,14 +691,14 @@ const openMessModal = ref(false);
 const openMessageModal = () => {
     openMessModal.value = true;
 };
-const isChatModal = ref("hidden");
+const isChatModal = ref(false);
 
 const modalOpen = () => {
-    isChatModal.value = "";
+    isChatModal.value = true;
 };
 
 const modalClose = () => {
-    isChatModal.value = "hidden";
+    isChatModal.value = false;
 };
 </script>
 

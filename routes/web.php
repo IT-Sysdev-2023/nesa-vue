@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
 
             // about route
             Route::get('about', [AdminController::class, 'about'])->name('about');
+            Route::get('reports', [AdminController::class, 'reports'])->name('reports');
         });
     });
 });
