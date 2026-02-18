@@ -81,6 +81,8 @@ Route::get('get-coa', [AndroidController::class, 'getCOA']);
 
 Route::get('get-photo', [AndroidController::class, 'getPhoto']);
 
+Route::post('updateIsOnline', [AndroidController::class, 'updateIsOnline']);
+
 Route::get('update-password', [AndroidController::class, 'updatePassword']);
 
 Route::get('count-all-products', [AndroidController::class, 'countItemCodes']);
@@ -136,6 +138,16 @@ Route::get('getLatestNesaRequest', [AndroidController::class, 'getLatestNesaRequ
 
 Route::post('updateCourseAction', [AndroidController::class, 'updateCourseAction']);
 
+Route::get('countRequestsByStatusNESA', [AndroidController::class, 'countRequestsByStatusNESA']);
+
+Route::get('app-update', [AndroidController::class, 'check']);
+
+Route::get('getUserTypeName', [AndroidController::class, 'getUserTypeName']);
+
+Route::get('checkServer', [AndroidController::class, 'checkServer']);
+
+Route::get('getBusinessUnits', [AndroidController::class, 'getBusinessUnits']);
+
 // #############################
 // #######  BAD ORDER  #########
 // #############################
@@ -148,4 +160,14 @@ Route::get('countRequestsByStatus', [AndroidController::class, 'countRequestsByS
 
 Route::get('getAllBORequestByCreatedBy', [AndroidController::class, 'getAllBORequestByCreatedBy']);
 
+Route::get('countAllRequestsByStatus', [AndroidController::class, 'countAllRequestsByStatus']);
 
+
+// #############################
+// #######  NESA V2  ###########
+// #############################
+
+Route::prefix('v2')->group(function () {
+    Route::get('getPendingRequest', [AndroidController::class, 'getPendingRequestV2']);
+    Route::get('getApprovedRequest', [AndroidController::class, 'getApprovedRequestV2']);
+});
