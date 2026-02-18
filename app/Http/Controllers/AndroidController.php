@@ -12,6 +12,7 @@ use App\Models\DownloadLog;
 use App\Models\Notifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\JsonResponse;
 use Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache; // Add this import
@@ -21,6 +22,27 @@ use Illuminate\Support\Facades\Crypt;
 
 class AndroidController extends Controller
 {
+
+    public function checkServer(): JsonResponse
+    {
+        try {
+            // Optional DB check
+            DB::connection()->getPdo();
+
+            return response()->json([
+                'status' => 'online',
+                'database' => 'connected',
+                'time' => now()->toDateTimeString()
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'online',
+                'database' => 'error',
+                'time' => now()->toDateTimeString()
+            ], 500);
+        }
+    }
     public function user()
     {
         return response()->json(User::select(
@@ -364,7 +386,6 @@ class AndroidController extends Controller
         $query = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
             ->join('users', 'users.id', '=', 'nesa_requests.created_by')
             ->join('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
-            ->where('nesa_requests.is_consolidated', 0)
             ->whereNull('nesa_requests.coa')
             ->where('nesa_requests.status', 'approved')
             ->selectRaw('
@@ -1020,6 +1041,7 @@ class AndroidController extends Controller
     {
         $userId = $request->input('id');
 
+        // Get the latest message IDs per conversation
         $latestMessageIds = DB::table('messages')
             ->select(DB::raw('MAX(id) as id'))
             ->where(function ($q) use ($userId) {
@@ -1028,6 +1050,7 @@ class AndroidController extends Controller
             })
             ->groupByRaw('LEAST(sender_id, recipient_id), GREATEST(sender_id, recipient_id)');
 
+        // Join messages with users
         $inbox = DB::table('messages as m')
             ->join('users as u', function ($join) use ($userId) {
                 $join->on('u.id', '=', DB::raw(
@@ -1042,6 +1065,7 @@ class AndroidController extends Controller
                 'u.id as user_id',
                 'u.firstname',
                 'u.lastname',
+                'u.is_online', // add the datetime column
                 DB::raw("
                 CASE 
                     WHEN m.sender_id = {$userId} 
@@ -1055,10 +1079,10 @@ class AndroidController extends Controller
             ->orderBy('m.created_at', 'desc')
             ->get();
 
-        // Decrypt each message
+        // Decrypt messages and calculate online status
         $inbox = $inbox->map(function ($msg) {
             try {
-                // Check if the message starts with "me: " and decrypt the rest
+                // Decrypt message
                 if (str_starts_with($msg->message, 'me: ')) {
                     $encryptedPart = substr($msg->message, 4); // remove "me: "
                     $msg->message = 'me: ' . Crypt::decryptString($encryptedPart);
@@ -1066,18 +1090,22 @@ class AndroidController extends Controller
                     $msg->message = Crypt::decryptString($msg->message);
                 }
             } catch (\Exception $e) {
-                // If decryption fails, keep the raw message
                 $msg->message = '[Cannot decrypt]';
             }
+
+            // Calculate is_online: true if within last 5 minutes
+            if ($msg->is_online) {
+                $lastOnline = Carbon::parse($msg->is_online);
+                $msg->is_online = $lastOnline->diffInMinutes(now()) <= 5 ? true : false;
+            } else {
+                $msg->is_online = false;
+            }
+
             return $msg;
         });
 
         return response()->json($inbox);
     }
-
-
-
-
 
     public function messages(Request $request)
     {
@@ -1117,16 +1145,48 @@ class AndroidController extends Controller
         return response()->json(['status' => 'sent']);
     }
 
-    public function getLatestNesaRequest()
+    // public function getLatestNesaRequest()
+    // {
+    //     $data = DB::table('nesa_requests as nr')
+    //         ->join('users as u', 'nr.created_by', '=', 'u.id') // join users table
+    //         ->join('business_units as bu', 'u.bu', '=', 'bu.id') // join business_units
+    //         ->where('nr.is_consolidated', 0)
+    //         ->where('nr.created_at', '>=', Carbon::now()->subDays(5))
+    //         ->where('nr.status', 'pending')
+    //         ->orderBy('nr.created_at', 'desc')
+    //         ->select(
+    //             'nr.*', // all nesa_requests columns
+    //             'bu.abbrevation as business_unit_name' // add the abbreviation
+    //         )
+    //         ->get();
+
+    //     return response()->json($data);
+    // }
+
+    public function getLatestNesaRequest(Request $request)
     {
-        $data = NesaRequest::where('is_consolidated', 0)
-            ->where('created_at', '>=', Carbon::now()->subDays(5))
-            ->where('status', 'pending')
-            ->orderBy('created_at', 'desc') // latest first
+        $perPage = $request->input('per_page', 20);
+        $page = $request->input('page', 1);
+        $user_id = $request->input('user_id', 0);
+
+        $query = DB::table('nesa_requests as nr')
+            ->join('users as u', 'nr.created_by', '=', 'u.id')
+            ->join('business_units as bu', 'u.bu', '=', 'bu.id')
+            ->where('nr.is_consolidated', 0)
+            ->where('nr.created_at', '>=', Carbon::now()->subDays(5))
+            ->where('nr.status', 'pending')
+            ->where('nr.created_by', '!=', $user_id);
+    
+        $data = $query->orderBy('nr.created_at', 'desc')
+            ->select('nr.*', 'bu.abbrevation as business_unit_name')
+            ->skip(($page - 1) * $perPage)
+            ->take($perPage)
             ->get();
 
         return response()->json($data);
     }
+
+
 
     public function updateCourseAction(Request $request)
     {
@@ -1220,6 +1280,158 @@ class AndroidController extends Controller
         ]);
     }
 
+    public function getPendingRequestV2(Request $request)
+    {
+        // Get the user type
+        $usertype = User::where('id', $request->id)->value('usertype');
+
+        // Base query
+        $rows = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
+            ->join('users', 'users.id', '=', 'nesa_requests.created_by') // to get BU
+            ->join('business_units', 'business_units.id', '=', 'users.bu') // join BU table
+            ->where('nesa_requests.status', 'pending')
+            ->when($usertype == 3, function ($q) use ($request) {
+                $q->where('nesa_requests.created_by', $request->id);
+            })
+            ->when($request->filled('supplier_name'), function ($q) use ($request) {
+                $q->where('suppliers.name', 'like', "%{$request->supplier_name}%");
+            })
+            ->when($request->filled('date'), function ($q) use ($request) {
+                $q->whereDate('nesa_requests.created_at', $request->date);
+            })
+            ->when($request->filled('date_from') && $request->filled('date_to'), function ($q) use ($request) {
+                $q->whereBetween('nesa_requests.created_at', [$request->date_from, $request->date_to]);
+            })
+            ->select(
+                'nesa_requests.nesa_no',
+                'nesa_requests.created_at',
+                'suppliers.name as supplier_name',
+                'business_units.name as location', // added location
+                'nesa_requests.itemcode',
+                'products.description',
+                'products.uom',
+                'nesa_requests.quantity',
+                'nesa_requests.expiry'
+            )
+            ->orderBy('nesa_requests.nesa_no')
+            ->get();
+
+        // Group by NESA number + Supplier
+        $result = $rows->groupBy(function ($item) {
+            return $item->nesa_no . '|' . $item->supplier_name;
+        })->map(function ($items) {
+            return [
+                'nesa_no' => $items->first()->nesa_no,
+                'date' => \Carbon\Carbon::parse($items->first()->created_at)->format('Y-m-d'),
+                'supplier_name' => $items->first()->supplier_name,
+                'location' => $items->first()->location, // added location
+                'data' => $items->map(function ($item) {
+                    return [
+                        'item_code' => $item->itemcode,
+                        'item_description' => $item->description,
+                        'item_quantity' => $item->quantity,
+                        'item_expiry_date' => $item->expiry,
+                        'item_uom' => $item->uom,
+                    ];
+                })->values()
+            ];
+        })->values();
+
+        return response()->json($result);
+    }
+
+    public function getApprovedRequestV2(Request $request)
+    {
+        // Get the user type
+        $usertype = User::where('id', $request->id)->value('usertype');
+
+        // Base query
+        $rows = NesaRequest::join('products', 'products.itemcode', '=', 'nesa_requests.itemcode')
+            ->join('suppliers', 'suppliers.supplier_code', '=', 'products.vendor_no')
+            ->leftJoin('users as ric_head', 'ric_head.id', '=', 'nesa_requests.ric_section_head') // Ric section head
+            ->leftJoin('users as creator', 'creator.id', '=', 'nesa_requests.created_by') // Created_by user to get BU
+            ->leftJoin('business_units', 'business_units.id', '=', 'creator.bu') // <-- changed table name
+            ->where('nesa_requests.status', 'approved')
+            ->when($usertype == 3, function ($q) use ($request) {
+                $q->where('nesa_requests.created_by', $request->id);
+            })
+            ->when($request->filled('supplier_name'), function ($q) use ($request) {
+                $q->where('suppliers.name', 'like', "%{$request->supplier_name}%");
+            })
+            ->when($request->filled('date'), function ($q) use ($request) {
+                $q->whereDate('nesa_requests.created_at', $request->date);
+            })
+            ->when($request->filled('date_from') && $request->filled('date_to'), function ($q) use ($request) {
+                $q->whereBetween('nesa_requests.created_at', [$request->date_from, $request->date_to]);
+            })
+            ->select(
+                'nesa_requests.nesa_no',
+                'nesa_requests.created_at',
+                'suppliers.name as supplier_name',
+                'business_units.name as location', // updated table
+                'nesa_requests.itemcode',
+                'products.description',
+                'products.uom',
+                'nesa_requests.quantity',
+                'nesa_requests.expiry',
+                'ric_head.firstname as ric_firstname',
+                'ric_head.middlename as ric_middlename',
+                'ric_head.lastname as ric_lastname',
+                'ric_head.name_extention as ric_name_extention',
+                'nesa_requests.ric_section_head_signature'
+            )
+            ->orderBy('nesa_requests.nesa_no')
+            ->get();
+
+        // Group by NESA number + Supplier
+        $result = $rows->groupBy(function ($item) {
+            return $item->nesa_no . '|' . $item->supplier_name;
+        })->map(function ($items) {
+            return [
+                'nesa_no' => $items->first()->nesa_no,
+                'date' => \Carbon\Carbon::parse($items->first()->created_at)->format('Y-m-d'),
+                'supplier_name' => $items->first()->supplier_name,
+                'location' => $items->first()->location, // location added
+                'data' => $items->map(function ($item) {
+                    return [
+                        'item_code' => $item->itemcode,
+                        'item_description' => $item->description,
+                        'item_quantity' => $item->quantity,
+                        'item_expiry_date' => $item->expiry,
+                        'item_uom' => $item->uom,
+                        'item_ric_section_head' => [
+                            'firstname' => $item->ric_firstname,
+                            'middlename' => $item->ric_middlename,
+                            'lastname' => $item->ric_lastname,
+                            'name_extention' => $item->ric_name_extention,
+                        ],
+                        'item_ric_section_head_signature' => $item->ric_section_head_signature,
+                    ];
+                })->values()
+            ];
+        })->values();
+
+        return response()->json($result);
+    }
+
+    public function updateIsOnline(Request $request)
+    {
+        User::where('id', $request->id)
+            ->update([
+                'is_online' => now() // current date & time
+            ]);
+
+        return response()->noContent(); // 204
+    }
+
+    public function getBusinessUnits()
+    {
+        $business_units = DB::table('business_units')->get(); // Fetch all rows from 'users' table
+        return response()->json($business_units);    // Return as JSON
+    }
+
+
     // #############################
     // #######  BAD ORDER  #########
     // #############################
@@ -1303,7 +1515,7 @@ class AndroidController extends Controller
             \Log::error('Fetch failed: ' . $e->getMessage());
 
             return response()->json([
-             $e->getMessage()
+                $e->getMessage()
             ], 500);
         }
     }
@@ -1422,7 +1634,7 @@ class AndroidController extends Controller
         // Count requests by status
         $pendingNESACount = NesaRequest::where('created_by', $userId)
             ->where('status', 'pending')
-            ->count();  
+            ->count();
 
         $pendingBOCount = BORequest::where('created_by', $userId)
             ->where('status', 'pending')
